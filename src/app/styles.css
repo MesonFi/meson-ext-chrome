@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 可选的小工具类 */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
