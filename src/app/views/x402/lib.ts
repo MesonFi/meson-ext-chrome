@@ -108,7 +108,7 @@ export function inferNetworkFromWallet(
  */
 export function pickPaymentRequirement(
   requirements: PaymentRequirementsParsed[],
-  wallet: Signer | MultiNetworkSigner,
+  wallet: any,
   opts?: {
     scheme?: string
     selector?: PaymentRequirementsSelector
@@ -127,7 +127,7 @@ export function pickPaymentRequirement(
  * - 不发送请求，只返回 Header 字符串，交由调用方在 Step 3 使用
  */
 export async function buildXPaymentHeader(params: {
-  wallet: Signer | MultiNetworkSigner
+  wallet: any
   x402Version: number
   requirement: PaymentRequirementsParsed
   config?: X402Config
@@ -157,7 +157,7 @@ export async function fetchWithXPayment(
     ...init,
     headers: {
       ...(init.headers || {}),
-      "X-PAYMENT": xPaymentHeader,
+      "X-Payment": xPaymentHeader,
       "Access-Control-Expose-Headers": "X-PAYMENT-RESPONSE",
     },
     __is402Retry: true // 与源码行为一致：避免重复付费

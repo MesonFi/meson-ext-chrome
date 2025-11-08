@@ -46,80 +46,74 @@ function formatRelativeFromDate(d?: Date | null) {
   if (!d) return "-"
   const diffMs = Date.now() - d.getTime()
   const s = Math.max(1, Math.floor(diffMs / 1000))
-  if (s < 60) return `${s}s 前`
+  if (s < 60) return `${s}s ago`
   const m = Math.floor(s / 60)
-  if (m < 60) return `${m}min 前`
+  if (m < 60) return `${m}min ago`
   const h = Math.floor(m / 60)
-  if (h < 24) return `${h}h 前`
+  if (h < 24) return `${h}h ago`
   const dd = Math.floor(h / 24)
-  if (dd < 7) return `${dd}d 前`
+  if (dd < 7) return `${dd}d ago`
   return d.toLocaleString()
 }
 
 const X402Item: React.FC<Props> = ({ item, onClick, maxMonth = 0 }) => {
   const resource = stripScheme(item?.resource)
+  console.log(resource, item)
+  const accpet = item?.accepts?.[0] || {}
   const score = item?.metadata?.confidence?.overallScore
   const mth = monthTx(item?.metadata)
   const success = item?.metadata?.reliability?.apiSuccessRate
   const updated = item?.lastUpdated ? new Date(item.lastUpdated) : null
+  const desc = accpet.description || "-"
+  const network = accpet.network
+  const maxAmountRequired = Number(accpet.maxAmountRequired) / 1000000
+  const tokenName = accpet.extra?.name
 
   return (
-    <div className="py-3 cursor-pointer hover:bg-slate-50" onClick={onClick}>
-      {/* 第一行：resource（过长省略） */}
-      <div className="min-w-0">
+    <div className="py-3 cursor-pointer hover:bg-card px-3 flex flex-col gap-2" onClick={onClick}>
+      <div className="flex gap-2 items-center justify-between">
         <div className="text-sm font-medium truncate" title={resource}>
           {resource}
         </div>
+        <span className="text-xs truncate text-textColor3">
+          {formatRelativeFromDate(updated)}
+        </span>
       </div>
 
-      {/* 第二行：四项两行对齐（评分、月交易、成功率、更新时间），数值也放在“框里” */}
-      <div className="mt-1 grid grid-cols-4 gap-3">
-        {/* 评分 */}
-        <div className="min-w-0">
-          <div className="text-[11px] text-gray-500 leading-none mb-1">评分</div>
-          <div
-            className={`inline-flex items-center h-6 px-2 rounded ${scoreBadgeClass(score)}`}
-            title={typeof score === "number" ? score.toFixed(2) : "-"}
-          >
-            <span className="text-xs font-semibold">
-              {typeof score === "number" ? score.toFixed(2) : "-"}
-            </span>
+      <div className="flex gap-3">
+        <div
+          className={`inline-flex px-2 py-0.5 rounded flex-col items-start flex-shrink-0 ${scoreBadgeClass(score)}`}
+          title={typeof score === "number" ? score.toFixed(2) : "-"}
+        >
+          <span>Score</span>
+          <span className="font-semibold text-xl">
+            {typeof score === "number" ? score.toFixed(2) : "-"}
+          </span>
+        </div>
+        <div className="text-xs text-textColor4 line-clamp-3" title={desc}>
+          {desc}
+        </div>
+      </div>
+      <div className="flex gap-3">
+        <div className="flex flex-col min-w-[60px]">
+          <div className="text-xs text-textColor4">
+            M. Tx
+          </div>
+          <div className="font-medium text-sm text-textColor1">{formatInt(mth)}</div>
+        </div>
+        <div className="flex flex-col w-full">
+          <div className="text-xs text-textColor4">
+            Payment
+          </div>
+          <div className="font-medium text-sm text-textColor1">
+            {network} {maxAmountRequired} <span className="text-textColor4">{tokenName}</span>
           </div>
         </div>
-
-        {/* 月交易 */}
-        <div className="min-w-0">
-          <div className="text-[11px] text-gray-500 leading-none mb-1">月交易</div>
-          <div
-            className={`inline-flex items-center h-6 px-2 rounded ${monthBadgeClass(mth, maxMonth)}`}
-            title={formatInt(mth)}
-          >
-            <span className="text-xs font-semibold">{formatInt(mth)}</span>
+        <div className="flex flex-col min-w-[70px]">
+          <div className="text-xs text-textColor4">
+            Succ. Rate
           </div>
-        </div>
-
-        {/* 成功率（放框里，保持一致风格） */}
-        <div className="min-w-0">
-          <div className="text-[11px] text-gray-500 leading-none mb-1">成功率</div>
-          <div
-            className="inline-flex items-center h-6 px-2 rounded bg-slate-100 text-slate-800"
-            title={formatPercent(success, 0)}
-          >
-            <span className="text-xs font-semibold">{formatPercent(success, 0)}</span>
-          </div>
-        </div>
-
-        {/* 更新时间（放框里 + 相对时间） */}
-        <div className="min-w-0 text-right">
-          <div className="text-[11px] text-gray-500 leading-none mb-1">更新时间</div>
-          <div
-            className="inline-flex items-center h-6 px-2 rounded bg-slate-100 text-slate-800 max-w-full"
-            title={updated ? updated.toLocaleString() : "-"}
-          >
-            <span className="text-[11px] font-medium truncate">
-              {formatRelativeFromDate(updated)}
-            </span>
-          </div>
+          <div className="font-medium text-sm text-textColor1 text-right">{formatPercent(success, 0)}</div>
         </div>
       </div>
     </div>

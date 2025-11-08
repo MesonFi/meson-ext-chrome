@@ -6,14 +6,22 @@
   "include": [
     ".plasmo/index.d.ts",
     "./**/*.ts",
-    "./**/*.tsx"
+    "./**/*.tsx",
+    "./**/*.d.ts"
   ],
   "compilerOptions": {
     "paths": {
       "~*": [
         "./*"
+      ],
+      "~/components/*": [
+        "./components/*"
+      ],
+      "~/lib/*": [
+        "./lib/*"
       ]
     },
-    "baseUrl": "."
+    "baseUrl": ".",
+    "moduleResolution": "bundler"
   }
 }

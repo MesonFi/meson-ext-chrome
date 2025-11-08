@@ -5,6 +5,7 @@
 /node_modules
 /.pnp
 .pnp.js
+package-lock.json
 
 # testing
 /coverage
@@ -30,4 +31,4 @@ dist/
 .plasmo
 
 # typescript
-.tsbuildinfo
+*.tsbuildinfo

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react"
 import { loadState, watchState, type AppState } from "../../lib/storage"
 import X402Item from "./X402Item"
 import X402Popup from "./X402Popup"
+import RefreshIcon from "~/src/assets/icons/refresh.svg"
 
 const BAZAAR_URL =
   "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources"
@@ -25,7 +26,7 @@ type SortKey = "score" | "month"
 const CACHE_KEY = "x402_cache"
 const CACHE_MS = 5 * 60 * 1000
 
-export default function ViewX402List({ goBack }: Props) {
+export default function ViewX402List() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>("")
   const [items, setItems] = useState<any[]>([])
@@ -98,62 +99,51 @@ export default function ViewX402List({ goBack }: Props) {
   }, [items, sortKey])
 
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <div className="px-3 pt-3 mb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <button
-              className="px-2 py-1 text-xs rounded bg-slate-100 hover:bg-slate-200"
-              onClick={goBack}
-            >
-              ←
-            </button>
-            <h3 className="text-lg font-semibold">x402 列表</h3>
+            <h3 className="text-base font-medium">X402 List</h3>
             <button
               onClick={() => load(true)}
-              className="p-1 rounded hover:bg-slate-100"
+              className=""
               title="刷新"
               aria-label="刷新"
               disabled={loading}
             >
-              <svg
+              <img
+                src={RefreshIcon}
+                alt="refresh"
                 className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              >
-                <path d="M21 12a9 9 0 1 1-3-6.7" />
-                <path d="M21 3v6h-6" />
-              </svg>
+              />
             </button>
           </div>
-
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-gray-600">排序：</span>
             <div className="flex rounded-md overflow-hidden border border-gray-200">
               <button
-                className={`px-2 py-1 ${sortKey === "score" ? "bg-slate-200" : "bg-white hover:bg-slate-50"}`}
+                className={`px-2 py-0.5 ${sortKey === "score" ? "bg-card border-r border-borderColor" : "bg-white text-textColor2"}`}
                 onClick={() => setSortKey("score")}
-                title="按综合评分排序"
+                title="Score"
               >
-                评分
+                Score
               </button>
               <button
-                className={`px-2 py-1 ${sortKey === "month" ? "bg-slate-200" : "bg-white hover:bg-slate-50"}`}
+                className={`px-2 py-1 ${sortKey === "month" ? "bg-card border-l border-borderColor" : "bg-white text-textColor2"}`}
                 onClick={() => setSortKey("month")}
-                title="按月交易量排序"
+                title="Monthly Tx"
               >
-                月交易
+                Monthly Tx
               </button>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="px-3 pb-3">
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
         {loading && <div className="text-sm text-gray-600">加载中...</div>}
         {error && <div className="text-sm text-red-600">加载失败：{error}</div>}
 
         {!loading && !error && (
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-borderColor pb-3">
             {sorted.map((item: any, idx: number) => (
               <X402Item
                 key={idx}
@@ -165,7 +155,6 @@ export default function ViewX402List({ goBack }: Props) {
           </div>
         )}
       </div>
-
       {showItem && (
         <X402Popup
           item={showItem}

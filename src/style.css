@@ -29,23 +29,6 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-
-    /* Custom colors for Button component */
-    --primary-color: 164 100% 42%;
-    --primary-color-hover: 163 98% 40%;
-    --primary-color-linear: linear-gradient(282deg, #00D395 -40%, #04DDDE 140%);
-    --primary-color-linear-hover: linear-gradient(282deg, #02C78D -40%, #04D0D1 140%);
-    --primary-color-linear-active: linear-gradient(282deg, #00C189 -40%, #03C9CA 140%);
-    --secondary-bg: 162 59% 92%;
-    --text-color-1: 0 0% 10%;
-    --text-color-2: 0 0% 20%;
-    --text-color-3: 0 0% 60%;
-    --disable-color: 0 0% 85%;
-    --border-color: 0 0% 90%;
-    --active: 164 100% 38%;
-    --error: 0 84% 60%;
-    --error-hover: 0 84% 55%;
-    --error-active: 0 84% 50%;
   }
 
   .dark {
@@ -84,21 +67,4 @@
   body {
     @apply bg-background text-foreground;
   }
-}
-
-/* 隐藏滚动条但保持可滚动 */
-@layer utilities {
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-/* 可选的小工具类 */
-.scroll-smooth {
-  scroll-behavior: smooth;
 }
