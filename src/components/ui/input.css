@@ -1,0 +1,3 @@
+.inputSuffix:hover + input {
+  border-color: #1be2bb;
+}

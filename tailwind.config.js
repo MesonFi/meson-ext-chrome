@@ -62,7 +62,7 @@ module.exports = {
         textColor2: "#6F9483",
         textColor3: "#BDC7C3",
         textColor4: "#75807B",
-        disableColor: "hsl(var(--disable-color))",
+        disableColor: "#DFEBE7",
         borderColor: "#f2f2f2",
         active: "hsl(var(--active))",
         error: "hsl(var(--error))",

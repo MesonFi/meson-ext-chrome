@@ -22,7 +22,7 @@ const buttonVariants = cva(
       size: {
         xs: 'py-0 px-3 text-base rounded',
         sm: 'px-5 py-1 rounded-md text-base rounded xs:rounded-lg',
-        lg: 'px-10 py-[10px] rounded-xl text-base font-medium',
+        lg: 'px-10 py-[12px] rounded-xl text-base font-medium',
         default: 'py-[6px] px-10 text-base rounded-lg xs:rounded-xl',
       },
     },

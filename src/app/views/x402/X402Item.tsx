@@ -82,7 +82,7 @@ const X402Item: React.FC<Props> = ({ item, onClick, maxMonth = 0 }) => {
 
       <div className="flex gap-3">
         <div
-          className={`inline-flex px-2 py-0.5 rounded flex-col items-start flex-shrink-0 ${scoreBadgeClass(score)}`}
+          className={`inline-flex px-2 py-0.5 rounded flex-col items-start flex-shrink-0 pb-1 w-[60px] ${scoreBadgeClass(score)}`}
           title={typeof score === "number" ? score.toFixed(2) : "-"}
         >
           <span>Score</span>
