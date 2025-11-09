@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react"
 import { useWallet } from "../../../contexts/WalletContext"
 import X402AcceptOption from "./X402AcceptOption"
 import { buildXPaymentHeader } from "../lib"
+import { Button } from "~src/components/Button"
 
 // 根据 accept 输出 schema 推导方法
 function deriveInitByAccept(acc: any): RequestInit {
@@ -53,7 +54,7 @@ const Step1: React.FC<Props> = ({ item, onSelected }) => {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="">
       {/* 支付选项列表 */}
       {accepts.map((acc: any, i: number) => (
         <X402AcceptOption
@@ -71,18 +72,17 @@ const Step1: React.FC<Props> = ({ item, onSelected }) => {
       {err && <div className="text-xs text-red-600">{err}</div>}
 
       {/* Footer */}
-      <div className="h-14 mt-2 px-0 border-t border-gray-200 flex items-center justify-end">
-        <button
+      <div className="mt-6 px-0 border-borderColor flex items-center justify-end">
+        <Button
+          className="w-full"
+          variant="primary"
+          size="lg"
           onClick={onProceed}
-          disabled={!canProceed || signing}
-          className={`px-3 py-2 text-sm rounded ${
-            canProceed && !signing
-              ? "bg-indigo-600 text-white hover:bg-indigo-700"
-              : "bg-slate-100 text-slate-500 cursor-not-allowed"
-          }`}
+          disabled={!canProceed}
+          loading={signing}
         >
-          {signing ? "生成中…" : "进行支付"}
-        </button>
+          {signing ? 'Signing' : 'Confirm'}
+        </Button>
       </div>
     </div>
   )

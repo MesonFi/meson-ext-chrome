@@ -33,43 +33,30 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
     <div
       role="button"
       onClick={onSelect}
-      className={`rounded border p-2 ${
-        selected ? "border-indigo-500 bg-indigo-50" : "border-gray-200 hover:bg-slate-50"
+      className={`px-2 py-1 bg-card rounded-lg ${
+        selected ? "outline outline-1 outline-textColor2" : ""
       }`}
     >
-      {desc && <div className="text-sm font-medium break-words">{desc}</div>}
-
-      <div className="mt-1 flex items-center justify-between text-[12px]">
-        <span className="inline-flex items-center h-5 px-2 rounded bg-slate-100 text-slate-800" title={network}>
-          {network}
-        </span>
-        {scheme && scheme !== "exact" && (
-          <span className="text-[11px] text-gray-500">{scheme}</span>
-        )}
-      </div>
-
-      {/* 金额 / 资产行 */}
-      <div className="mt-2 grid grid-cols-3 gap-2 text-[12px]">
-        {/* 金额 1/3 */}
-        <div className="col-span-1 min-w-0">
-          <div className="text-[11px] text-gray-500">最大金额</div>
+      {desc && <div className="text-xs break-words text-black mb-2">{desc}</div>}
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-between">
+          <div className="text-xs text-textColor4">Payment</div>
           <div className="truncate">
+            <span className="inline-flex items-center h-5 px-2 rounded bg-slate-100 text-slate-800" title={network}>
+              {network}
+            </span>
             {amount6}
             {extraName && <span className="text-gray-500 ml-1">{extraName}</span>}
           </div>
         </div>
-
-        {/* 资产 2/3 */}
-        <div className="col-span-2 min-w-0">
-          <div className="text-[11px] text-gray-500">资产</div>
-          <div className="truncate" title={asset}>{asset}</div>
+        <div className="flex justify-between">
+          <div className="text-xs text-textColor4 min-w-[104px]">Asset</div>
+          <div className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1" title={asset}>{asset}</div>
         </div>
-      </div>
-
-      {/* 收款地址 */}
-      <div className="mt-2">
-        <div className="text-[11px] text-gray-500">收款地址</div>
-        <div className="text-[12px] break-all">{payTo}</div>
+        <div className="flex justify-between">
+          <div className="text-xs text-textColor4 min-w-[104px]">Pay to</div>
+          <div className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1">{payTo}</div>
+        </div>
       </div>
     </div>
   )

@@ -2,6 +2,15 @@ import React, { useState } from "react"
 import Step1 from "./Step1"
 import Step2 from "./Step2"
 import Step3 from "./Step3"
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "~src/components/ui/drawer"
+import CloseIcon from "~src/assets/icons/X.svg"
+import ArrowRightIcon from "~src/assets/icons/arrow-right.svg"
 
 type Props = {
   item: any
@@ -29,18 +38,18 @@ const X402Popup: React.FC<Props> = ({ item, onClose }) => {
 
   const renderStepIndicator = () => {
     const steps = [
-      { n: 1, label: "支付选项" },
-      { n: 2, label: "支付凭证" },
-      { n: 3, label: "完成请求" }
+      { n: 1, label: "Accepts" },
+      { n: 2, label: "X-Payment Header" },
+      { n: 3, label: "Response" }
     ] as const
     return (
-      <div className="flex items-center gap-2 px-3 py-2 text-[11px] text-gray-600">
+      <div className="flex items-center px-3 py-2 text-sm text-textColor3">
         {steps.map((s, i) => (
           <React.Fragment key={s.n}>
-            <span className={step === s.n ? "font-semibold text-gray-900" : ""}>
+            <span className={step === s.n ? "text-textColor1 font-medium" : ""}>
               {s.label}
             </span>
-            {i < steps.length - 1 && <span>›</span>}
+            {i < steps.length - 1 && <img src={ArrowRightIcon} alt="arrow" className="w-6 h-6" />}
           </React.Fragment>
         ))}
       </div>
@@ -48,26 +57,21 @@ const X402Popup: React.FC<Props> = ({ item, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50">
-      {/* 顶部留白 + 遮罩（点击关闭） */}
-      <div className="absolute inset-0 bg-black/30 pt-1" onClick={onClose} />
-
-      {/* Bottom sheet */}
-      <div
-        className="absolute left-0 right-0 bottom-0 bg-white max-h-[80vh] rounded-t-xl shadow-2xl overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* 标题：显示完整 URL，break-all */}
-        <div className="px-3 py-2 border-b border-gray-200">
-          <div className="text-[13px] font-semibold break-all">
+    <Drawer open={true} onOpenChange={(open) => { if (!open) onClose() }}>
+      <DrawerContent>
+        <DrawerHeader className="flex justify-between border-b border-borderColor items-start">
+          <DrawerTitle className="break-all pr-8 text-left font-normal text-sm">
             {resourceUrl}
-          </div>
-        </div>
+          </DrawerTitle>
+          <DrawerClose className="p-1 hover:bg-gray-100 rounded transition-colors">
+            <img src={CloseIcon} alt="close" className="w-6 h-6" />
+          </DrawerClose>
+        </DrawerHeader>
 
         {renderStepIndicator()}
 
         {/* 内容区域，底部按钮在各 Step 内部 */}
-        <div className="px-3 pb-3 pt-1 max-h-[calc(80vh-32px-32px)] overflow-y-auto text-[13px]">
+        <div className="px-3 pb-3 pt-1 max-h-[calc(80vh-120px)] overflow-y-auto text-[13px]">
           {step === 1 && (
             <Step1
               item={item}
@@ -100,8 +104,8 @@ const X402Popup: React.FC<Props> = ({ item, onClose }) => {
             />
           )}
         </div>
-      </div>
-    </div>
+      </DrawerContent>
+    </Drawer>
   )
 }
 
