@@ -7,6 +7,7 @@ type Props = {
   item: any
   onClick: () => void
   maxMonth?: number
+  sortKey: string
 }
 
 function monthTx(meta?: any) {
@@ -59,7 +60,7 @@ function formatRelativeFromDate(d?: Date | null) {
   return d.toLocaleString()
 }
 
-const X402Item: React.FC<Props> = ({ item, onClick, maxMonth = 0 }) => {
+const X402Item: React.FC<Props> = ({ item, onClick, sortKey, maxMonth }) => {
   const resource = stripScheme(item?.resource)
   const accpet = item?.accepts?.[0] || {}
   const score = item?.metadata?.confidence?.overallScore
@@ -84,12 +85,13 @@ const X402Item: React.FC<Props> = ({ item, onClick, maxMonth = 0 }) => {
 
       <div className="flex gap-3">
         <div
-          className={`inline-flex px-2 py-0.5 rounded flex-col items-start flex-shrink-0 pb-1 w-[60px] ${scoreBadgeClass(score)}`}
-          title={typeof score === "number" ? score.toFixed(2) : "-"}
+          className={`inline-flex px-2 py-0.5 rounded flex-col items-start flex-shrink-0 pb-1 w-[60px]
+            ${sortKey === 'score' ? scoreBadgeClass(score) : monthBadgeClass(mth, maxMonth)}
+          `}
         >
-          <span>Score</span>
+          <span>{sortKey === 'score' ? 'Score' : 'M. Tx'}</span>
           <span className="font-semibold text-xl">
-            {typeof score === "number" ? score.toFixed(2) : "-"}
+            {sortKey === 'score' ? typeof score === "number" ? score.toFixed(2) : "-" : formatInt(mth)}
           </span>
         </div>
         <div className="text-xs text-textColor4 line-clamp-3" title={desc}>
@@ -99,9 +101,11 @@ const X402Item: React.FC<Props> = ({ item, onClick, maxMonth = 0 }) => {
       <div className="flex gap-3">
         <div className="flex flex-col min-w-[60px]">
           <div className="text-xs text-textColor4">
-            M. Tx
+            {sortKey === 'score' ? 'M. Tx' : 'Score'}
           </div>
-          <div className="font-medium text-sm text-textColor1">{formatInt(mth)}</div>
+          <div className="font-medium text-sm text-textColor1">
+            {sortKey === 'score' ? formatInt(mth) : typeof score === "number" ? score.toFixed(2) : "-"}
+          </div>
         </div>
         <div className="flex flex-col w-full">
           <div className="text-xs text-textColor4">

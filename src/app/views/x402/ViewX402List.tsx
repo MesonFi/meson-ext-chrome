@@ -159,6 +159,7 @@ export default function ViewX402List() {
                 key={idx}
                 item={item}
                 maxMonth={maxMonth}
+                sortKey={sortKey}
                 onClick={() => setShowItem(item)}
               />
             ))}
