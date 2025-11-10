@@ -2,6 +2,7 @@ import React from "react"
 import SvgIcon from "~src/components/SvgIcon"
 import BaseIconSrc from "~/src/assets/icons/base.svg"
 import { capitalize } from "~src/app/lib/utils"
+import { cn } from "~lib/utils"
 
 type Props = {
   item: any
@@ -90,7 +91,7 @@ const X402Item: React.FC<Props> = ({ item, onClick, sortKey, maxMonth }) => {
           `}
         >
           <span>{sortKey === 'score' ? 'Score' : 'M. Tx'}</span>
-          <span className="font-semibold text-xl">
+          <span className={cn("font-semibold text-xl", sortKey === 'month' && formatInt(mth).length >= 5 && 'text-[17px]')}>
             {sortKey === 'score' ? typeof score === "number" ? score.toFixed(2) : "-" : formatInt(mth)}
           </span>
         </div>
