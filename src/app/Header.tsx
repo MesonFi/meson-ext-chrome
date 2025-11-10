@@ -71,7 +71,7 @@ const Header: React.FC<{
   }, [booting, connecting])
 
   return (
-    <div className={cn("border-b border-borderColor flex items-center justify-between gap-3 px-3", connected ? 'py-[18px]' : 'py-3')}>
+    <div className={cn("border-b border-borderColor flex items-center justify-between px-3", connected ? 'py-[18px]' : 'py-3')}>
       {!connected ? (
         <Button
           variant="primary"
@@ -89,38 +89,40 @@ const Header: React.FC<{
           </span>
         </div>
       )}
-      <div className="flex items-center gap-4">
-        {
-          connected && <>
-            <MessageTooltip content={copied ? 'Copied' : 'Copy'}>
+      {
+        (connected || mode === "popup") && <div className="flex items-center gap-4 ml-3">
+          {
+            connected && <>
+              <MessageTooltip content={copied ? 'Copied' : 'Copy'}>
+                <button
+                onClick={handleCopy}
+                title="Copy Address"
+                >
+                  <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
+                </button>
+              </MessageTooltip>
+              <MessageTooltip content={'Disconnect'}>
+                <button
+                  onClick={disconnect}
+                  title="Disconnect"
+                >
+                  <SvgIcon src={LogoutIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
+                </button>
+              </MessageTooltip>
+            </>
+          }
+          {mode === "popup" &&
+            <MessageTooltip content={'Sidebar'}>
               <button
-              onClick={handleCopy}
-              title="Copy Address"
+                onClick={onOpenSidePanel}
+                title="Open Sidebar"
               >
-                <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
+                <SvgIcon src={SidebarIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
               </button>
             </MessageTooltip>
-            <MessageTooltip content={'Disconnect'}>
-              <button
-                onClick={disconnect}
-                title="Disconnect"
-              >
-                <SvgIcon src={LogoutIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
-              </button>
-            </MessageTooltip>
-          </>
-        }
-        {mode === "popup" &&
-          <MessageTooltip content={'Sidebar'}>
-            <button
-              onClick={onOpenSidePanel}
-              title="Open Sidebar"
-            >
-              <SvgIcon src={SidebarIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
-            </button>
-          </MessageTooltip>
-        }
-      </div>
+          }
+        </div>
+      }
     </div>
   )
 }
