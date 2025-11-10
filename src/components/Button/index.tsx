@@ -13,7 +13,7 @@ const buttonVariants = cva(
         primary:
           'bg-primaryColor text-white backdrop-blur-[10px] hover:bg-primaryColorHover active:bg-active disabled:bg-disableColor',
         secondary:
-          'bg-secondaryBg text-textColor1 hover:bg-secondaryBg/80 active:bg-secondaryBg/70 disabled:bg-disableColor disabled:text-textColor3',
+          'bg-secondaryBg text-textColor1 hover:bg-primaryColorHover hover:text-white active:bg-active disabled:bg-disableColor disabled:text-textColor3',
         default: 'active:outline-active active:outline-1 focus:outline-1 focus:[outline-style:solid] focus:outline-primaryColor active:[outline-style:solid] active:bg-active/5 active:text-active hover:outline-primaryColorHover outline-1 [outline-style:solid] hover:text-primaryColorHover outline-borderColor text-primaryColor disabled:outline-disableColor disabled:bg-white bg-white hover:bg-primaryColorHover/[0.06]',
         main: 'bg-primaryColorLinear hover:bg-primaryColorLinearHover text-[#fff] active:bg-primaryColorLinearActive',
         error: 'text-white bg-error hover:bg-errorHover active:bg-errorActive',

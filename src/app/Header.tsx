@@ -2,11 +2,12 @@
 import React, { useMemo } from "react"
 import { useWallet } from "./contexts/WalletContext"
 import { Button } from "~src/components/Button"
-import SidebarIcon from "../assets/icons/sidebar.svg"
-import CloseIcon from "../assets/icons/close.svg"
-import MetaMaskIcon from "../assets/icons/metamask.svg"
-import CopyIcon from "../assets/icons/copy.svg"
-import LogoutIcon from "../assets/icons/logout.svg"
+import { SvgIcon } from "~src/components/SvgIcon"
+import SidebarIconSrc from "../assets/icons/sidebar.svg"
+import CloseIconSrc from "../assets/icons/close.svg"
+import MetaMaskIconSrc from "../assets/icons/metamask.svg"
+import CopyIconSrc from "../assets/icons/copy.svg"
+import LogoutIconSrc from "../assets/icons/logout.svg"
 import { cn } from "~lib/utils"
 import { MessageTooltip } from "~src/components/MessageTooltip"
 
@@ -77,7 +78,7 @@ const Header: React.FC<{
         </Button>
       ) : (
         <div className="flex-1 flex items-center gap-2 rounded-lg">
-          <img src={MetaMaskIcon} alt="metamask" className="w-6 h-6" />
+          <SvgIcon src={MetaMaskIconSrc} className="w-6 h-6" />
           <span className="text-sm font-medium text-gray-900 flex-1 truncate" title={address}>
             {shortAddr(address)}
           </span>
@@ -91,7 +92,7 @@ const Header: React.FC<{
               onClick={handleCopy}
               title="Copy Address"
               >
-                <img src={CopyIcon} alt="copy" className="w-4 h-4 text-gray-600" />
+                <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
               </button>
             </MessageTooltip>
             <MessageTooltip content={'Disconnect'}>
@@ -99,18 +100,18 @@ const Header: React.FC<{
                 onClick={disconnect}
                 title="Disconnect"
               >
-                <img src={LogoutIcon} alt="logout" className="w-4 h-4 text-gray-600" />
+                <SvgIcon src={LogoutIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
               </button>
             </MessageTooltip>
           </>
         }
-        {mode === "popup" && 
+        {mode === "popup" &&
           <MessageTooltip content={'Sidebar'}>
             <button
               onClick={onOpenSidePanel}
               title="Open Sidebar"
             >
-              <img src={SidebarIcon} alt="sidebar" className="w-4 h-4" />
+              <SvgIcon src={SidebarIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
             </button>
           </MessageTooltip>
         }

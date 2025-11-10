@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState } from "react"
 import { loadState, watchState, type AppState } from "../../lib/storage"
 import X402Item from "./X402Item"
 import X402Popup from "./X402Popup"
-import RefreshIcon from "~/src/assets/icons/refresh.svg"
+import { SvgIcon } from "~src/components/SvgIcon"
+import RefreshIconSrc from "~/src/assets/icons/refresh.svg"
 
 const BAZAAR_URL =
   "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources"
@@ -106,15 +107,14 @@ export default function ViewX402List() {
             <h3 className="text-base font-medium">X402 List</h3>
             <button
               onClick={() => load(true)}
-              className=""
+              className="flex items-center justify-center"
               title="刷新"
               aria-label="刷新"
               disabled={loading}
             >
-              <img
-                src={RefreshIcon}
-                alt="refresh"
-                className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+              <SvgIcon
+                src={RefreshIconSrc}
+                className={`w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors ${loading ? "animate-spin" : ""}`}
               />
             </button>
           </div>

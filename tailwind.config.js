@@ -53,7 +53,7 @@ module.exports = {
         },
         // Custom colors for Button component
         primaryColor: "hsl(var(--primary-color))",
-        primaryColorHover: "hsl(var(--primary-color-hover))",
+        primaryColorHover: "#1BE2BB",
         primaryColorLinear: "var(--primary-color-linear)",
         primaryColorLinearHover: "var(--primary-color-linear-hover)",
         primaryColorLinearActive: "var(--primary-color-linear-active)",
@@ -64,7 +64,7 @@ module.exports = {
         textColor4: "#75807B",
         disableColor: "#DFEBE7",
         borderColor: "#f2f2f2",
-        active: "hsl(var(--active))",
+        active: "#11C58F",
         error: "hsl(var(--error))",
         errorHover: "hsl(var(--error-hover))",
         errorActive: "hsl(var(--error-active))",
