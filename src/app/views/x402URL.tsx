@@ -173,7 +173,7 @@ export const X402URL: React.FC = () => {
           <DrawerHeader className="flex justify-between items-center">
             <DrawerTitle>Enter x402 URL</DrawerTitle>
             <DrawerClose className="p-1 hover:bg-gray-100 rounded transition-colors">
-              <SvgIcon src={CloseIconSrc} className="w-6 h-6" />
+              <SvgIcon src={CloseIconSrc} className="min-w-6 h-6" />
             </DrawerClose>
           </DrawerHeader>
           <div className="px-3">

@@ -64,7 +64,7 @@ const X402Popup: React.FC<Props> = ({ item, onClose }) => {
             {resourceUrl}
           </DrawerTitle>
           <DrawerClose className="p-1 hover:bg-gray-100 rounded transition-colors">
-            <img src={CloseIcon} alt="close" className="w-6 h-6" />
+            <img src={CloseIcon} alt="close" className="min-w-6 h-6" />
           </DrawerClose>
         </DrawerHeader>
 

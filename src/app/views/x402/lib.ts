@@ -21,6 +21,16 @@ import {
 } from "x402/client"
 
 import { decodeXPaymentResponse } from "x402/shared"
+import type { Hex } from "../../lib/signer"
+
+const NETWORK_TO_CHAIN_ID: Record<string, Hex> = {
+  "base": "0x2105",           // 8453
+  "base-sepolia": "0x14a34"   // 84532
+}
+
+function getChainId(network: string): Hex | null {
+  return NETWORK_TO_CHAIN_ID[network.toLowerCase()] || null
+}
 
 // ====== Step 1: 获取并解析 Payment Requirements ======
 
@@ -133,7 +143,18 @@ export async function buildXPaymentHeader(params: {
   config?: X402Config
 }): Promise<string> {
   const { wallet, x402Version, requirement, config } = params
-  await wallet.switchChain('0x2105')
+  const network = requirement.network as string
+  const chainId = getChainId(network)
+
+  if (!chainId) {
+    throw new Error(`Unsupported network: ${network}. Only 'base' and 'base-sepolia' are supported.`)
+  }
+
+  try {
+    await wallet.switchChain(chainId)
+  } catch (error: any) {
+    throw new Error(`Failed to switch to ${network}: ${error.message}`)
+  }
 
   const header = await createPaymentHeader(wallet, x402Version, requirement, config)
   return header

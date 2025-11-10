@@ -67,18 +67,54 @@ export class ExtensionSigner {
       sendToActiveTab({ type: "MM_SWITCH_CHAIN", chainId }),
       20000
     )
-    if (r?.error && /4902/.test(String(r.error))) {
-      // 未添加该链，尝试添加
-      if (!addParams) throw new Error(r.error)
-      const ar = await withTimeout<any>(
-        sendToActiveTab({ type: "MM_ADD_CHAIN", params: addParams }),
-        30000
-      )
-      if (ar?.error) throw new Error(ar.error)
-    } else if (r?.error) {
-      throw new Error(r.error)
+    // 检查是否有错误
+    if (r?.error) {
+
+      if (/Unrecognized chain ID/.test(String(r.error))) {
+        const params = addParams || this._getDefaultAddParams(chainId)
+        if (!params) {
+          throw new Error(String(r.error))
+        }
+
+        const ar = await withTimeout<any>(
+          sendToActiveTab({ type: "MM_ADD_CHAIN", params }),
+          30000
+        )
+        if (ar?.error) {
+          const addErrorMsg = typeof ar.error === 'object' ? ar.error.message : ar.error
+          throw new Error(addErrorMsg || String(ar.error))
+        }
+      } else {
+        throw new Error(String(r.error))
+      }
     }
+
     this._chainId = chainId
+  }
+
+  /** 根据 chainId 获取默认的添加链参数 */
+  private _getDefaultAddParams(chainId: Hex): AddChainParams | null {
+    const id = chainId.toLowerCase()
+    switch (id) {
+      case "0x2105": // Base mainnet (8453)
+        return {
+          chainId: "0x2105",
+          chainName: "Base",
+          nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+          rpcUrls: ["https://mainnet.base.org"],
+          blockExplorerUrls: ["https://basescan.org"]
+        }
+      case "0x14a34": // Base Sepolia (84532)
+        return {
+          chainId: "0x14a34",
+          chainName: "Base Sepolia",
+          nativeCurrency: { name: "Sepolia Ether", symbol: "ETH", decimals: 18 },
+          rpcUrls: ["https://sepolia.base.org"],
+          blockExplorerUrls: ["https://sepolia.basescan.org"]
+        }
+      default:
+        return null
+    }
   }
 
   /** personal_sign（EOA 原文签名） */
@@ -125,6 +161,7 @@ export class ExtensionSigner {
   inferNetworkFromWallet():
     | "ethereum"
     | "base"
+    | "base-sepolia"
     | "polygon"
     | "arbitrum"
     | "optimism"
@@ -133,8 +170,10 @@ export class ExtensionSigner {
     switch (id) {
       case "0x1":
         return "ethereum"
-      case "0x2105": // Base mainnet
+      case "0x2105": // Base mainnet (8453)
         return "base"
+      case "0x14a34": // Base Sepolia (84532)
+        return "base-sepolia"
       case "0x89":
         return "polygon"
       case "0xa4b1":
