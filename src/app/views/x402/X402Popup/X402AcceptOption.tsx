@@ -35,6 +35,12 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
     window.open(url)
   }
 
+  const getDomainUrl = (networkId: string) => {
+    if (networkId === 'base') {
+      return 'https://basescan.org'
+    }
+    return 'https://sepolia.basescan.org'
+  }
   return (
     <div
       role="button"
@@ -61,7 +67,7 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
           <div
             className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1 text-right"
             title={asset}
-            onClick={() => openUrl(`https://basescan.org/token/${asset}`)}
+            onClick={() => openUrl(`${getDomainUrl(network)}/token/${asset}`)}
           >
             {asset}
           </div>
@@ -70,7 +76,7 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
           <div className="text-xs text-textColor4 min-w-[104px]">Pay to</div>
           <div
             className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1 text-right"
-            onClick={() => openUrl(`https://basescan.org/address/${payTo}`)}
+            onClick={() => openUrl(`${getDomainUrl(network)}/address/${payTo}`)}
           >{payTo}</div>
         </div>
       </div>
