@@ -3,6 +3,7 @@ import { useWallet } from "../../../contexts/WalletContext"
 import X402AcceptOption from "./X402AcceptOption"
 import { buildXPaymentHeader } from "../lib"
 import { Button } from "~src/components/Button"
+import { ConnectMetamaskButton } from "~src/components/ConnectMetamask"
 
 // 根据 accept 输出 schema 推导方法
 function deriveInitByAccept(acc: any): RequestInit {
@@ -73,16 +74,19 @@ const Step1: React.FC<Props> = ({ item, onSelected }) => {
 
       {/* Footer */}
       <div className="mt-6 px-0 border-borderColor flex items-center justify-end">
-        <Button
-          className="w-full"
-          variant="primary"
-          size="lg"
-          onClick={onProceed}
-          disabled={!canProceed}
-          loading={signing}
-        >
-          {signing ? 'Signing' : 'Confirm'}
-        </Button>
+        {
+          connected ?
+            <Button
+              className="w-full"
+              variant="primary"
+              size="lg"
+              onClick={onProceed}
+              disabled={!canProceed}
+              loading={signing}
+            >
+              {signing ? 'Signing' : 'Confirm'}
+            </Button> : <ConnectMetamaskButton className="w-full" size="lg" />
+        }
       </div>
     </div>
   )
