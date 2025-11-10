@@ -31,6 +31,9 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
   const scheme = accept?.scheme
   const amount6 = formatMaxAmount6(accept?.maxAmountRequired)
   const payTo = accept?.payTo ?? "-"
+  const openUrl = (url: string) => {
+    window.open(url)
+  }
 
   return (
     <div
@@ -54,11 +57,20 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
         </div>
         <div className="flex justify-between">
           <div className="text-xs text-textColor4 min-w-[104px]">Asset</div>
-          <div className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1" title={asset}>{asset}</div>
+          <div
+            className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1"
+            title={asset}
+            onClick={() => openUrl(`https://basescan.org/token/${asset}`)}
+          >
+            {asset}
+          </div>
         </div>
         <div className="flex justify-between">
           <div className="text-xs text-textColor4 min-w-[104px]">Pay to</div>
-          <div className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1">{payTo}</div>
+          <div
+            className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1"
+            onClick={() => openUrl(`https://basescan.org/address/${payTo}`)}
+          >{payTo}</div>
         </div>
       </div>
     </div>
