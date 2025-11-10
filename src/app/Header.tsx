@@ -1,5 +1,5 @@
 // src/app/Header.tsx
-import React, { useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import { useWallet } from "./contexts/WalletContext"
 import { Button } from "~src/components/Button"
 import { SvgIcon } from "~src/components/SvgIcon"
@@ -20,7 +20,7 @@ const Header: React.FC<{
   mode: "popup" | "sidepanel"
 }> = ({ mode }) => {
   const { booting, connecting, connected, address, connect, disconnect } = useWallet()
-
+  const [copied, setCopied] = useState(false);
   const onOpenSidePanel = async () => {
     if (mode !== "popup") return
     try {
@@ -54,10 +54,15 @@ const Header: React.FC<{
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(address || "")
+      setCopied(true)
+      setTimeout(() => {
+        setCopied(false)
+      }, 1000);
     } catch (e) {
       console.error("复制失败：", e)
     }
   }
+
 
   const buttonText = useMemo(() => {
     if (booting) return "Loading..."
@@ -87,7 +92,7 @@ const Header: React.FC<{
       <div className="flex items-center gap-4">
         {
           connected && <>
-            <MessageTooltip content={'Copy'}>
+            <MessageTooltip content={copied ? 'Copied' : 'Copy'}>
               <button
               onClick={handleCopy}
               title="Copy Address"

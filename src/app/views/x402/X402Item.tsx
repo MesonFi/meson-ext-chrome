@@ -77,7 +77,7 @@ const X402Item: React.FC<Props> = ({ item, onClick, maxMonth = 0 }) => {
         <div className="text-sm font-medium truncate" title={resource}>
           {resource}
         </div>
-        <span className="text-xs truncate text-textColor3">
+        <span className="text-xs text-textColor3 shrink-0">
           {formatRelativeFromDate(updated)}
         </span>
       </div>
@@ -112,7 +112,7 @@ const X402Item: React.FC<Props> = ({ item, onClick, maxMonth = 0 }) => {
           </div>
         </div>
         <div className="flex flex-col min-w-[70px]">
-          <div className="text-xs text-textColor4">
+          <div className="text-xs text-textColor4 text-right">
             Succ. Rate
           </div>
           <div className="font-medium text-sm text-textColor1 text-right">{formatPercent(success, 0)}</div>
