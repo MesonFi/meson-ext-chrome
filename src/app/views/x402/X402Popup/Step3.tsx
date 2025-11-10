@@ -11,7 +11,7 @@ const Step3: React.FC<Props> = ({ finalText, decodedPaymentResp }) => {
       {decodedPaymentResp && (
         <div>
           <div className="text-sm text-textColor1">
-            X-PAYMENT-RESPONSE（解析）
+            X-Payment Response
           </div>
           <pre className="text-xs bg-card p-2 rounded-lg whitespace-pre-wrap break-words">
             {JSON.stringify(decodedPaymentResp, null, 2)}

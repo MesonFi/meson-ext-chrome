@@ -115,13 +115,13 @@ export const X402URL: React.FC = () => {
           Enter x402 URL
         </Button>
         <DrawerContent>
-          <DrawerHeader className="flex justify-between items-center border-b border-borderColor">
+          <DrawerHeader className="flex justify-between items-center">
             <DrawerTitle>Enter x402 URL</DrawerTitle>
             <DrawerClose className="p-1 hover:bg-gray-100 rounded transition-colors">
               <SvgIcon src={CloseIconSrc} className="w-6 h-6" />
             </DrawerClose>
           </DrawerHeader>
-          <div className="px-3 pt-4">
+          <div className="px-3">
             <Input
               type="text"
               size="sm"

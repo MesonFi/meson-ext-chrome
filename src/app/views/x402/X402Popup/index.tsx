@@ -59,7 +59,7 @@ const X402Popup: React.FC<Props> = ({ item, onClose }) => {
   return (
     <Drawer open={true} onOpenChange={(open) => { if (!open) onClose() }}>
       <DrawerContent>
-        <DrawerHeader className="flex justify-between border-b border-borderColor items-start">
+        <DrawerHeader className="flex justify-between border-borderColor items-start">
           <DrawerTitle className="break-all pr-8 text-left font-normal text-sm">
             {resourceUrl}
           </DrawerTitle>

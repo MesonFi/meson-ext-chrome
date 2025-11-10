@@ -108,7 +108,7 @@ const X402Item: React.FC<Props> = ({ item, onClick, maxMonth = 0 }) => {
             Payment
           </div>
           <div className="font-medium text-sm text-textColor1 flex items-center gap-1">
-            {['base', 'base-sepolia'].includes(network) && <SvgIcon src={BaseIconSrc} />}{capitalize(network)} {maxAmountRequired} <span className="text-textColor4">{tokenName}</span>
+            {['base', 'base-sepolia'].includes(network) && <SvgIcon src={BaseIconSrc} />}{capitalize(network)} <div className="w-[1px] h-3 bg-[#E4E3E3]"/>{maxAmountRequired} <span className="text-textColor4">{tokenName}</span>
           </div>
         </div>
         <div className="flex flex-col min-w-[70px]">

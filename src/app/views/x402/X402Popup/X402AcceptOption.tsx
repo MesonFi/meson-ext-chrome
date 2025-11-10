@@ -48,17 +48,18 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
         <div className="flex justify-between">
           <div className="text-xs text-textColor4">Payment</div>
           <div className="flex items-center">
-            <span className="inline-flex items-center h-5 px-2 rounded bg-slate-100 text-slate-800 gap-2" title={network}>
+            <div className="inline-flex items-center h-5 pr-1 rounded bg-slate-100 text-textColor1 gap-1" title={network}>
               {['base', 'base-sepolia'].includes(network) && <SvgIcon src={BaseIconSrc} />}{capitalize(network)}
-            </span>
+            </div>
+            <div className="w-[1px] h-3 bg-[#E4E3E3] mr-1"/>
             {amount6}
-            {extraName && <span className="text-gray-500 ml-1">{extraName}</span>}
+            {extraName && <span className="text-textColor4 ml-1">{extraName}</span>}
           </div>
         </div>
         <div className="flex justify-between">
           <div className="text-xs text-textColor4 min-w-[104px]">Asset</div>
           <div
-            className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1"
+            className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1 text-right"
             title={asset}
             onClick={() => openUrl(`https://basescan.org/token/${asset}`)}
           >
@@ -68,7 +69,7 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
         <div className="flex justify-between">
           <div className="text-xs text-textColor4 min-w-[104px]">Pay to</div>
           <div
-            className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1"
+            className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1 text-right"
             onClick={() => openUrl(`https://basescan.org/address/${payTo}`)}
           >{payTo}</div>
         </div>

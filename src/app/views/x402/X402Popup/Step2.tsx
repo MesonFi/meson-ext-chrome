@@ -38,7 +38,7 @@ const Step2: React.FC<Props> = ({
       {err && <div className="text-xs text-red-600 mb-3">错误：{err}</div>}
 
       <div className="">
-        <div className="text-textColor1 text-sm mb-1">X-PAYMENT Header</div>
+        <div className="text-textColor1 text-sm mb-1">X-PaymentHeader</div>
         <div className="text-xs bg-card p-2 rounded-lg whitespace-pre-wrap break-words h-[172px] overflow-y-scroll scrollbar-hide">
           {xPaymentHeader}
         </div>
