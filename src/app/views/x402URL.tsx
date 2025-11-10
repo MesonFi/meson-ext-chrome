@@ -11,7 +11,10 @@ import {
 } from "~src/components/ui/drawer"
 import { SvgIcon } from "~src/components/SvgIcon"
 import CloseIconSrc from "~src/assets/icons/X.svg"
+import PasteIconSrc from "~src/assets/icons/paste.svg"
 import { Input } from "~src/components/ui/input"
+import { MessageTooltip } from "~src/components/MessageTooltip"
+import X402Popup from "./x402/X402Popup"
 
 // URL 验证函数
 function validateURL(url: string): string | null {
@@ -43,6 +46,7 @@ export const X402URL: React.FC = () => {
   const [url, setUrl] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showItem, setShowItem] = useState<any | null>(null)
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -79,11 +83,15 @@ export const X402URL: React.FC = () => {
       if (response.status === 402) {
         const body = await response.json()
         console.log("402 Response body:", body)
+        setShowItem({
+          ...body,
+          resource: url
+        })
         setOpen(false)
         setUrl("")
         setError(null)
       } else {
-        setError("URL must be a 402 url.")
+        setError("URL must be a x402 url.")
       }
     } catch (e) {
       setLoading(false)
@@ -98,6 +106,53 @@ export const X402URL: React.FC = () => {
       // 关闭时重置状态
       setUrl("")
       setError(null)
+    }
+  }
+
+  const handlePaste = async () => {
+    try {
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        try {
+          const text = await navigator.clipboard.readText()
+          setUrl(text)
+          if (text.trim()) {
+            const validationError = validateURL(text)
+            setError(validationError)
+          } else {
+            setError(null)
+          }
+          return
+        } catch (clipboardError) {
+          console.warn("Clipboard API failed, trying fallback method:", clipboardError)
+        }
+      }
+
+      const textarea = document.createElement('textarea')
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.focus()
+
+      const success = document.execCommand('paste')
+      const text = textarea.value
+      document.body.removeChild(textarea)
+
+      if (success && text) {
+        setUrl(text)
+
+        // 验证粘贴的内容
+        if (text.trim()) {
+          const validationError = validateURL(text)
+          setError(validationError)
+        } else {
+          setError(null)
+        }
+      } else {
+        throw new Error("Paste operation failed")
+      }
+    } catch (e) {
+      console.error("Failed to paste:", e)
+      setError("Failed to paste. Please use Ctrl+V or Cmd+V to paste.")
     }
   }
 
@@ -129,6 +184,11 @@ export const X402URL: React.FC = () => {
               onChange={handleUrlChange}
               placeholder="Please provide a URL supports x402"
               variant={error ? "error" : "default"}
+              suffix={
+                <MessageTooltip content={'Paste'}>
+                  <SvgIcon src={PasteIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover cursor-pointer" onClick={handlePaste} />
+                </MessageTooltip>
+              }
             />
             {error && (
               <div className="mt-2 text-xs text-error">
@@ -139,16 +199,23 @@ export const X402URL: React.FC = () => {
           <DrawerFooter className="pt-6">
             <Button
               variant="primary"
-              disabled={!isValid}
+              disabled={!isValid || loading}
               size="lg"
               className="w-full"
               onClick={handleConfirm}
+              loading={loading}
             >
               Confirm
             </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+      {showItem && (
+        <X402Popup
+          item={showItem}
+          onClose={() => setShowItem(null)}
+        />
+      )}
     </div>
   )
 }

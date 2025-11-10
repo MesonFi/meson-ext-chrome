@@ -12,7 +12,8 @@
       "storage",
       "tabs",
       "scripting",
-      "activeTab"
+      "activeTab",
+      "clipboardRead"
     ],
     "host_permissions": [
       "https://*/*",

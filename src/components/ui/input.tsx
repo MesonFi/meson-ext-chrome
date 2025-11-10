@@ -84,6 +84,7 @@ const Input = React.forwardRef<
           type={type}
           className={cn(
             'w-full text-textColor1 [&::-webkit-inner-spin-button]:appearance-none inputGroup placeholder:text-textColor3 focus:outline-none focus-visible:outline-none',
+            suffix && 'pr-6'
           )}
           ref={ref}
           {...props}
