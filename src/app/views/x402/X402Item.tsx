@@ -58,7 +58,6 @@ function formatRelativeFromDate(d?: Date | null) {
 
 const X402Item: React.FC<Props> = ({ item, onClick, maxMonth = 0 }) => {
   const resource = stripScheme(item?.resource)
-  console.log(resource, item)
   const accpet = item?.accepts?.[0] || {}
   const score = item?.metadata?.confidence?.overallScore
   const mth = monthTx(item?.metadata)

@@ -71,7 +71,7 @@ const X402Popup: React.FC<Props> = ({ item, onClose }) => {
         {renderStepIndicator()}
 
         {/* 内容区域，底部按钮在各 Step 内部 */}
-        <div className="px-3 pb-3 pt-1 max-h-[calc(80vh-120px)] overflow-y-auto text-[13px]">
+        <div className="px-3 pb-3 pt-1 max-h-[calc(80vh-120px)] overflow-auto text-[13px] scrollbar-hide">
           {step === 1 && (
             <Step1
               item={item}

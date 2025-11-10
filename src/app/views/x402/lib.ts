@@ -122,6 +122,24 @@ export function pickPaymentRequirement(
   return selector(requirements, network as any, scheme)
 }
 
+function wrapWalletWithEIP712Domain(wallet: any) {
+  const originalSignTypedData = wallet.signTypedData.bind(wallet)
+  Object.assign(wallet, {
+    signTypedData: async (data: any) => {
+      if (data.primaryType === "TransferWithAuthorization" && data.types && !data.types.EIP712Domain) {
+        data.types.EIP712Domain = [
+          { name: "name", type: "string" },
+          { name: "version", type: "string" },
+          { name: "chainId", type: "uint256" },
+          { name: "verifyingContract", type: "address" }
+        ]
+      }
+      return originalSignTypedData(data)
+    }
+  })
+  return wallet
+}
+
 /**
  * 生成支付头（签名）（仅使用官方 createPaymentHeader）
  * - 不发送请求，只返回 Header 字符串，交由调用方在 Step 3 使用
@@ -134,7 +152,9 @@ export async function buildXPaymentHeader(params: {
 }): Promise<string> {
   const { wallet, x402Version, requirement, config } = params
   await wallet.switchChain('0x2105')
-  const header = await createPaymentHeader(wallet, x402Version, requirement, config)
+
+  const wrappedWallet = wrapWalletWithEIP712Domain(wallet)
+  const header = await createPaymentHeader(wrappedWallet, x402Version, requirement, config)
   return header
 }
 

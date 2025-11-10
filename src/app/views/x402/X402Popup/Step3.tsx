@@ -7,21 +7,21 @@ type Props = {
 
 const Step3: React.FC<Props> = ({ finalText, decodedPaymentResp }) => {
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 h-full pt-2">
       {decodedPaymentResp && (
         <div>
-          <div className="text-[11px] text-gray-500 mb-1">
+          <div className="text-sm text-textColor1">
             X-PAYMENT-RESPONSE（解析）
           </div>
-          <pre className="text-[11px] bg-slate-50 p-2 rounded whitespace-pre-wrap break-words">
+          <pre className="text-xs bg-card p-2 rounded-lg whitespace-pre-wrap break-words">
             {JSON.stringify(decodedPaymentResp, null, 2)}
           </pre>
         </div>
       )}
 
       <div>
-        <div className="text-[11px] text-gray-500 mb-1">响应文本</div>
-        <pre className="text-[11px] bg-slate-50 p-2 rounded whitespace-pre-wrap break-words">
+        <div className="text-sm text-textColor1">Response Body</div>
+        <pre className="text-xs bg-card p-2 rounded-lg whitespace-pre-wrap break-words">
           {finalText || "(empty)"}
         </pre>
       </div>
