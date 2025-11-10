@@ -126,14 +126,12 @@ function wrapWalletWithEIP712Domain(wallet: any) {
   const originalSignTypedData = wallet.signTypedData.bind(wallet)
   Object.assign(wallet, {
     signTypedData: async (data: any) => {
-      if (data.primaryType === "TransferWithAuthorization" && data.types && !data.types.EIP712Domain) {
-        data.types.EIP712Domain = [
-          { name: "name", type: "string" },
-          { name: "version", type: "string" },
-          { name: "chainId", type: "uint256" },
-          { name: "verifyingContract", type: "address" }
-        ]
-      }
+      data.types.EIP712Domain = [
+        { name: "name", type: "string" },
+        { name: "version", type: "string" },
+        { name: "chainId", type: "uint256" },
+        { name: "verifyingContract", type: "address" }
+      ]
       return originalSignTypedData(data)
     }
   })

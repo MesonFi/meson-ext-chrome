@@ -8,6 +8,7 @@ import MetaMaskIcon from "../assets/icons/metamask.svg"
 import CopyIcon from "../assets/icons/copy.svg"
 import LogoutIcon from "../assets/icons/logout.svg"
 import { cn } from "~lib/utils"
+import { MessageTooltip } from "~src/components/MessageTooltip"
 
 function shortAddr(addr?: string) {
   if (!addr) return ""
@@ -64,7 +65,7 @@ const Header: React.FC<{
   }, [booting, connecting])
 
   return (
-    <div className={cn("border-b border-borderColor flex items-center justify-between px-3 gap-3", connected ? 'py-[18px]' : 'py-3')}>
+    <div className={cn("border-b border-borderColor flex items-center justify-between gap-3 px-3", connected ? 'py-[18px]' : 'py-3')}>
       {!connected ? (
         <Button
           variant="primary"
@@ -75,7 +76,7 @@ const Header: React.FC<{
           {buttonText}
         </Button>
       ) : (
-        <div className="flex-1 flex items-center gap-2 rounded-lg px-3">
+        <div className="flex-1 flex items-center gap-2 rounded-lg">
           <img src={MetaMaskIcon} alt="metamask" className="w-6 h-6" />
           <span className="text-sm font-medium text-gray-900 flex-1 truncate" title={address}>
             {shortAddr(address)}
@@ -85,35 +86,34 @@ const Header: React.FC<{
       <div className="flex items-center gap-4">
         {
           connected && <>
-            <button
+            <MessageTooltip content={'Copy'}>
+              <button
               onClick={handleCopy}
               title="Copy Address"
-            >
-              <img src={CopyIcon} alt="copy" className="w-4 h-4 text-gray-600" />
-            </button>
-            <button
-              onClick={disconnect}
-              title="Disconnect"
-            >
-              <img src={LogoutIcon} alt="logout" className="w-4 h-4 text-gray-600" />
-            </button>
+              >
+                <img src={CopyIcon} alt="copy" className="w-4 h-4 text-gray-600" />
+              </button>
+            </MessageTooltip>
+            <MessageTooltip content={'Disconnect'}>
+              <button
+                onClick={disconnect}
+                title="Disconnect"
+              >
+                <img src={LogoutIcon} alt="logout" className="w-4 h-4 text-gray-600" />
+              </button>
+            </MessageTooltip>
           </>
         }
-        {mode === "popup" ? (
-          <button
-            onClick={onOpenSidePanel}
-            title="Open Sidebar"
-          >
-            <img src={SidebarIcon} alt="sidebar" className="w-4 h-4" />
-          </button>
-        ) : (
-          <button
-            onClick={onCloseSidePanel}
-            title="Close Sidebar"
-          >
-            <img src={CloseIcon} alt="close" className="w-4 h-4" />
-          </button>
-        )}
+        {mode === "popup" && 
+          <MessageTooltip content={'Sidebar'}>
+            <button
+              onClick={onOpenSidePanel}
+              title="Open Sidebar"
+            >
+              <img src={SidebarIcon} alt="sidebar" className="w-4 h-4" />
+            </button>
+          </MessageTooltip>
+        }
       </div>
     </div>
   )

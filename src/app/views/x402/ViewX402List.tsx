@@ -121,14 +121,14 @@ export default function ViewX402List() {
           <div className="flex items-center gap-2 text-xs">
             <div className="flex rounded-md overflow-hidden border border-gray-200">
               <button
-                className={`px-2 py-0.5 ${sortKey === "score" ? "bg-card border-r border-borderColor" : "bg-white text-textColor2"}`}
+                className={`px-2 py-0.5 ${sortKey === "score" ? "bg-card border-r border-borderColor" : "bg-white text-textColor2 hover:text-textColor1"}`}
                 onClick={() => setSortKey("score")}
                 title="Score"
               >
                 Score
               </button>
               <button
-                className={`px-2 py-1 ${sortKey === "month" ? "bg-card border-l border-borderColor" : "bg-white text-textColor2"}`}
+                className={`px-2 py-1 ${sortKey === "month" ? "bg-card border-l border-borderColor" : "bg-white text-textColor2 hover:text-textColor1"}`}
                 onClick={() => setSortKey("month")}
                 title="Monthly Tx"
               >
