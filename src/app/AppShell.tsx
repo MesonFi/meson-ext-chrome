@@ -16,7 +16,7 @@ const AppShell: React.FC<{ mode: Mode }> = ({ mode }) => {
   const containerClass = useMemo(
     () =>
       mode === "popup"
-        ? "w-[360px] h-[560px] text-gray-900 flex flex-col"
+        ? "w-[360px] h-[600px] text-gray-900 flex flex-col"
         : "w-full h-screen text-gray-900 flex flex-col",
     [mode]
   )
