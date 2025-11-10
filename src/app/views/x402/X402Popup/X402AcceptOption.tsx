@@ -1,4 +1,7 @@
 import React from "react"
+import { capitalize } from "~src/app/lib/utils"
+import SvgIcon from "~src/components/SvgIcon"
+import BaseIconSrc from "~/src/assets/icons/base.svg"
 
 type Props = {
   accept: any
@@ -41,9 +44,9 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
           <div className="text-xs text-textColor4">Payment</div>
-          <div className="truncate">
-            <span className="inline-flex items-center h-5 px-2 rounded bg-slate-100 text-slate-800" title={network}>
-              {network}
+          <div className="flex items-center">
+            <span className="inline-flex items-center h-5 px-2 rounded bg-slate-100 text-slate-800 gap-2" title={network}>
+              {['base', 'base-sepolia'].includes(network) && <SvgIcon src={BaseIconSrc} />}{capitalize(network)}
             </span>
             {amount6}
             {extraName && <span className="text-gray-500 ml-1">{extraName}</span>}

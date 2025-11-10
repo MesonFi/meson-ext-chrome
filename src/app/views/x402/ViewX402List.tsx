@@ -4,6 +4,7 @@ import X402Item from "./X402Item"
 import X402Popup from "./X402Popup"
 import { SvgIcon } from "~src/components/SvgIcon"
 import RefreshIconSrc from "~/src/assets/icons/refresh.svg"
+import Loading from "~src/components/Loading"
 
 const BAZAAR_URL =
   "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources"
@@ -139,8 +140,17 @@ export default function ViewX402List() {
         </div>
       </div>
       <div className="flex-1 overflow-y-auto scrollbar-hide">
-        {loading && <div className="text-sm text-gray-600">加载中...</div>}
-        {error && <div className="text-sm text-red-600">加载失败：{error}</div>}
+        {loading && <div className="text-sm text-gray-600 flex flex-col gap-6 px-3">
+            {new Array(10).fill(1).map(i => {
+              return (
+                <Loading className="w-full h-[128px] bg-card" />
+              )
+            })}
+          </div>
+        }
+        {error && <div className="text-sm text-textColor4 w-full flex justify-center mt-24">
+          Loading failed: {error}
+          </div>}
 
         {!loading && !error && (
           <div className="divide-y divide-borderColor pb-3">

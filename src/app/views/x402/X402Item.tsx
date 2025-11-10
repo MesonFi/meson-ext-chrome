@@ -1,4 +1,7 @@
 import React from "react"
+import SvgIcon from "~src/components/SvgIcon"
+import BaseIconSrc from "~/src/assets/icons/base.svg"
+import { capitalize } from "~src/app/lib/utils"
 
 type Props = {
   item: any
@@ -104,8 +107,8 @@ const X402Item: React.FC<Props> = ({ item, onClick, maxMonth = 0 }) => {
           <div className="text-xs text-textColor4">
             Payment
           </div>
-          <div className="font-medium text-sm text-textColor1">
-            {network} {maxAmountRequired} <span className="text-textColor4">{tokenName}</span>
+          <div className="font-medium text-sm text-textColor1 flex items-center gap-1">
+            {['base', 'base-sepolia'].includes(network) && <SvgIcon src={BaseIconSrc} />}{capitalize(network)} {maxAmountRequired} <span className="text-textColor4">{tokenName}</span>
           </div>
         </div>
         <div className="flex flex-col min-w-[70px]">

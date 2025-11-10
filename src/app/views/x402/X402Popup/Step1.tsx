@@ -18,7 +18,7 @@ type Props = {
 
 const Step1: React.FC<Props> = ({ item, onSelected }) => {
   const { connected, signer } = useWallet()
-  const [selectedIdx, setSelectedIdx] = useState<number>(-1)
+  const [selectedIdx, setSelectedIdx] = useState<number>(0)
   const [signing, setSigning] = useState(false)
   const [err, setErr] = useState<string>("")
 
