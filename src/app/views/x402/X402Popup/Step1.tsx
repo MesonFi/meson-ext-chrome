@@ -66,10 +66,10 @@ const Step1: React.FC<Props> = ({ item, onSelected }) => {
       ))}
 
       {accepts.length === 0 && (
-        <div className="text-xs text-gray-600">没有可用的支付选项。</div>
+        <div className="text-xs text-gray-600">No accepts.</div>
       )}
 
-      {err && <div className="text-xs text-red-600">{err}</div>}
+      {err && <div className="text-xs text-error mt-3">{err}</div>}
 
       {/* Footer */}
       <div className="mt-6 px-0 border-borderColor flex items-center justify-end">

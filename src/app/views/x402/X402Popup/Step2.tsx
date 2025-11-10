@@ -35,7 +35,7 @@ const Step2: React.FC<Props> = ({
 
   return (
     <div className="">
-      {err && <div className="text-xs text-red-600 mb-3">错误：{err}</div>}
+      {err && <div className="text-xs text-error mb-3">错误：{err}</div>}
 
       <div className="">
         <div className="text-textColor1 text-sm mb-1">X-PaymentHeader</div>

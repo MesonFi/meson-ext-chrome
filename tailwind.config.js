@@ -65,7 +65,7 @@ module.exports = {
         disableColor: "#DFEBE7",
         borderColor: "#f2f2f2",
         active: "#11C58F",
-        error: "hsl(var(--error))",
+        error: "#FD5050",
         errorHover: "hsl(var(--error-hover))",
         errorActive: "hsl(var(--error-active))",
         card: "#F2F9F7",
