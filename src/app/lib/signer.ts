@@ -96,6 +96,12 @@ export class ExtensionSigner {
   async signTypedData(typedDataJson: any): Promise<Hex> {
     const addr = this._address ?? (await this.getAddress())
     typedDataJson.account = addr
+    typedDataJson.types.EIP712Domain = [
+      { name: "name", type: "string" },
+      { name: "version", type: "string" },
+      { name: "chainId", type: "uint256" },
+      { name: "verifyingContract", type: "address" }
+    ]
     console.log(typedDataJson)
     const resp = await withTimeout<any>(
       sendToActiveTab({ type: "MM_SIGN_TYPED_DATA_V4", from: addr, data: JSON.stringify(typedDataJson) }),
