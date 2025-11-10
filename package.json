@@ -1,13 +1,13 @@
 {
   "name": "meson-ext-chrome",
-  "displayName": "Meson",
-  "version": "0.0.1",
-  "description": "Meson Chrome Extension",
+  "displayName": "Meson x402",
+  "version": "0.1.0",
+  "description": "Discover and call x402 endpoints — the essential tool for x402",
   "author": "Phil",
   "manifest": {
     "manifest_version": 3,
-    "name": "Meson",
-    "version": "1.0.0",
+    "name": "Meson x402",
+    "version": "0.1.0",
     "permissions": [
       "storage",
       "tabs",
