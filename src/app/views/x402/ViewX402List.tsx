@@ -146,7 +146,7 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="px-3 pt-3 mb-3">
+      <div className="px-3 pt-4 mb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <h3 className="text-base font-medium">X402 List</h3>
@@ -164,7 +164,7 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
             </button>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <div className="flex rounded-md overflow-hidden border border-gray-200">
+            <div className="flex rounded-md overflow-hidden border border-borderColor">
               <button
                 className={`px-2 py-0.5 ${sortKey === "score" ? "bg-card border-r border-borderColor" : "bg-white text-textColor2 hover:text-textColor1"}`}
                 onClick={() => setSortKey("score")}

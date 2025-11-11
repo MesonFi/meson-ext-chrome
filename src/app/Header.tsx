@@ -38,6 +38,7 @@ const Header: React.FC<{
               <button
                 onClick={onOpenSidePanel}
                 title="Open Sidebar"
+                className="flex items-center"
               >
                 <SvgIcon src={SidebarIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
               </button>

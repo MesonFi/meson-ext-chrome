@@ -63,7 +63,7 @@ module.exports = {
         textColor3: "#BDC7C3",
         textColor4: "#75807B",
         disableColor: "#DFEBE7",
-        borderColor: "#f2f2f2",
+        borderColor: "#DDF3EA",
         active: "#11C58F",
         warning: '#FFC700',
         error: '#FD5050',
