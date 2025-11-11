@@ -6,6 +6,7 @@ import Header from "./Header"
 import Home from "./views/Home"
 import { cn } from "~lib/utils"
 import { X402URL } from './views/x402URL'
+import { Toaster } from "~src/components/ui/sonner"
 
 type Mode = "popup" | "sidepanel"
 type View = "home" | "x402" | "options"
@@ -30,6 +31,7 @@ const AppShell: React.FC<{ mode: Mode }> = ({ mode }) => {
           <Home mode={mode} />
         </div>
         <X402URL mode={mode} />
+        <Toaster />
       </div>
     </WalletProvider>
   )
