@@ -5,11 +5,14 @@ import X402Popup from "./X402Popup"
 import { SvgIcon } from "~src/components/SvgIcon"
 import RefreshIconSrc from "~/src/assets/icons/refresh.svg"
 import Loading from "~src/components/Loading"
+import { getPendingTransaction, clearPendingTransaction } from "../../lib/transactionState"
 
 const BAZAAR_URL =
   "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources"
 
-type Props = { goBack: () => void }
+type Props = {
+  mode?: "popup" | "sidepanel"
+}
 
 function monthTx(meta?: any) {
   return (
@@ -28,7 +31,7 @@ type SortKey = "score" | "month"
 const CACHE_KEY = "x402_cache"
 const CACHE_MS = 5 * 60 * 1000
 
-export default function ViewX402List() {
+const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>("")
   const [items, setItems] = useState<any[]>([])
@@ -81,6 +84,18 @@ export default function ViewX402List() {
     }
   }
   useEffect(() => { load() }, [])
+
+  // 检查是否有待恢复的交易，自动打开 drawer
+  useEffect(() => {
+    const checkPendingTransaction = async () => {
+      const savedState = await getPendingTransaction()
+      if (savedState && savedState.item) {
+        console.log("[ViewX402List] Auto-restoring pending transaction:", savedState)
+        setShowItem(savedState.item)
+      }
+    }
+    checkPendingTransaction()
+  }, [])
 
   const maxMonth = useMemo(
     () => Math.max(0, ...items.map((it) => monthTx(it?.metadata) || 0)),
@@ -169,9 +184,15 @@ export default function ViewX402List() {
       {showItem && (
         <X402Popup
           item={showItem}
-          onClose={() => setShowItem(null)}
+          mode={mode}
+          onClose={async () => {
+            await clearPendingTransaction()
+            setShowItem(null)
+          }}
         />
       )}
     </div>
   )
 }
+
+export default ViewX402List

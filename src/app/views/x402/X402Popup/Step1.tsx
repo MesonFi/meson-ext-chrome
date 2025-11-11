@@ -14,10 +14,11 @@ function deriveInitByAccept(acc: any): RequestInit {
 
 type Props = {
   item: any
+  mode?: "popup" | "sidepanel"
   onSelected: (acc: any, init: RequestInit, xPaymentHeader: string) => void
 }
 
-const Step1: React.FC<Props> = ({ item, onSelected }) => {
+const Step1: React.FC<Props> = ({ item, mode = "popup", onSelected }) => {
   const { connected, signer } = useWallet()
   const [selectedIdx, setSelectedIdx] = useState<number>(0)
   const [signing, setSigning] = useState(false)

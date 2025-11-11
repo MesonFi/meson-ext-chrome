@@ -27,9 +27,9 @@ const AppShell: React.FC<{ mode: Mode }> = ({ mode }) => {
       <div className={cn(containerClass, 'overflow-hidden')}>
         <Header mode={mode} />
         <div className="flex-1 overflow-y-auto scrollbar-hide">
-          <Home />
+          <Home mode={mode} />
         </div>
-        <X402URL />
+        <X402URL mode={mode} />
       </div>
     </WalletProvider>
   )

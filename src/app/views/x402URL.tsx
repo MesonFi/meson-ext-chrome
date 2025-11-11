@@ -15,6 +15,7 @@ import PasteIconSrc from "~src/assets/icons/paste.svg"
 import { Input } from "~src/components/ui/input"
 import { MessageTooltip } from "~src/components/MessageTooltip"
 import X402Popup from "./x402/X402Popup"
+import { clearPendingTransaction } from "../lib/transactionState"
 
 // URL 验证函数
 function validateURL(url: string): string | null {
@@ -41,7 +42,11 @@ function validateURL(url: string): string | null {
   }
 }
 
-export const X402URL: React.FC = () => {
+type X402URLProps = {
+  mode?: "popup" | "sidepanel"
+}
+
+export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
   const [open, setOpen] = useState(false)
   const [url, setUrl] = useState("")
   const [loading, setLoading] = useState(false)
@@ -213,7 +218,11 @@ export const X402URL: React.FC = () => {
       {showItem && (
         <X402Popup
           item={showItem}
-          onClose={() => setShowItem(null)}
+          mode={mode}
+          onClose={async () => {
+            await clearPendingTransaction()
+            setShowItem(null)
+          }}
         />
       )}
     </div>

@@ -3,10 +3,14 @@ import React from "react"
 import { Button } from "~src/components/Button"
 import ViewX402List from "./x402/ViewX402List"
 
-const Home: React.FC = ({ }) => {
+type Props = {
+  mode?: "popup" | "sidepanel"
+}
+
+const Home: React.FC<Props> = ({ mode = "popup" }) => {
   return (
     <div className="pt-3 space-y-2 h-full">
-      <ViewX402List />
+      <ViewX402List mode={mode} />
     </div>
   )
 }

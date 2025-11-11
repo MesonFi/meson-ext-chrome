@@ -194,3 +194,29 @@ export function decodeXPaymentResponseHeader(res: Response) {
   const raw = res.headers.get("x-payment-response")
   return raw ? decodeXPaymentResponse(raw) : null
 }
+
+/**
+ * 从 X-Payment header 中解析 validBefore 时间
+ * @param xPaymentHeader Base64 编码的 X-Payment header
+ * @returns validBefore 秒级 Unix timestamp，如果不存在则返回 null
+ */
+export function parseValidBeforeFromHeader(xPaymentHeader: string): number | null {
+  try {
+    // X-Payment header 是 base64 编码的 JSON
+    const decoded = atob(xPaymentHeader)
+    const payload = JSON.parse(decoded)
+
+    // validBefore 在 payload.payload.authorization.validBefore（秒级时间戳，字符串格式）
+    const validBefore = payload?.payload?.authorization?.validBefore
+
+    if (validBefore) {
+      // 解析为数字（秒）
+      return parseInt(validBefore, 10)
+    }
+
+    return null
+  } catch (e) {
+    console.error("Failed to parse validBefore from X-Payment header:", e)
+    return null
+  }
+}

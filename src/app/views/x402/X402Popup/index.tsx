@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Step1 from "./Step1"
 import Step2 from "./Step2"
 import Step3 from "./Step3"
@@ -11,15 +11,22 @@ import {
 } from "~src/components/ui/drawer"
 import CloseIcon from "~src/assets/icons/X.svg"
 import ArrowRightIcon from "~src/assets/icons/arrow-right.svg"
+import {
+  savePendingTransaction,
+  getPendingTransaction,
+  clearPendingTransaction
+} from "../../../lib/transactionState"
+import { parseValidBeforeFromHeader } from "../lib"
 
 type Props = {
   item: any
   onClose: () => void
+  mode?: "popup" | "sidepanel"
 }
 
 type Step = 1 | 2 | 3
 
-const X402Popup: React.FC<Props> = ({ item, onClose }) => {
+const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
   const [step, setStep] = useState<Step>(1)
 
   // 选择的 accept
@@ -35,6 +42,39 @@ const X402Popup: React.FC<Props> = ({ item, onClose }) => {
   // 最终响应数据
   const [finalText, setFinalText] = useState<string>("")
   const [decodedPaymentResp, setDecodedPaymentResp] = useState<any>(null)
+
+  // 组件挂载时尝试恢复状态
+  useEffect(() => {
+    const restoreState = async () => {
+      const savedState = await getPendingTransaction()
+
+      if (savedState && savedState.item?.resource === item?.resource) {
+        console.log("[X402Popup] Restoring saved state:", savedState)
+
+        // 恢复状态
+        setStep(savedState.step)
+
+        if (savedState.accept) {
+          setSelectedAccept(savedState.accept)
+        }
+
+        if (savedState.init) {
+          setBaseInit(savedState.init)
+        }
+
+        if (savedState.xPaymentHeader) {
+          setXPaymentHeader(savedState.xPaymentHeader)
+        }
+
+        if (savedState.response) {
+          setFinalText(JSON.stringify(savedState.response.body, null, 2))
+          // 如果有 decoded 信息也恢复
+        }
+      }
+    }
+
+    restoreState()
+  }, [item])
 
   const renderStepIndicator = () => {
     const steps = [
@@ -75,11 +115,25 @@ const X402Popup: React.FC<Props> = ({ item, onClose }) => {
           {step === 1 && (
             <Step1
               item={item}
-              onSelected={(acc, init, header) => {
+              mode={mode}
+              onSelected={async (acc, init, header) => {
                 setSelectedAccept(acc)
                 setBaseInit(init)
                 setXPaymentHeader(header)
                 setStep(2)
+
+                // 保存状态（签名后的状态）
+                const validBefore = parseValidBeforeFromHeader(header)
+                await savePendingTransaction({
+                  item,
+                  selectedAcceptIndex: item.accepts?.indexOf(acc) ?? 0,
+                  step: 2,
+                  accept: acc,
+                  init,
+                  xPaymentHeader: header,
+                  validBefore: validBefore ?? undefined, // 从凭证中解析有效期
+                  timestamp: Date.now()
+                })
               }}
             />
           )}
@@ -89,10 +143,13 @@ const X402Popup: React.FC<Props> = ({ item, onClose }) => {
               resourceUrl={resourceUrl}
               baseInit={baseInit}
               xPaymentHeader={xPaymentHeader}
-              onCompleted={(payload) => {
+              onCompleted={async (payload) => {
                 setFinalText(payload.text)
                 setDecodedPaymentResp(payload.decoded)
                 setStep(3)
+
+                // 清除保存的状态（交易完成）
+                await clearPendingTransaction()
               }}
             />
           )}
