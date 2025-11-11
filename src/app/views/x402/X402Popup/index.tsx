@@ -17,9 +17,10 @@ import {
   clearPendingTransaction
 } from "../../../lib/transactionState"
 import { parseValidBeforeFromHeader } from "../lib"
+import type { X402Item, X402Accept } from "../types"
 
 type Props = {
-  item: any
+  item: X402Item
   onClose: () => void
   mode?: "popup" | "sidepanel"
 }
@@ -30,11 +31,11 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
   const [step, setStep] = useState<Step>(1)
 
   // 选择的 accept
-  const [selectedAccept, setSelectedAccept] = useState<any>(null)
+  const [selectedAccept, setSelectedAccept] = useState<X402Accept | null>(null)
   // 支付凭证（X-PAYMENT header）
   const [xPaymentHeader, setXPaymentHeader] = useState<string>("")
   // 用于最终请求的 URL（优先 accept.resource，否则 item.resource）
-  const resourceUrl = (selectedAccept?.resource as string) || (item?.resource as string) || "-"
+  const resourceUrl = selectedAccept?.resource || item.resource || "-"
 
   // 首次请求的 init（由 accept.outputSchema.input.method 推断）
   const [baseInit, setBaseInit] = useState<RequestInit>({ method: "GET" })

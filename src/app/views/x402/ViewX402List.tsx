@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { loadState, watchState, type AppState } from "../../lib/storage"
 import X402Item from "./X402Item"
 import X402Popup from "./X402Popup"
 import { SvgIcon } from "~src/components/SvgIcon"
@@ -7,6 +6,11 @@ import RefreshIconSrc from "~/src/assets/icons/refresh.svg"
 import Loading from "~src/components/Loading"
 import { getPendingTransaction, clearPendingTransaction } from "../../lib/transactionState"
 import { toast } from "sonner"
+import type {
+  X402Item as X402ItemType,
+  X402DiscoveryResponse,
+  X402ItemMetadata
+} from "./types"
 
 const BAZAAR_URL =
   "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources"
@@ -15,14 +19,14 @@ type Props = {
   mode?: "popup" | "sidepanel"
 }
 
-function monthTx(meta?: any) {
+function monthTx(meta?: X402ItemMetadata) {
   return (
     meta?.paymentAnalytics?.transactionsMonth ??
     meta?.paymentAnalytics?.totalTransactions ??
     0
   )
 }
-function normalizeList(json: any): any[] {
+function normalizeList(json: X402DiscoveryResponse | X402ItemType[]): X402ItemType[] {
   if (Array.isArray(json)) return json
   if (Array.isArray(json?.items)) return json.items
   return []
@@ -34,37 +38,22 @@ const CACHE_KEY = "x402_cache"
 const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
   const [loading, setLoading] = useState(false)
   const [loadFailed, setLoadFailed] = useState(false)
-  const [items, setItems] = useState<any[]>([])
+  const [items, setItems] = useState<X402ItemType[]>([])
   const [sortKey, setSortKey] = useState<SortKey>("score")
-  const [showItem, setShowItem] = useState<any | null>(null)
-
-  const [connected, setConnected] = useState(false)
-  const [address, setAddress] = useState<string | undefined>("")
-
-  useEffect(() => {
-    ;(async () => {
-      const s = await loadState()
-      setConnected(!!s.connected && !!s.address)
-      setAddress(s.address)
-    })()
-    return watchState((s: AppState) => {
-      setConnected(!!s.connected && !!s.address)
-      setAddress(s.address)
-    })
-  }, [])
+  const [showItem, setShowItem] = useState<X402ItemType | null>(null)
 
   async function load(forceRefresh = false) {
     setLoadFailed(false)
 
     // 1. 先尝试从缓存加载数据
     const raw = localStorage.getItem(CACHE_KEY)
-    let cacheData: any[] = []
+    let cacheData: X402ItemType[] = []
 
     if (raw) {
       try {
         const { data } = JSON.parse(raw)
         if (data && data.length > 0) {
-          cacheData = data
+          cacheData = data as X402ItemType[]
           setItems(data)
         }
       } catch (e) {
@@ -84,7 +73,7 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
         cache: "no-store"
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const json = await res.json()
+      const json: X402DiscoveryResponse = await res.json()
       const list = normalizeList(json)
 
       // 成功：更新数据和缓存
@@ -200,7 +189,7 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
           </div>
         ) : (
           <div className="divide-y divide-borderColor pb-3">
-            {sorted.map((item: any, idx: number) => (
+            {sorted.map((item, idx) => (
               <X402Item
                 key={idx}
                 item={item}

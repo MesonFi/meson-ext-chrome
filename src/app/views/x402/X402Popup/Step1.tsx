@@ -4,18 +4,19 @@ import X402AcceptOption from "./X402AcceptOption"
 import { buildXPaymentHeader } from "../lib"
 import { Button } from "~src/components/Button"
 import { ConnectMetamaskButton } from "~src/components/ConnectMetamask"
+import type { X402Accept, X402Item } from "../types"
 
 // 根据 accept 输出 schema 推导方法
-function deriveInitByAccept(acc: any): RequestInit {
+function deriveInitByAccept(acc: X402Accept): RequestInit {
   const method = acc?.outputSchema?.input?.method?.toUpperCase?.() || "GET"
   if (method === "POST") return { method: "POST" }
   return { method }
 }
 
 type Props = {
-  item: any
+  item: X402Item
   mode?: "popup" | "sidepanel"
-  onSelected: (acc: any, init: RequestInit, xPaymentHeader: string) => void
+  onSelected: (acc: X402Accept, init: RequestInit, xPaymentHeader: string) => void
 }
 
 const Step1: React.FC<Props> = ({ item, mode = "popup", onSelected }) => {
