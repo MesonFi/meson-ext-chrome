@@ -2,14 +2,15 @@ import React from "react"
 import { capitalize } from "~src/app/lib/utils"
 import SvgIcon from "~src/components/SvgIcon"
 import BaseIconSrc from "~/src/assets/icons/base.svg"
+import type { X402Accept } from "../types"
 
 type Props = {
-  accept: any
+  accept: X402Accept
   selected?: boolean
   onSelect: () => void
 }
 
-function formatMaxAmount6(raw?: string) {
+function formatMaxAmount6(raw?: number) {
   if (!raw) return "-"
   try {
     const n = BigInt(raw)
