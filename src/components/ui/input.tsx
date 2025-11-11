@@ -74,7 +74,7 @@ const Input = React.forwardRef<
         {suffix ? (
           <span
             className={cn(
-              'absolute right-3',
+              'absolute right-3 top-1/2 -translate-y-1/2 flex items-center',
             )}
           >
             {suffix}
