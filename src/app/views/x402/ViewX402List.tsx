@@ -6,6 +6,7 @@ import { SvgIcon } from "~src/components/SvgIcon"
 import RefreshIconSrc from "~/src/assets/icons/refresh.svg"
 import Loading from "~src/components/Loading"
 import { getPendingTransaction, clearPendingTransaction } from "../../lib/transactionState"
+import { toast } from "sonner"
 
 const BAZAAR_URL =
   "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources"
@@ -29,11 +30,10 @@ function normalizeList(json: any): any[] {
 
 type SortKey = "score" | "month"
 const CACHE_KEY = "x402_cache"
-const CACHE_MS = 5 * 60 * 1000
 
 const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string>("")
+  const [loadFailed, setLoadFailed] = useState(false)
   const [items, setItems] = useState<any[]>([])
   const [sortKey, setSortKey] = useState<SortKey>("score")
   const [showItem, setShowItem] = useState<any | null>(null)
@@ -53,21 +53,32 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
     })
   }, [])
 
-  async function load(force = false) {
-    setLoading(true)
-    setError("")
-    try {
-      if (!force) {
-        const raw = localStorage.getItem(CACHE_KEY)
-        if (raw) {
-          const { ts, data } = JSON.parse(raw)
-          if (Date.now() - ts < CACHE_MS) {
-            setItems(data || [])
-            setLoading(false)
-            return
-          }
+  async function load(forceRefresh = false) {
+    setLoadFailed(false)
+
+    // 1. 先尝试从缓存加载数据
+    const raw = localStorage.getItem(CACHE_KEY)
+    let cacheData: any[] = []
+
+    if (raw) {
+      try {
+        const { data } = JSON.parse(raw)
+        if (data && data.length > 0) {
+          cacheData = data
+          setItems(data)
         }
+      } catch (e) {
+        console.error("[ViewX402List] Failed to parse cache:", e)
       }
+    }
+
+    // 2. 只有在没有缓存数据或手动刷新时才显示 loading
+    if (cacheData.length === 0 || forceRefresh) {
+      setLoading(true)
+    }
+
+    // 3. 请求接口获取最新数据
+    try {
       const res = await fetch(BAZAAR_URL, {
         headers: { accept: "application/json" },
         cache: "no-store"
@@ -75,15 +86,33 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const json = await res.json()
       const list = normalizeList(json)
+
+      // 成功：更新数据和缓存
       setItems(list)
       localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: list }))
+      setLoadFailed(false)
     } catch (e: any) {
-      setError(e?.message ?? String(e))
+      console.error("[ViewX402List] Failed to load:", e)
+
+      // 失败：显示 toast 警告提示
+      toast.warning("Failed to load X402 list", {
+        description: e?.message ?? String(e)
+      })
+
+      // 如果有缓存数据，继续使用缓存
+      if (cacheData.length > 0) {
+        setItems(cacheData)
+        setLoadFailed(false)
+      } else {
+        // 如果没有缓存数据，进入 loading failed 状态
+        setItems([])
+        setLoadFailed(true)
+      }
     } finally {
       setLoading(false)
     }
   }
-  useEffect(() => { load() }, [])
+  useEffect(() => { load(false) }, [])
 
   // 检查是否有待恢复的交易，自动打开 drawer
   useEffect(() => {
@@ -155,19 +184,21 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
         </div>
       </div>
       <div className="flex-1 overflow-y-auto scrollbar-hide">
-        {loading && <div className="text-sm text-gray-600 flex flex-col gap-6 px-3">
-            {new Array(10).fill(1).map(i => {
-              return (
-                <Loading className="w-full h-[128px] bg-card" />
-              )
-            })}
+        {loading ? (
+          <div className="text-sm text-gray-600 flex flex-col gap-6 px-3">
+            {new Array(10).fill(1).map((_, i) => (
+              <Loading key={i} className="w-full h-[128px] bg-card" />
+            ))}
           </div>
-        }
-        {error && <div className="text-sm text-textColor4 w-full flex justify-center mt-24">
-          Loading failed: {error}
-          </div>}
-
-        {!loading && !error && (
+        ) : loadFailed ? (
+          <div className="text-sm text-textColor4 w-full flex justify-center mt-24">
+            Loading failed
+          </div>
+        ) : items.length === 0 ? (
+          <div className="text-sm text-textColor4 w-full flex justify-center mt-24">
+            No data available
+          </div>
+        ) : (
           <div className="divide-y divide-borderColor pb-3">
             {sorted.map((item: any, idx: number) => (
               <X402Item
