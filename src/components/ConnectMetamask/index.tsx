@@ -82,12 +82,12 @@ export const ConnectMetamask: React.FC<ConnectMetamaskProps> = ({
           {showActions && (
             <div className="flex items-center gap-4">
               <MessageTooltip content={copied ? 'Copied' : 'Copy'}>
-                <button onClick={handleCopy} title="Copy Address">
+                <button onClick={handleCopy} title="Copy Address" className="flex items-center">
                   <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
                 </button>
               </MessageTooltip>
               <MessageTooltip content={'Disconnect'}>
-                <button onClick={handleDisconnect} title="Disconnect">
+                <button onClick={handleDisconnect} title="Disconnect" className="flex items-center">
                   <SvgIcon src={LogoutIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
                 </button>
               </MessageTooltip>
