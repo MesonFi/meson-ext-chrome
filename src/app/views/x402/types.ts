@@ -3,22 +3,26 @@
 /**
  * 输出 Schema 定义
  */
+/**
+ * bodyFields 和 headerFields 的字段类型定义
+ * 实际 API 中存在的类型: string, number, integer, boolean
+ */
+export type X402FieldType = "string" | "number" | "integer" | "boolean"
+
+export interface X402FieldSchema {
+  type?: X402FieldType
+  description?: string
+  required?: boolean
+  default?: any
+}
+
 export interface X402OutputSchema {
   input?: {
     type?: string // "http"
     method?: string // HTTP 方法：GET, POST, etc.
     bodyType?: string // "json"
-    bodyFields?: Record<string, {
-      type?: string
-      description?: string
-      required?: boolean
-      default?: any
-    }>
-    headerFields?: Record<string, {
-      type?: string
-      description?: string
-      required?: boolean
-    }>
+    bodyFields?: Record<string, X402FieldSchema>
+    headerFields?: Record<string, X402FieldSchema>
   }
   output?: Record<string, string> // 输出字段类型映射
 }

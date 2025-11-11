@@ -144,6 +144,7 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
               resourceUrl={resourceUrl}
               baseInit={baseInit}
               xPaymentHeader={xPaymentHeader}
+              selectedAccept={selectedAccept}
               onCompleted={async (payload) => {
                 setFinalText(payload.text)
                 setDecodedPaymentResp(payload.decoded)
