@@ -61,7 +61,7 @@ const WalletStatus: React.FC = () => {
                 <div className="space-y-2">
                   <div className="text-sm font-semibold">连接钱包</div>
                   <div className="text-xs text-gray-600">
-                    点击下方按钮通过 MetaMask 连接。
+                    点击下方按钮通过 Phantom 连接。
                   </div>
                   <button
                     onClick={async () => {
@@ -75,7 +75,7 @@ const WalletStatus: React.FC = () => {
                     disabled={connecting}
                     className={BTN_PRIMARY}
                   >
-                    {connecting ? "连接中…" : "连接 MetaMask"}
+                    {connecting ? "连接中…" : "连接 Phantom"}
                   </button>
                 </div>
               ) : (

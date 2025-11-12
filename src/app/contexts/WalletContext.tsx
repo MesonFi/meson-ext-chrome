@@ -44,27 +44,37 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const connected = useMemo(() => !!address, [address])
 
-  // 连接（沿用 MM_GET_ACCOUNTS）
+  // 连接 Phantom 钱包
   const connect = async () => {
     setConnecting(true)
     try {
       const res = await withTimeout<any>(
-        sendToActiveTab({ type: "MM_GET_ACCOUNTS" }),
+        sendToActiveTab({ type: "PHANTOM_CONNECT" }),
         15000
       )
       if (res?.error) throw new Error(res.error)
-      const accounts: string[] | undefined = res?.accounts ?? res?.result?.accounts
-      const a = accounts?.[0]
-      if (!a) throw new Error("未获得地址，可能被拒绝或未安装 MetaMask")
-      await saveState({ connected: true, address: a })
-      setAddress(a)
+      const publicKey = res?.publicKey
+      if (!publicKey) throw new Error("未获得地址，请确保已安装 Phantom 钱包")
+      await saveState({ connected: true, address: publicKey })
+      setAddress(publicKey)
+    } catch (error: any) {
+      console.error("连接 Phantom 失败:", error)
+      throw error
     } finally {
       setConnecting(false)
     }
   }
 
-  // 断开
+  // 断开连接
   const disconnect = async () => {
+    try {
+      await withTimeout<any>(
+        sendToActiveTab({ type: "PHANTOM_DISCONNECT" }),
+        5000
+      )
+    } catch (e) {
+      console.error("断开连接失败:", e)
+    }
     await clearState()
     setAddress("")
   }

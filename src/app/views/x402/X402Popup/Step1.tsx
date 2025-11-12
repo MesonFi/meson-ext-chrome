@@ -3,7 +3,7 @@ import { useWallet } from "../../../contexts/WalletContext"
 import X402AcceptOption from "./X402AcceptOption"
 import { buildXPaymentHeader } from "../lib"
 import { Button } from "~src/components/Button"
-import { ConnectMetamaskButton } from "~src/components/ConnectMetamask"
+import { ConnectPhantomButton } from "~src/components/PhantomWallet"
 import type { X402Accept, X402Item } from "../types"
 
 // 根据 accept 输出 schema 推导方法
@@ -43,7 +43,7 @@ const Step1: React.FC<Props> = ({ item, mode = "popup", onSelected }) => {
       const header = await buildXPaymentHeader({
         wallet: signer,
         x402Version,
-        requirement: selectedAccept
+        requirement: selectedAccept as any  // API 数据类型比 x402 库类型定义更宽松
       })
 
       const init = deriveInitByAccept(selectedAccept)
@@ -87,7 +87,7 @@ const Step1: React.FC<Props> = ({ item, mode = "popup", onSelected }) => {
               loading={signing}
             >
               {signing ? 'Signing' : 'Confirm'}
-            </Button> : <ConnectMetamaskButton className="w-full" size="lg" />
+            </Button> : <ConnectPhantomButton className="w-full" size="lg" />
         }
       </div>
     </div>

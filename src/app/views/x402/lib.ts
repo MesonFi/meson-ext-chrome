@@ -1,16 +1,8 @@
 // src/app/views/x402/lib.ts
-// 分步 x402 流程：1) 获取并解析 Payment Requirements 2) 生成支付头(签名) 3) 携带支付头重试
-// 仅使用 x402 官方导出：x402/types, x402/client, x402/shared
+// Solana x402 支付流程：1) 获取并解析 Payment Requirements 2) 生成支付头(签名) 3) 携带支付头重试
 
 import {
-  ChainIdToNetwork,
   PaymentRequirementsSchema,
-  type Signer,
-  type MultiNetworkSigner,
-  evm,
-  isMultiNetworkSigner,
-  isSvmSignerWallet,
-  type Network,
   type X402Config
 } from "x402/types"
 
@@ -21,16 +13,6 @@ import {
 } from "x402/client"
 
 import { decodeXPaymentResponse } from "x402/shared"
-import type { Hex } from "../../lib/signer"
-
-const NETWORK_TO_CHAIN_ID: Record<string, Hex> = {
-  "base": "0x2105",           // 8453
-  "base-sepolia": "0x14a34"   // 84532
-}
-
-function getChainId(network: string): Hex | null {
-  return NETWORK_TO_CHAIN_ID[network.toLowerCase()] || null
-}
 
 // ====== Step 1: 获取并解析 Payment Requirements ======
 
@@ -133,8 +115,9 @@ export function pickPaymentRequirement(
 }
 
 /**
- * 生成支付头（签名）（仅使用官方 createPaymentHeader）
- * - 不发送请求，只返回 Header 字符串，交由调用方在 Step 3 使用
+ * 生成 Solana 支付头（签名）
+ * - 不需要切链逻辑，Solana 通过 RPC endpoint 区分网络
+ * - 返回 X-Payment Header 字符串
  */
 export async function buildXPaymentHeader(params: {
   wallet: any
@@ -144,19 +127,31 @@ export async function buildXPaymentHeader(params: {
 }): Promise<string> {
   const { wallet, x402Version, requirement, config } = params
   const network = requirement.network as string
-  const chainId = getChainId(network)
 
-  if (!chainId) {
-    throw new Error(`Unsupported network: ${network}. Only 'base' and 'base-sepolia' are supported.`)
+  // 验证是否为支持的 Solana 网络
+  if (!['solana', 'solana-devnet'].includes(network)) {
+    throw new Error(`Unsupported network: ${network}. Only 'solana' and 'solana-devnet' are supported.`)
   }
 
-  try {
-    await wallet.switchChain(chainId)
-  } catch (error: any) {
-    throw new Error(`Failed to switch to ${network}: ${error.message}`)
-  }
+  console.log('[buildXPaymentHeader] Creating payment header for Solana:', {
+    network,
+    asset: requirement.asset,
+    payTo: requirement.payTo,
+    amount: requirement.maxAmountRequired
+  })
 
-  const header = await createPaymentHeader(wallet, x402Version, requirement, config)
+  // 生成支付头（x402 库会自动处理 Solana 交易构建和签名）
+  const header = await createPaymentHeader(wallet, x402Version, requirement, {
+    ...config,
+    svmConfig: {
+      // 可以配置自定义 RPC（如果公共 RPC 限流）
+      // rpcUrl: "https://api.mainnet-beta.solana.com",  // mainnet
+      // rpcUrl: "https://api.devnet.solana.com",         // devnet
+      ...config?.svmConfig
+    }
+  })
+
+  console.log('[buildXPaymentHeader] Payment header created successfully')
   return header
 }
 

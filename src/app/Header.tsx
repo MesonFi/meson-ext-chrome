@@ -5,7 +5,7 @@ import { SvgIcon } from "~src/components/SvgIcon"
 import SidebarIconSrc from "../assets/icons/sidebar.svg"
 import { cn } from "~lib/utils"
 import { MessageTooltip } from "~src/components/MessageTooltip"
-import { ConnectMetamask } from "~src/components/ConnectMetamask"
+import { ConnectPhantom } from "~src/components/PhantomWallet"
 
 const Header: React.FC<{
   mode: "popup" | "sidepanel"
@@ -30,7 +30,7 @@ const Header: React.FC<{
 
   return (
     <div className={cn("border-b border-borderColor flex items-center justify-between px-3", connected ? 'py-[18px]' : 'py-3')}>
-      <ConnectMetamask mode="full" className="flex-1" showActions={true} />
+      <ConnectPhantom mode="full" className="flex-1" showActions={true} />
       {(connected || mode === "popup") && (
         <div className="flex items-center gap-4 ml-4">
           {mode === "popup" && (

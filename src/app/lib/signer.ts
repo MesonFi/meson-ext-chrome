@@ -1,187 +1,144 @@
 // src/app/lib/signer.ts
+// Solana 签名器 - 用于 Phantom 钱包
 import { withTimeout, sendToActiveTab } from "./transport"
 
-export type Hex = `0x${string}`
+export type SolanaNetwork = "solana" | "solana-devnet"
 
-export type TxParams = {
-  from?: string
-  to?: string
-  data?: Hex
-  value?: Hex
-  gas?: Hex
-  gasPrice?: Hex
-  maxFeePerGas?: Hex
-  maxPriorityFeePerGas?: Hex
-  nonce?: Hex
-  chainId?: Hex
-}
-
-export type AddChainParams = {
-  chainId: Hex // 0xAA36A7
-  chainName: string
-  nativeCurrency: { name: string; symbol: string; decimals: number }
-  rpcUrls: string[]
-  blockExplorerUrls?: string[]
-}
-
+/**
+ * Phantom 钱包签名器（Solana）
+ * 实现基本的连接、签名功能，兼容现有的 useWallet hook
+ */
 export class ExtensionSigner {
   private _address: string | null = null
-  private _chainId: Hex | null = null
+  private _network: SolanaNetwork = "solana"
 
   public chain = {}
   public transport = {}
-  get account () {
+
+  get account() {
     return { address: this._address }
   }
 
-  constructor () {
+  get address() {
+    return this._address || ""
+  }
+
+  constructor() {
+    // 延迟初始化，避免在钱包未连接时报错
     setTimeout(() => {
-      this.getAddress()
-      this.getChainId()
+      this.getAddress().catch(() => {
+        // 忽略错误，等待用户主动连接
+      })
     }, 3000)
   }
 
-  /** 读取当前账户（会触发 MetaMask 连接授权弹窗） */
+  /** 连接 Phantom 钱包并获取地址 */
   async getAddress(): Promise<string> {
-    const resp = await withTimeout<any>(sendToActiveTab({ type: "MM_GET_ACCOUNTS" }), 30000)
+    const resp = await withTimeout<any>(
+      sendToActiveTab({ type: "PHANTOM_CONNECT" }),
+      30000
+    )
     if (resp?.error) throw new Error(resp.error)
-    const addr = resp?.accounts?.[0]
-    if (!addr) throw new Error("No account")
+    const addr = resp?.publicKey
+    if (!addr) throw new Error("No Solana account")
     this._address = addr
     return addr
   }
 
-  /** 读取当前链 ID（0x…） */
-  async getChainId(): Promise<Hex> {
-    const resp = await withTimeout<any>(sendToActiveTab({ type: "MM_CHAIN_ID" }), 15000)
-    if (resp?.error) throw new Error(resp.error)
-    const id = resp?.chainId as Hex
-    if (!id) throw new Error("No chain id")
-    this._chainId = id
-    return id
+  /** 获取当前网络 */
+  async getNetwork(): Promise<SolanaNetwork> {
+    return this._network
   }
 
-  /** 尝试切换链；如果未添加则回退添加链 */
-  async switchChain(chainId: Hex, addParams?: AddChainParams) {
-    const r = await withTimeout<any>(
-      sendToActiveTab({ type: "MM_SWITCH_CHAIN", chainId }),
-      20000
+  /** 签名消息（用于身份验证等） */
+  async signMessage(message: string | Uint8Array): Promise<string> {
+    const messageStr = typeof message === "string" ? message : new TextDecoder().decode(message)
+
+    const resp = await withTimeout<any>(
+      sendToActiveTab({
+        type: "PHANTOM_SIGN_MESSAGE",
+        message: messageStr
+      }),
+      30000
     )
-    // 检查是否有错误
-    if (r?.error) {
 
-      if (/Unrecognized chain ID/.test(String(r.error))) {
-        const params = addParams || this._getDefaultAddParams(chainId)
-        if (!params) {
-          throw new Error(String(r.error))
-        }
+    if (resp?.error) throw new Error(resp.error)
+    return resp?.signature
+  }
 
-        const ar = await withTimeout<any>(
-          sendToActiveTab({ type: "MM_ADD_CHAIN", params }),
-          30000
-        )
-        if (ar?.error) {
-          const addErrorMsg = typeof ar.error === 'object' ? ar.error.message : ar.error
-          throw new Error(addErrorMsg || String(ar.error))
-        }
+  /**
+   * 签名交易（x402 支付需要）
+   * @param transactions - 交易对象数组（来自 @solana/web3.js 2.x）
+   * @returns SignatureDictionary[] - 签名字典数组
+   */
+  async signTransactions(transactions: any[]): Promise<any[]> {
+    if (!transactions || transactions.length === 0) {
+      throw new Error("No transactions to sign")
+    }
+
+    // 确保已连接
+    if (!this._address) {
+      await this.getAddress()
+    }
+
+    console.log("[ExtensionSigner] Signing transactions:", transactions.length)
+
+    // 将交易序列化为 base64（x402 传入的是编译后的交易消息）
+    const serializedTxs = transactions.map((tx) => {
+      // x402 传入的交易可能已经有 serialize 方法，或者是字节数组
+      let bytes: Uint8Array
+
+      if (tx instanceof Uint8Array) {
+        bytes = tx
+      } else if (typeof tx.serialize === 'function') {
+        bytes = tx.serialize()
+      } else if (tx.__compiled) {
+        // @solana/web3.js 2.x 编译后的交易
+        bytes = tx.__compiled
       } else {
-        throw new Error(String(r.error))
+        throw new Error("Unknown transaction format")
       }
+
+      return btoa(String.fromCharCode(...bytes))
+    })
+
+    const resp = await withTimeout<any>(
+      sendToActiveTab({
+        type: "PHANTOM_SIGN_TRANSACTIONS",
+        transactions: serializedTxs
+      }),
+      60000 // 交易签名可能需要更长时间
+    )
+
+    if (resp?.error) throw new Error(resp.error)
+
+    const signatures = resp?.signatures as string[] // base64 格式的签名数组
+    if (!signatures || !Array.isArray(signatures)) {
+      throw new Error("Invalid response from Phantom: missing signatures")
     }
 
-    this._chainId = chainId
+    // 将签名转换为 SignatureDictionary 格式
+    // SignatureDictionary = { [address: string]: Uint8Array }
+    return signatures.map((sigBase64) => {
+      const sigBytes = Uint8Array.from(atob(sigBase64), c => c.charCodeAt(0))
+      return {
+        [this._address as string]: sigBytes
+      }
+    })
   }
 
-  /** 根据 chainId 获取默认的添加链参数 */
-  private _getDefaultAddParams(chainId: Hex): AddChainParams | null {
-    const id = chainId.toLowerCase()
-    switch (id) {
-      case "0x2105": // Base mainnet (8453)
-        return {
-          chainId: "0x2105",
-          chainName: "Base",
-          nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-          rpcUrls: ["https://mainnet.base.org"],
-          blockExplorerUrls: ["https://basescan.org"]
-        }
-      case "0x14a34": // Base Sepolia (84532)
-        return {
-          chainId: "0x14a34",
-          chainName: "Base Sepolia",
-          nativeCurrency: { name: "Sepolia Ether", symbol: "ETH", decimals: 18 },
-          rpcUrls: ["https://sepolia.base.org"],
-          blockExplorerUrls: ["https://sepolia.basescan.org"]
-        }
-      default:
-        return null
-    }
-  }
-
-  /** personal_sign（EOA 原文签名） */
-  async personalSign(messageHexOrUtf8: string, address?: string): Promise<Hex> {
-    const from = address ?? this._address ?? (await this.getAddress())
+  /** 断开连接 */
+  async disconnect(): Promise<void> {
     const resp = await withTimeout<any>(
-      sendToActiveTab({ type: "MM_PERSONAL_SIGN", from, message: messageHexOrUtf8 }),
-      30000
+      sendToActiveTab({ type: "PHANTOM_DISCONNECT" }),
+      10000
     )
     if (resp?.error) throw new Error(resp.error)
-    return resp?.result?.signature as Hex
+    this._address = null
   }
 
-  /** EIP-712 v4（typed data） */
-  async signTypedData(typedDataJson: any): Promise<Hex> {
-    const addr = this._address ?? (await this.getAddress())
-    typedDataJson.account = addr
-    typedDataJson.types.EIP712Domain = [
-      { name: "name", type: "string" },
-      { name: "version", type: "string" },
-      { name: "chainId", type: "uint256" },
-      { name: "verifyingContract", type: "address" }
-    ]
-    console.log(typedDataJson)
-    const resp = await withTimeout<any>(
-      sendToActiveTab({ type: "MM_SIGN_TYPED_DATA_V4", from: addr, data: JSON.stringify(typedDataJson) }),
-      30000
-    )
-    if (resp?.error) throw new Error(resp.error)
-    return resp?.signature as Hex
-  }
-
-  /** 发送交易（保持“完整 tx 透传”不变） */
-  async sendTransaction(tx: TxParams): Promise<string> {
-    const resp = await withTimeout<any>(
-      sendToActiveTab({ type: "MM_SEND_TX", tx }),
-      60000
-    )
-    if (resp?.error) throw new Error(resp.error)
-    return resp?.result?.txHash ?? resp?.txHash
-  }
-
-  /** 简单的网络名推断（给 x402 的 infer 用） */
-  inferNetworkFromWallet():
-    | "ethereum"
-    | "base"
-    | "base-sepolia"
-    | "polygon"
-    | "arbitrum"
-    | "optimism"
-    | "unknown" {
-    const id = (this._chainId ?? "0x0").toLowerCase()
-    switch (id) {
-      case "0x1":
-        return "ethereum"
-      case "0x2105": // Base mainnet (8453)
-        return "base"
-      case "0x14a34": // Base Sepolia (84532)
-        return "base-sepolia"
-      case "0x89":
-        return "polygon"
-      case "0xa4b1":
-        return "arbitrum"
-      case "0xa":
-        return "optimism"
-      default:
-        return "unknown"
-    }
+  /** 推断当前网络（给 x402 使用） */
+  inferNetworkFromWallet(): "solana" | "solana-devnet" {
+    return this._network
   }
 }

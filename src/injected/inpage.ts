@@ -1,5 +1,5 @@
 // src/injected/inpage.ts
-// 该脚本注入到页面的真实 window 上，能访问 window.ethereum
+// 该脚本注入到页面的真实 window 上，能访问 window.phantom (Solana)
 ;(function () {
   console.log("[INPAGE] injected inpage.js on", location.href)
 
@@ -19,83 +19,87 @@
     const { id, payload } = data
 
     try {
-      const eth = (window as any).ethereum
-      if (!eth) {
-        reply(id, undefined, "未检测到 MetaMask（window.ethereum 不存在）")
+      const phantom = (window as any).phantom?.solana
+      if (!phantom) {
+        reply(id, undefined, "未检测到 Phantom 钱包（window.phantom.solana 不存在）")
         return
       }
 
-      if (payload?.type === "MM_GET_ACCOUNTS") {
-        console.log("[INPAGE] calling eth_requestAccounts")
-        const accounts: string[] = await eth.request({ method: "eth_requestAccounts" })
-        reply(id, { accounts })
+      // 连接 Phantom 钱包并获取账户
+      if (payload?.type === "PHANTOM_CONNECT") {
+        console.log("[INPAGE] connecting to Phantom")
+        const response = await phantom.connect()
+        const publicKey = response.publicKey.toString()
+        reply(id, { publicKey })
         return
       }
 
-      if (payload?.type === "MM_CHAIN_ID") {
-        const chainId = await eth.request({ method: "eth_chainId" })
-        reply(id, { chainId })
-        return
-      }
-
-      if (payload?.type === "MM_SWITCH_CHAIN") {
-        const { chainId } = payload // 0x…
-        await eth.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId }]
-        })
+      // 断开 Phantom 钱包
+      if (payload?.type === "PHANTOM_DISCONNECT") {
+        console.log("[INPAGE] disconnecting from Phantom")
+        await phantom.disconnect()
         reply(id, { ok: true })
         return
       }
 
-      if (payload?.type === "MM_ADD_CHAIN") {
-        const { params } = payload // 直接透传 EIP-3085 参数
-        await eth.request({
-          method: "wallet_addEthereumChain",
-          params: [params]
-        })
-        reply(id, { ok: true })
+      // 签名消息
+      if (payload?.type === "PHANTOM_SIGN_MESSAGE") {
+        console.log("[INPAGE] signing message with Phantom")
+        const { message } = payload
+
+        // 将消息转换为 Uint8Array
+        const encodedMessage = new TextEncoder().encode(message)
+
+        const { signature } = await phantom.signMessage(encodedMessage, "utf8")
+
+        // 将签名转换为 base64
+        const signatureBase64 = btoa(String.fromCharCode(...signature))
+        reply(id, { signature: signatureBase64 })
         return
       }
 
-      if (payload?.type === "MM_SEND_TX") {
-        // 新增：优先支持直接透传完整 tx（用于已在上游构造好的 ERC20 transfer 等）
-        let finalTx = { ...payload.tx }
+      // 签名交易（用于 x402 支付）
+      if (payload?.type === "PHANTOM_SIGN_TRANSACTIONS") {
+        console.log("[INPAGE] signing transactions with Phantom")
+        const { transactions } = payload // 数组：每个元素是 base64 编码的序列化交易
 
-        // 如果上游没填 from，这里补上当前选中的账户
-        if (!finalTx.from) {
-          const accounts: string[] = await eth.request({ method: "eth_requestAccounts" })
-          finalTx.from = accounts[0]
+        if (!Array.isArray(transactions) || transactions.length === 0) {
+          reply(id, undefined, "transactions must be a non-empty array")
+          return
         }
 
-        console.log("[INPAGE] eth_sendTransaction (passthrough tx) =", finalTx)
-        const txHash = await eth.request({
-          method: "eth_sendTransaction",
-          params: [finalTx]
-        })
-        console.log("[INPAGE] eth_sendTransaction returned txHash", txHash)
-        reply(id, { txHash })
-        return
-      }
+        // 导入 Solana web3.js（假设页面已加载，或使用动态导入）
+        // 注意：实际使用时需要确保 @solana/web3.js 在页面上可用
+        const solanaWeb3 = (window as any).solanaWeb3
+        if (!solanaWeb3?.VersionedTransaction) {
+          reply(id, undefined, "Solana web3.js not available on page")
+          return
+        }
 
-      if (payload?.type === "MM_PERSONAL_SIGN") {
-        const { from, message } = payload
-        // personal_sign 的 params 顺序为 [message, from]
-        const signature = await eth.request({
-          method: "personal_sign",
-          params: [message, from]
-        })
-        reply(id, { signature })
-        return
-      }
+        try {
+          // 将 base64 编码的交易转换为 VersionedTransaction 对象
+          const txObjects = transactions.map((txBase64: string) => {
+            const txBytes = Uint8Array.from(atob(txBase64), c => c.charCodeAt(0))
+            return solanaWeb3.VersionedTransaction.deserialize(txBytes)
+          })
 
-      if (payload?.type === "MM_SIGN_TYPED_DATA_V4") {
-        const { from, data } = payload
-        const signature = await eth.request({
-          method: "eth_signTypedData_v4",
-          params: [from, data]
-        })
-        reply(id, { signature })
+          // 使用 Phantom 签名所有交易
+          const signedTxs = await phantom.signAllTransactions(txObjects)
+
+          // 提取签名并转换为 base64 格式
+          const signatures = signedTxs.map((signedTx: any) => {
+            // signedTx.signatures 是 Array<Uint8Array | null>
+            // 我们需要第一个签名（用户的签名）
+            const sig = signedTx.signatures[0]
+            if (!sig) throw new Error("No signature in signed transaction")
+            return btoa(String.fromCharCode(...sig))
+          })
+
+          reply(id, { signatures })
+        } catch (err: any) {
+          console.error("[INPAGE] transaction signing error:", err)
+          reply(id, undefined, err?.message ?? String(err))
+        }
         return
       }
 
