@@ -44,6 +44,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const connected = useMemo(() => !!address, [address])
 
+  // 同步地址到 signer（当地址变化时）
+  useEffect(() => {
+    signer.setAddress(address || null)
+  }, [address, signer])
+
   // 连接 Phantom 钱包
   const connect = async () => {
     setConnecting(true)

@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { useWallet } from "~src/app/contexts/WalletContext"
 import { SvgIcon } from "~src/components/SvgIcon"
 import CopyIconSrc from "~src/assets/icons/copy.svg"
+import SolanaIconSrc from "~src/assets/icons/solana.svg"
 import LogoutIconSrc from "~src/assets/icons/logout.svg"
 import { cn } from "~lib/utils"
 import { MessageTooltip } from "~src/components/MessageTooltip"
@@ -69,9 +70,7 @@ export const ConnectPhantom: React.FC<ConnectPhantomProps> = ({
       ) : (
         <>
           <div className="flex-1 flex items-center gap-2 rounded-lg">
-            <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-xs font-bold">P</span>
-            </div>
+            <SvgIcon src={SolanaIconSrc} className="w-6 h-6" />
             <span className="text-sm font-medium text-gray-900 flex-1 truncate" title={address}>
               {shortAddr(address)}
             </span>

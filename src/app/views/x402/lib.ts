@@ -147,6 +147,7 @@ export async function buildXPaymentHeader(params: {
       // 可以配置自定义 RPC（如果公共 RPC 限流）
       // rpcUrl: "https://api.mainnet-beta.solana.com",  // mainnet
       // rpcUrl: "https://api.devnet.solana.com",         // devnet
+      rpcUrl: "https://solemn-winter-road.solana-mainnet.quiknode.pro/46fa061ea3ca4552da78cde720d7d3e6ea1c6265",
       ...config?.svmConfig
     }
   })

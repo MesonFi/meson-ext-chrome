@@ -53,9 +53,6 @@ export const ConnectPhantomButton: React.FC<Props> = ({
       onClick={handleConnect}
       loading={connecting}
     >
-      <div className="w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center">
-        <span className="text-white text-xs font-bold">P</span>
-      </div>
       {connecting ? "Connecting..." : "Connect Phantom"}
     </Button>
   )

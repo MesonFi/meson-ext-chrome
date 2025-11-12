@@ -2,6 +2,7 @@ import React from "react"
 import { capitalize } from "~src/app/lib/utils"
 import SvgIcon from "~src/components/SvgIcon"
 import BaseIconSrc from "~/src/assets/icons/base.svg"
+import SolanaIconSrc from "~/src/assets/icons/solana.svg"
 import type { X402Accept } from "../types"
 
 type Props = {
@@ -56,7 +57,9 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
           <div className="text-xs text-textColor4">Payment</div>
           <div className="flex items-center">
             <div className="inline-flex items-center h-5 pr-1 rounded bg-slate-100 text-textColor1 gap-1" title={network}>
-              {['base', 'base-sepolia'].includes(network) && <SvgIcon src={BaseIconSrc} />}{capitalize(network)}
+              {['base', 'base-sepolia'].includes(network) && <SvgIcon src={BaseIconSrc} />}
+              {['solana'].includes(network) && <SvgIcon src={SolanaIconSrc} />}
+              {capitalize(network)}
             </div>
             <div className="w-[1px] h-3 bg-[#E4E3E3] mr-1"/>
             {amount6}

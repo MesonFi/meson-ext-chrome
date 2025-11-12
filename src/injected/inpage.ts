@@ -1,7 +1,17 @@
 // src/injected/inpage.ts
 // 该脚本注入到页面的真实 window 上，能访问 window.phantom (Solana)
+
+// 直接 import Solana web3.js（会被 plasmo 打包进来）
+import { VersionedTransaction } from '@solana/web3.js'
+
 ;(function () {
   console.log("[INPAGE] injected inpage.js on", location.href)
+
+  // 将 Solana web3.js 导出到 window 上，供后续代码使用
+  ;(window as any).solanaWeb3 = {
+    VersionedTransaction
+  }
+  console.log("[INPAGE] Solana web3.js loaded from bundle")
 
   function reply(id: string, result?: any, error?: string) {
     console.log("[INPAGE] -> content reply", { id, result, error })
@@ -68,33 +78,48 @@
           return
         }
 
-        // 导入 Solana web3.js（假设页面已加载，或使用动态导入）
-        // 注意：实际使用时需要确保 @solana/web3.js 在页面上可用
-        const solanaWeb3 = (window as any).solanaWeb3
-        if (!solanaWeb3?.VersionedTransaction) {
-          reply(id, undefined, "Solana web3.js not available on page")
-          return
-        }
-
         try {
+          // web3.js 已经在顶部导入并挂载到 window 上
+          const solanaWeb3 = (window as any).solanaWeb3
+          if (!solanaWeb3?.VersionedTransaction) {
+            reply(id, undefined, "Solana web3.js not available (this should not happen)")
+            return
+          }
+
+          console.log("[INPAGE] Deserializing transactions:", transactions.length)
+
           // 将 base64 编码的交易转换为 VersionedTransaction 对象
-          const txObjects = transactions.map((txBase64: string) => {
-            const txBytes = Uint8Array.from(atob(txBase64), c => c.charCodeAt(0))
-            return solanaWeb3.VersionedTransaction.deserialize(txBytes)
+          const txObjects = transactions.map((txBase64: string, idx: number) => {
+            try {
+              const txBytes = Uint8Array.from(atob(txBase64), c => c.charCodeAt(0))
+              console.log(`[INPAGE] Transaction ${idx} bytes length:`, txBytes.length)
+              return solanaWeb3.VersionedTransaction.deserialize(txBytes)
+            } catch (err: any) {
+              console.error(`[INPAGE] Failed to deserialize transaction ${idx}:`, err)
+              throw new Error(`Failed to deserialize transaction ${idx}: ${err.message}`)
+            }
           })
+
+          console.log("[INPAGE] Calling Phantom signAllTransactions with", txObjects.length, "transactions")
 
           // 使用 Phantom 签名所有交易
           const signedTxs = await phantom.signAllTransactions(txObjects)
 
+          console.log("[INPAGE] Phantom returned signed transactions:", signedTxs.length)
+
           // 提取签名并转换为 base64 格式
-          const signatures = signedTxs.map((signedTx: any) => {
+          const signatures = signedTxs.map((signedTx: any, idx: number) => {
             // signedTx.signatures 是 Array<Uint8Array | null>
             // 我们需要第一个签名（用户的签名）
             const sig = signedTx.signatures[0]
-            if (!sig) throw new Error("No signature in signed transaction")
+            if (!sig) {
+              console.error(`[INPAGE] No signature in signed transaction ${idx}`)
+              throw new Error(`No signature in signed transaction ${idx}`)
+            }
             return btoa(String.fromCharCode(...sig))
           })
 
+          console.log("[INPAGE] Successfully extracted", signatures.length, "signatures")
           reply(id, { signatures })
         } catch (err: any) {
           console.error("[INPAGE] transaction signing error:", err)
