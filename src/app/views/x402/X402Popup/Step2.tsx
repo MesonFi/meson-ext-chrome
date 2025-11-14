@@ -3,6 +3,9 @@ import { decodeXPaymentResponseHeader } from "../lib"
 import { Button } from "~src/components/Button"
 import DynamicForm, { type DynamicFormRef } from "./DynamicForm"
 import type { X402Accept } from "../types"
+import { SvgIcon } from "~src/components/SvgIcon"
+import CopyIconSrc from "~src/assets/icons/copy.svg"
+import { MessageTooltip } from "~src/components/MessageTooltip"
 
 type Props = {
   resourceUrl: string
@@ -21,7 +24,54 @@ const Step2: React.FC<Props> = ({
 }) => {
   const [sending, setSending] = useState(false)
   const [err, setErr] = useState<string>("")
+  const [copied, setCopied] = useState(false)
+  const [headerFormat, setHeaderFormat] = useState<'base64' | 'json'>('base64')
   const formRef = useRef<DynamicFormRef>(null)
+
+  const handleCopy = async () => {
+    try {
+      const textToCopy = headerFormat === 'json' ? paymentHeaderJson : xPaymentHeader
+      await navigator.clipboard.writeText(textToCopy)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1000)
+    } catch (err) {
+      console.error("Failed to copy:", err)
+    }
+  }
+
+  const paymentHeaderJson = (() => {
+    try {
+      const decodeBase64Url = (str: string) => {
+        // Base64URL to Base64
+        let base64 = str.replace(/-/g, '+').replace(/_/g, '/')
+        // Add padding
+        const pad = base64.length % 4
+        if (pad) {
+          base64 += '='.repeat(4 - pad)
+        }
+        return atob(base64)
+      }
+
+      // Try JWT format first: header.payload.signature
+      const parts = xPaymentHeader.split('.')
+      if (parts.length === 3) {
+        try {
+          const header = JSON.parse(decodeBase64Url(parts[0]))
+          const payload = JSON.parse(decodeBase64Url(parts[1]))
+          return JSON.stringify({ header, payload, signature: parts[2] }, null, 2)
+        } catch (jwtError) {
+          // Not a valid JWT, continue to try direct base64 decode
+        }
+      }
+
+      // Try direct base64 decode
+      const decoded = decodeBase64Url(xPaymentHeader)
+      const parsed = JSON.parse(decoded)
+      return JSON.stringify(parsed, null, 2)
+    } catch (e) {
+      return xPaymentHeader
+    }
+  })()
 
   async function onSend() {
     setErr("")
@@ -80,9 +130,44 @@ const Step2: React.FC<Props> = ({
         <DynamicForm ref={formRef} selectedAccept={selectedAccept} />
 
         <div className="mt-4">
-          <div className="text-textColor1 text-sm mb-1">X-Payment Header</div>
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-1">
+              <div className="text-textColor1 text-sm">X-Payment Header</div>
+              <MessageTooltip content={copied ? 'Copied' : 'Copy'}>
+                <button
+                  onClick={handleCopy}
+                  className="flex items-center"
+                >
+                  <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
+                </button>
+              </MessageTooltip>
+            </div>
+            <div className="flex items-center">
+              <button
+                onClick={() => setHeaderFormat('json')}
+                className={`text-xs ${
+                  headerFormat === 'json'
+                    ? 'text-textColor1'
+                    : 'text-textColor3 hover:text-textColor1'
+                }`}
+              >
+                JSON
+              </button>
+              <div className="h-3 w-[1px] bg-borderColor mx-2"></div>
+              <button
+                onClick={() => setHeaderFormat('base64')}
+                className={`text-xs ${
+                  headerFormat === 'base64'
+                    ? 'text-textColor1'
+                    : 'text-textColor3 hover:text-textColor1'
+                }`}
+              >
+                BASE64
+              </button>
+            </div>
+          </div>
           <div className="text-xs bg-card p-2 rounded-lg whitespace-pre-wrap break-words max-h-[172px] overflow-y-scroll scrollbar-hide mb-3">
-            {xPaymentHeader}
+            {headerFormat === 'json' ? paymentHeaderJson : xPaymentHeader}
           </div>
         </div>
       </div>
