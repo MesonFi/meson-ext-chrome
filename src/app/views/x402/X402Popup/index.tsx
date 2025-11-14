@@ -19,6 +19,7 @@ import {
 import { parseValidBeforeFromHeader } from "../lib"
 import type { X402Item, X402Accept } from "../types"
 import { cn } from "~lib/utils"
+import { MessageTooltip } from "~src/components/MessageTooltip"
 
 type Props = {
   item: X402Item
@@ -44,6 +45,19 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
   // 最终响应数据
   const [finalText, setFinalText] = useState<string>("")
   const [decodedPaymentResp, setDecodedPaymentResp] = useState<any>(null)
+
+  // 复制 resourceUrl 状态
+  const [copiedUrl, setCopiedUrl] = useState(false)
+
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(resourceUrl)
+      setCopiedUrl(true)
+      setTimeout(() => setCopiedUrl(false), 1000)
+    } catch (err) {
+      console.error("Failed to copy:", err)
+    }
+  }
 
   // 组件挂载时尝试恢复状态
   useEffect(() => {
@@ -102,9 +116,14 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
     <Drawer open={true} onOpenChange={(open) => { if (!open) onClose() }}>
       <DrawerContent className="max-h-[480px] flex flex-col">
         <DrawerHeader className="flex justify-between border-borderColor items-start flex-shrink-0">
-          <DrawerTitle className="break-all pr-8 text-left font-normal text-sm">
-            {resourceUrl}
-          </DrawerTitle>
+          <MessageTooltip content={copiedUrl ? 'Copied' : 'Copy'}>
+            <DrawerTitle
+              className="break-all pr-8 text-left font-normal text-sm cursor-pointer hover:underline"
+              onClick={handleCopyUrl}
+            >
+              {resourceUrl}
+            </DrawerTitle>
+          </MessageTooltip>
           <DrawerClose className="p-1 hover:bg-gray-100 rounded transition-colors">
             <img src={CloseIcon} alt="close" className="min-w-6 h-6" />
           </DrawerClose>
