@@ -47,7 +47,7 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
       role="button"
       onClick={onSelect}
       className={`px-2 py-1 bg-card rounded-lg ${
-        selected ? "outline outline-1 outline-textColor2" : ""
+        selected ? "border border-textColor2" : ""
       }`}
     >
       {desc && <div className="text-xs break-words text-black mb-2">{desc}</div>}

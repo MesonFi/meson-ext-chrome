@@ -1,12 +1,6 @@
 import React, { useState, useMemo, forwardRef, useImperativeHandle } from "react"
 import { Input } from "~src/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~src/components/ui/select"
+import { Checkbox } from "~src/components/ui/checkbox"
 import type { X402Accept, X402FieldSchema } from "../types"
 
 type Props = {
@@ -98,54 +92,60 @@ const DynamicForm = forwardRef<DynamicFormRef, Props>(({ selectedAccept }, ref) 
   }
 
   return (
-    <div className="mb-4 space-y-3 hidden">
-      <div className="text-textColor1 text-sm mb-2">Request Parameters</div>
+    <div className="mb-4 space-y-2">
+      <div className="text-textColor1 text-sm mb-2 mt-3">Request Parameters</div>
       {bodyFields.map(({ key, schema }) => (
         <div key={key} className="space-y-1">
-          <label className="text-xs text-textColor4 flex items-center gap-1">
-            {key}
-            {schema.required && <span className="text-error">*</span>}
-            <span className="text-textColor3 ml-1">({schema.type || "string"})</span>
-          </label>
-
           {/* 根据类型渲染不同的输入组件 */}
           {schema.type === "boolean" ? (
-            <Select
-              value={formData[key]?.toString() || "false"}
-              onValueChange={(value) => handleInputChange(key, value === "true")}
-            >
-              <SelectTrigger className="text-xs">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="true">TRUE</SelectItem>
-                <SelectItem value="false">FALSE</SelectItem>
-              </SelectContent>
-            </Select>
-          ) : schema.type === "number" || schema.type === "integer" ? (
-            <Input
-              type="number"
-              placeholder={schema.description || `Enter ${key}`}
-              value={formData[key] ?? ""}
-              onChange={(e) => handleInputChange(key, e.target.value)}
-              className="text-xs"
-              step={schema.type === "integer" ? "1" : "any"}
-            />
+            <div className="flex items-center space-x-2 justify-between">
+              <label
+                htmlFor={`field-${key}`}
+                className="text-xs text-textColor1 flex items-center gap-1 cursor-pointer"
+              >
+                {key}
+                {schema.required && <span className="text-error">*</span>}
+                <span className="text-textColor4 ml-1">(boolean)</span>
+              </label>
+              <Checkbox
+                id={`field-${key}`}
+                checked={formData[key] || false}
+                onCheckedChange={(checked) => handleInputChange(key, checked)}
+              />
+            </div>
           ) : (
-            <Input
-              type="text"
-              placeholder={schema.description || `Enter ${key}`}
-              value={formData[key] || ""}
-              onChange={(e) => handleInputChange(key, e.target.value)}
-              className="text-xs"
-            />
+            <>
+              <label className="text-xs text-textColor1 flex items-center gap-1">
+                {key}
+                {schema.required && <span className="text-error">*</span>}
+                <span className="">({schema.type || "string"})</span>
+              </label>
+              {schema.type === "number" || schema.type === "integer" ? (
+                <Input
+                  type="number"
+                  placeholder={schema.description || `Enter ${key}`}
+                  value={formData[key] ?? ""}
+                  onChange={(e) => handleInputChange(key, e.target.value)}
+                  className="text-xs"
+                  step={schema.type === "integer" ? "1" : "any"}
+                />
+              ) : (
+                <Input
+                  type="text"
+                  placeholder={schema.description || `Enter ${key}`}
+                  value={formData[key] || ""}
+                  onChange={(e) => handleInputChange(key, e.target.value)}
+                  className="text-xs"
+                />
+              )}
+            </>
           )}
 
           {schema.description && (
-            <p className="text-xs text-textColor4">{schema.description}</p>
+            <p className="text-xs text-textColor4 m-0">{schema.description}</p>
           )}
           {schema.default !== undefined && (
-            <p className="text-xs text-textColor4">Default: {String(schema.default)}</p>
+            <p className="text-xs text-textColor4 m-0">Default: {String(schema.default)}</p>
           )}
         </div>
       ))}

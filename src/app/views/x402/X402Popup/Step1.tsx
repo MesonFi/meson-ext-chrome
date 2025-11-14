@@ -57,25 +57,27 @@ const Step1: React.FC<Props> = ({ item, mode = "popup", onSelected }) => {
   }
 
   return (
-    <div className="">
-      {/* 支付选项列表 */}
-      {accepts.map((acc: any, i: number) => (
-        <X402AcceptOption
-          key={i}
-          accept={acc}
-          selected={i === selectedIdx}
-          onSelect={() => setSelectedIdx(i)}
-        />
-      ))}
+    <div className="flex flex-col h-full px-3 overflow-hidden">
+      <div className="flex-1 overflow-y-auto scrollbar-hide min-h-0">
+        {/* 支付选项列表 */}
+        {accepts.map((acc: any, i: number) => (
+          <X402AcceptOption
+            key={i}
+            accept={acc}
+            selected={i === selectedIdx}
+            onSelect={() => setSelectedIdx(i)}
+          />
+        ))}
 
-      {accepts.length === 0 && (
-        <div className="text-xs text-gray-600">No accepts.</div>
-      )}
+        {accepts.length === 0 && (
+          <div className="text-xs text-gray-600">No accepts.</div>
+        )}
 
-      {err && <div className="text-xs text-error mt-3">{err}</div>}
+        {err && <div className="text-xs text-error mt-3">{err}</div>}
+      </div>
 
-      {/* Footer */}
-      <div className="mt-6 px-0 border-borderColor flex items-center justify-end">
+      {/* 固定底部按钮 */}
+      <div className="pt-4 flex-shrink-0">
         {
           connected ?
             <Button

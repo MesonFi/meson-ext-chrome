@@ -31,19 +31,17 @@ const Header: React.FC<{
   return (
     <div className={cn("border-b border-borderColor flex items-center justify-between px-3", connected ? 'py-[18px]' : 'py-3')}>
       <ConnectMetamask mode="full" className="flex-1" showActions={true} />
-      {(connected || mode === "popup") && (
+      {(mode === "popup") && (
         <div className="flex items-center gap-4 ml-4">
-          {mode === "popup" && (
-            <MessageTooltip content={'Sidebar'}>
-              <button
-                onClick={onOpenSidePanel}
-                title="Open Sidebar"
-                className="flex items-center"
-              >
-                <SvgIcon src={SidebarIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
-              </button>
-            </MessageTooltip>
-          )}
+          <MessageTooltip content={'Sidebar'}>
+            <button
+              onClick={onOpenSidePanel}
+              title="Open Sidebar"
+              className="flex items-center"
+            >
+              <SvgIcon src={SidebarIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
+            </button>
+          </MessageTooltip>
         </div>
       )}
     </div>

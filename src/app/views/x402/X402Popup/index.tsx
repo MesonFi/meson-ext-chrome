@@ -18,6 +18,7 @@ import {
 } from "../../../lib/transactionState"
 import { parseValidBeforeFromHeader } from "../lib"
 import type { X402Item, X402Accept } from "../types"
+import { cn } from "~lib/utils"
 
 type Props = {
   item: X402Item
@@ -79,12 +80,12 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
 
   const renderStepIndicator = () => {
     const steps = [
-      { n: 1, label: "Accepts" },
-      { n: 2, label: "X-Payment Header" },
+      { n: 1, label: "Payment" },
+      { n: 2, label: "Request" },
       { n: 3, label: "Response" }
     ] as const
     return (
-      <div className="flex items-center px-3 py-2 text-sm text-textColor3">
+      <div className={cn("flex items-center px-3 pb-1 text-sm text-textColor3", step === 2 && 'border-b border-borderColor')}>
         {steps.map((s, i) => (
           <React.Fragment key={s.n}>
             <span className={step === s.n ? "text-textColor1 font-medium" : ""}>
@@ -99,8 +100,8 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
 
   return (
     <Drawer open={true} onOpenChange={(open) => { if (!open) onClose() }}>
-      <DrawerContent>
-        <DrawerHeader className="flex justify-between border-borderColor items-start">
+      <DrawerContent className="max-h-[480px] flex flex-col">
+        <DrawerHeader className="flex justify-between border-borderColor items-start flex-shrink-0">
           <DrawerTitle className="break-all pr-8 text-left font-normal text-sm">
             {resourceUrl}
           </DrawerTitle>
@@ -109,10 +110,12 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
           </DrawerClose>
         </DrawerHeader>
 
-        {renderStepIndicator()}
+        <div className="flex-shrink-0">
+          {renderStepIndicator()}
+        </div>
 
-        {/* 内容区域，底部按钮在各 Step 内部 */}
-        <div className="px-3 pb-3 pt-1 max-h-[calc(80vh-120px)] overflow-auto text-[13px] scrollbar-hide">
+        {/* 内容区域 */}
+        <div className="flex-1 min-h-0 pb-3 pt-1 flex flex-col">
           {step === 1 && (
             <Step1
               item={item}
@@ -157,10 +160,12 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
           )}
 
           {step === 3 && (
-            <Step3
-              finalText={finalText}
-              decodedPaymentResp={decodedPaymentResp}
-            />
+            <div className="h-full overflow-auto scrollbar-hide">
+              <Step3
+                finalText={finalText}
+                decodedPaymentResp={decodedPaymentResp}
+              />
+            </div>
           )}
         </div>
       </DrawerContent>

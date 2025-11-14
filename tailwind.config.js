@@ -52,7 +52,7 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         // Custom colors for Button component
-        primaryColor: "hsl(var(--primary-color))",
+        primaryColor: "#25C696",
         primaryColorHover: "#1BE2BB",
         primaryColorLinear: "var(--primary-color-linear)",
         primaryColorLinearHover: "var(--primary-color-linear-hover)",

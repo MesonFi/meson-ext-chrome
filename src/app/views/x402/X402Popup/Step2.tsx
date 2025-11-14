@@ -71,21 +71,24 @@ const Step2: React.FC<Props> = ({
   }
 
   return (
-    <div className="">
-      {err && <div className="text-xs text-error mb-3">错误：{err}</div>}
+    <div className="flex flex-col h-full px-3 overflow-hidden">
+      {/* 可滚动内容区域 */}
+      <div className="flex-1 overflow-y-auto scrollbar-hide min-h-0">
+        {err && <div className="text-xs text-error mb-3">错误：{err}</div>}
 
-      {/* 动态表单 */}
-      <DynamicForm ref={formRef} selectedAccept={selectedAccept} />
+        {/* 动态表单 */}
+        <DynamicForm ref={formRef} selectedAccept={selectedAccept} />
 
-      <div className="">
-        <div className="text-textColor1 text-sm mb-1">X-Payment Header</div>
-        <div className="text-xs bg-card p-2 rounded-lg whitespace-pre-wrap break-words h-[172px] overflow-y-scroll scrollbar-hide">
-          {xPaymentHeader}
+        <div className="mt-4">
+          <div className="text-textColor1 text-sm mb-1">X-Payment Header</div>
+          <div className="text-xs bg-card p-2 rounded-lg whitespace-pre-wrap break-words max-h-[172px] overflow-y-scroll scrollbar-hide mb-3">
+            {xPaymentHeader}
+          </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="mt-6 px-0 border-borderColor flex items-center justify-end">
+      {/* 固定底部按钮 */}
+      <div className="pt-4 border-t border-borderColor flex-shrink-0">
         <Button
           className="w-full"
           variant="primary"
