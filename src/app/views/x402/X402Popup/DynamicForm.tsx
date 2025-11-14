@@ -1,6 +1,9 @@
 import React, { useState, useMemo, forwardRef, useImperativeHandle } from "react"
 import { Input } from "~src/components/ui/input"
 import { Checkbox } from "~src/components/ui/checkbox"
+import { SvgIcon } from "~src/components/SvgIcon"
+import PasteIconSrc from "~src/assets/icons/paste.svg"
+import { MessageTooltip } from "~src/components/MessageTooltip"
 import type { X402Accept, X402FieldSchema } from "../types"
 
 type Props = {
@@ -38,9 +41,23 @@ const DynamicForm = forwardRef<DynamicFormRef, Props>(({ selectedAccept }, ref) 
     return initial
   })
 
+  const [pastedField, setPastedField] = useState<string | null>(null)
+
   // 更新表单字段
   const handleInputChange = (key: string, value: any) => {
     setFormData(prev => ({ ...prev, [key]: value }))
+  }
+
+  // 粘贴功能
+  const handlePaste = async (key: string) => {
+    try {
+      const text = await navigator.clipboard.readText()
+      handleInputChange(key, text)
+      setPastedField(key)
+      setTimeout(() => setPastedField(null), 1000)
+    } catch (err) {
+      console.error("Failed to paste:", err)
+    }
   }
 
   // 暴露验证方法给父组件
@@ -128,6 +145,15 @@ const DynamicForm = forwardRef<DynamicFormRef, Props>(({ selectedAccept }, ref) 
                   onChange={(e) => handleInputChange(key, e.target.value)}
                   className="text-xs"
                   step={schema.type === "integer" ? "1" : "any"}
+                  suffix={
+                    <MessageTooltip content={pastedField === key ? 'Pasted' : 'Paste'}>
+                      <SvgIcon
+                        src={PasteIconSrc}
+                        className="w-4 h-4 text-textColor2 hover:text-primaryColorHover cursor-pointer"
+                        onClick={() => handlePaste(key)}
+                      />
+                    </MessageTooltip>
+                  }
                 />
               ) : (
                 <Input
@@ -136,6 +162,15 @@ const DynamicForm = forwardRef<DynamicFormRef, Props>(({ selectedAccept }, ref) 
                   value={formData[key] || ""}
                   onChange={(e) => handleInputChange(key, e.target.value)}
                   className="text-xs"
+                  suffix={
+                    <MessageTooltip content={pastedField === key ? 'Pasted' : 'Paste'}>
+                      <SvgIcon
+                        src={PasteIconSrc}
+                        className="w-4 h-4 text-textColor2 hover:text-primaryColorHover cursor-pointer"
+                        onClick={() => handlePaste(key)}
+                      />
+                    </MessageTooltip>
+                  }
                 />
               )}
             </>
