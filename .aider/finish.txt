@@ -11,7 +11,7 @@ You MUST:
   - requirements/01_requirement.md
   - requirements/02_design.md
   - requirements/03_adjustments.md
-- Create a new, empty `requirements/01_requirement.md` file to begin the next cycle.
+- Create a new, empty `requirements/01_requirement.md`, `requirements/02_design.md`, `requirements/03_adjustments.md` files to begin the next cycle.
 - Produce a brief summary of the completed development cycle for the commit body.
 - Stage all changes and create a git commit (summary = requirement description in normal English; body = short explanation of what was archived and completed).
 
