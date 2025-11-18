@@ -17,6 +17,12 @@ This section highlights key files and their roles.
 ## contexts  
 - **WalletContext.tsx**: exposes `connect`, `disconnect`, `address`, and `ExtensionSigner` via React context.
 
+## components/Navigation  
+- **TabBar.tsx**: Bottom persistent tab bar with List, Add, History controls.
+
+## app/views  
+- **History.tsx**: Placeholder for the History page accessible via TabBar.
+
 ## views/x402  
 - **X402URL.tsx**: URL input drawer to initiate x402 flows; now supports GET/POST method selection and retry logic on non-402 responses.  
 - **X402Popup/**: 3-step flow components (Step1: select & sign, Step2: form & retry, Step3: display response).  

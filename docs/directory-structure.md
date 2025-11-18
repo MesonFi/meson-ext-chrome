@@ -13,7 +13,8 @@ src/
 │  ├─ ui/               # Design system primitives (Input, Button, Tooltip, Drawer, etc.)  
 │  ├─ SvgIcon/          # Inline-SVG loader  
 │  ├─ ConnectMetamask/  # Connect button and UI  
-│  └─ Loading/          # Skeleton loaders  
+│  ├─ Loading/          # Skeleton loaders  
+│  └─ Navigation/       # Bottom TabBar component  
 
 ├─ wallet-transport/    # In-page & content scripts for wallet transport  
 ├─ background.ts        # Background script for tab tracking  

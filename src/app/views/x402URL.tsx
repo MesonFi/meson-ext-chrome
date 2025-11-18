@@ -45,10 +45,11 @@ function validateURL(url: string): string | null {
 
 type X402URLProps = {
   mode?: "popup" | "sidepanel"
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
-  const [open, setOpen] = useState(false)
+export const X402URL: React.FC<X402URLProps> = ({ mode = "popup", open, onOpenChange }) => {
   const [url, setUrl] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -110,7 +111,7 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
   }
 
   const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen)
+    onOpenChange(newOpen)
     if (!newOpen) {
       // 关闭时重置状态
       setUrl("")
@@ -184,14 +185,6 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
   return (
     <div className="p-3 border-t border-borderColor">
       <Drawer open={open} onOpenChange={handleOpenChange}>
-        <Button
-          variant="secondary"
-          className="w-full"
-          size="lg"
-          onClick={() => setOpen(true)}
-        >
-          Enter x402 URL
-        </Button>
         <DrawerContent>
           <DrawerHeader className="flex justify-between items-center">
             <DrawerTitle>Enter x402 URL</DrawerTitle>
