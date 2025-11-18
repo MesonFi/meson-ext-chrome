@@ -1,0 +1,8 @@
+# Phase: FINISH
+
+/read .aider/finish.txt
+/add requirements/01_requirement.md
+/add requirements/02_design.md
+/add requirements/03_adjustments.md
+
+/code Read finish.txt and follow the instructions inside.

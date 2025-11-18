@@ -1,0 +1,13 @@
+PHASE: DEVELOPMENT
+
+Modify codes (`src/**`) by the approved technical design and keep code and documentation (`docs/**`) aligned.
+
+You MUST:
+- Modify codes under `src/**` to realize the design according to `requirements/02_design.md`.
+- Update `docs/**` to accurately reflect the updated architecture, flows, and behavior—high-level only, without unnecessary detail.
+- Ensure code and documentation stay consistent.
+- Run the build/test command and fix errors until it succeeds.
+- Create a file `requirements/03_adjustments.md` as a template to capture follow-up refinements, uncertainty points, or areas requiring manual review.
+
+You MUST NOT:
+- Modify `requirements/01_requirement.md` or `requirements/02_design.md`.

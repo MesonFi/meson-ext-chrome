@@ -32,3 +32,8 @@ dist/
 
 # typescript
 *.tsbuildinfo
+
+.aider*
+!.aider
+!.aiderignore
+!.aider.conf.yml

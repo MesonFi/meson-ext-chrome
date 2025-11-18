@@ -1,0 +1,6 @@
+model: o4-mini
+editor-model: gpt-4.1-mini
+test-cmd: "yarn build"
+auto-commits: false
+watch-files: true
+# yes-always: true

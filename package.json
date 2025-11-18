@@ -20,6 +20,10 @@
     ]
   },
   "scripts": {
+    "ai:design": "aider --config .aider.conf.yml --load .aider/design.commands --no-gitignore",
+    "ai:dev": "aider --config .aider.conf.yml --load .aider/dev.commands --no-gitignore",
+    "ai:adjust": "aider --config .aider.conf.yml --load .aider/adjust.commands --no-gitignore",
+    "ai:finish": "aider --config .aider.conf.yml --load .aider/finish.commands --no-gitignore",
     "dev": "plasmo dev",
     "build": "plasmo build",
     "package": "plasmo package"

@@ -1,0 +1,14 @@
+PHASE: DESIGN
+
+Produce a complete technical design in `requirements/02_design.md` for the requirement described in `requirements/01_requirement.md`.
+
+You MUST:
+- Treat `01_requirement.md` as the primary requirement.
+- Understand the project using the existing codebase and documentation: `src/**`, `docs/**`, and all root-level config files (read-only).
+- Write a clear and concise technical design in `requirements/02_design.md`: describe exactly what needs to be implemented, avoid redundant language, and omit anything that does not support execution.
+- Refine `01_requirement.md`: preserve its original intent while improving clarity, structure, and formatting. If it contains tasks (e.g., translation, copywriting, missing details), complete them as part of the update.
+
+You MUST NOT:
+- Modify any files under `src/**`.
+- Modify any files under `docs/**`.
+- Change any root-level config files.

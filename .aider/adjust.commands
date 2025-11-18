@@ -1,0 +1,16 @@
+# Phase: ADJUST
+
+/read .aider/adjust.txt
+/read requirements/01_requirement.md
+/read requirements/02_design.md
+/add requirements/03_adjustments.md
+
+/add docs/
+/add src/
+/add package.json
+/add tsconfig.json
+/add postcss.config.js
+/add tailwind.config.js
+/add components.json
+
+/code Read adjust.txt and follow the instructions inside.

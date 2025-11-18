@@ -1,0 +1,14 @@
+PHASE: ADJUST
+
+Apply small-scope fixes and refinements to codes (`src/**`) based on the notes in `requirements/03_adjustments.md`.
+
+You MUST:
+- Use `requirements/03_adjustments.md` as the source of all fixes, bug reports, and minor improvement requests.
+- Read `requirements/01_requirement.md` and `requirements/02_design.md` for context understanding.
+- Modify code under `src/**` to address the issues listed in `requirements/03_adjustments.md`.
+- Update `docs/**` when needed to keep high-level documentation aligned.
+- Update `requirements/03_adjustments.md` after each adjustment with a brief note describing how the issue was resolved.
+
+You MUST NOT:
+- Modify `requirements/01_requirement.md` or `requirements/02_design.md`.
+- Introduce new scope or perform large refactors.

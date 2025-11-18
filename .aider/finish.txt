@@ -1,0 +1,20 @@
+PHASE: FINISH
+
+Archive the completed requirement cycle and finalize the commit without modifying code.
+
+You MUST:
+- Determine today’s date (YYYY-MM-DD).
+- Generate a short kebab-case description of the completed requirement; this will be used both as the archive folder suffix and the commit summary (in normal English for the commit, kebab-case for the folder).
+- Create the archive folder:
+  requirements/archived/YYYY-MM-DD_short-description/
+- Move the following files into the archive folder without altering their contents:
+  - requirements/01_requirement.md
+  - requirements/02_design.md
+  - requirements/03_adjustments.md
+- Create a new, empty `requirements/01_requirement.md` file to begin the next cycle.
+- Produce a brief summary of the completed development cycle for the commit body.
+- Stage all changes and create a git commit (summary = requirement description in normal English; body = short explanation of what was archived and completed).
+
+You MUST NOT:
+- Modify any code.
+- Perform `git push`.

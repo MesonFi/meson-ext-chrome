@@ -1,0 +1,15 @@
+# Phase: DESIGN
+
+/read .aider/design.txt
+/read docs/
+/read src/
+/read package.json
+/read tsconfig.json
+/read postcss.config.js
+/read tailwind.config.js
+/read components.json
+
+/add requirements/01_requirement.md
+/add requirements/02_design.md
+
+/code Read design.txt and follow the instructions inside.
