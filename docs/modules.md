@@ -2,7 +2,7 @@
 
 This section highlights key files and their roles.
 
-## app/lib  
+## lib  
 - **signer.ts**: `ExtensionSigner` wraps MetaMask RPC (accounts, chain, sign, sendTransaction).  
 - **transport.ts**: `sendToActiveTab` & `withTimeout` for messaging between popup and in-page.  
 - **transactionState.ts**: persists in-flight x402 transactions in Chrome storage.  

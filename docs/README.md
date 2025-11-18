@@ -43,14 +43,14 @@ We use absolute imports prefixed with `~/`, mapping to the project’s `src/` ro
 ```json
 "aliases": {
   "components": "~/components",
-  "utils": "~/app/lib/utils"
+  "utils": "~/lib/utils"
 }
 ```  
 
 Usage examples:
 ```ts
 import { Button } from "~/components/Button"
-import { cn } from "~/app/lib/utils"
+import { cn } from "~/lib/utils"
 ```
 
 For more details, see the linked pages above.

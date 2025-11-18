@@ -4,12 +4,11 @@ Below is the top-level `src/` layout:
 
 src/  
 ├─ app/  
-│  ├─ lib/             # Core logic (signer, transport, utils, storage)  
 │  ├─ contexts/        # React contexts (WalletContext)  
 │  ├─ views/           # Feature views (Home, X402, Options)  
 │  ├─ AppShell.tsx     # Root shell for popup & sidepanel  
 │  └─ Header.tsx       # Shared header with wallet connect  
-
+├─ lib/                # Core logic (signer, transport, utils, storage)  
 ├─ components/          # Shared UI components  
 │  ├─ ui/               # Design system primitives (Input, Button, Tooltip, Drawer, etc.)  
 │  ├─ SvgIcon/          # Inline-SVG loader  
