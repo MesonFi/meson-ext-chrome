@@ -8,9 +8,9 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-} from "~src/components/ui/drawer"
-import CloseIcon from "~src/assets/icons/X.svg"
-import ArrowRightIcon from "~src/assets/icons/arrow-right.svg"
+} from "~/components/ui/drawer"
+import CloseIcon from "~/assets/icons/X.svg"
+import ArrowRightIcon from "~/assets/icons/arrow-right.svg"
 import {
   savePendingTransaction,
   getPendingTransaction,
@@ -18,8 +18,8 @@ import {
 } from "../../../lib/transactionState"
 import { parseValidBeforeFromHeader } from "../lib"
 import type { X402Item, X402Accept } from "../types"
-import { cn } from "~src/app/lib/utils"
-import { MessageTooltip } from "~src/components/MessageTooltip"
+import { cn } from "~/app/lib/utils"
+import { MessageTooltip } from "~/components/MessageTooltip"
 
 type Props = {
   item: X402Item

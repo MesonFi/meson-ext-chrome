@@ -1,11 +1,11 @@
 // src/app/Header.tsx
 import React from "react"
 import { useWallet } from "./contexts/WalletContext"
-import { SvgIcon } from "~src/components/SvgIcon"
+import { SvgIcon } from "~/components/SvgIcon"
 import SidebarIconSrc from "../assets/icons/sidebar.svg"
-import { cn } from "~src/app/lib/utils"
-import { MessageTooltip } from "~src/components/MessageTooltip"
-import { ConnectMetamask } from "~src/components/ConnectMetamask"
+import { cn } from "~/app/lib/utils"
+import { MessageTooltip } from "~/components/MessageTooltip"
+import { ConnectMetamask } from "~/components/ConnectMetamask"
 
 const Header: React.FC<{
   mode: "popup" | "sidepanel"

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
-import { SvgIcon } from "~src/components/SvgIcon"
-import CopyIconSrc from "~src/assets/icons/copy.svg"
-import { MessageTooltip } from "~src/components/MessageTooltip"
+import { SvgIcon } from "~/components/SvgIcon"
+import CopyIconSrc from "~/assets/icons/copy.svg"
+import { MessageTooltip } from "~/components/MessageTooltip"
 
 type Props = {
   finalText: string

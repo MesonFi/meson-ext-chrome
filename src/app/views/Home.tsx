@@ -1,6 +1,6 @@
 // src/app/views/Home.tsx
 import React from "react"
-import { Button } from "~src/components/Button"
+import { Button } from "~/components/Button"
 import ViewX402List from "./x402/ViewX402List"
 
 type Props = {

@@ -1,12 +1,12 @@
 // src/components/ConnectMetamask/index.tsx
 import React, { useState } from "react"
-import { useWallet } from "~src/app/contexts/WalletContext"
-import { SvgIcon } from "~src/components/SvgIcon"
-import MetaMaskIconSrc from "~src/assets/icons/metamask.svg"
-import CopyIconSrc from "~src/assets/icons/copy.svg"
-import LogoutIconSrc from "~src/assets/icons/logout.svg"
-import { cn } from "~src/app/lib/utils"
-import { MessageTooltip } from "~src/components/MessageTooltip"
+import { useWallet } from "~/app/contexts/WalletContext"
+import { SvgIcon } from "~/components/SvgIcon"
+import MetaMaskIconSrc from "~/assets/icons/metamask.svg"
+import CopyIconSrc from "~/assets/icons/copy.svg"
+import LogoutIconSrc from "~/assets/icons/logout.svg"
+import { cn } from "~/app/lib/utils"
+import { MessageTooltip } from "~/components/MessageTooltip"
 import { ConnectMetamaskButton } from "./ConnectMetamaskButton"
 
 function shortAddr(addr?: string) {

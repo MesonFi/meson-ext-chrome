@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Button } from "~src/components/Button"
+import { Button } from "~/components/Button"
 import {
   Drawer,
   DrawerClose,
@@ -8,12 +8,12 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-} from "~src/components/ui/drawer"
-import { SvgIcon } from "~src/components/SvgIcon"
-import CloseIconSrc from "~src/assets/icons/X.svg"
-import PasteIconSrc from "~src/assets/icons/paste.svg"
-import { Input } from "~src/components/ui/input"
-import { MessageTooltip } from "~src/components/MessageTooltip"
+} from "~/components/ui/drawer"
+import { SvgIcon } from "~/components/SvgIcon"
+import CloseIconSrc from "~/assets/icons/X.svg"
+import PasteIconSrc from "~/assets/icons/paste.svg"
+import { Input } from "~/components/ui/input"
+import { MessageTooltip } from "~/components/MessageTooltip"
 import X402Popup from "./x402/X402Popup"
 import { clearPendingTransaction } from "../lib/transactionState"
 

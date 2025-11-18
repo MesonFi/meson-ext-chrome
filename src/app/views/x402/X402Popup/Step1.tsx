@@ -2,8 +2,8 @@ import React, { useMemo, useState } from "react"
 import { useWallet } from "../../../contexts/WalletContext"
 import X402AcceptOption from "./X402AcceptOption"
 import { buildXPaymentHeader } from "../lib"
-import { Button } from "~src/components/Button"
-import { ConnectMetamaskButton } from "~src/components/ConnectMetamask"
+import { Button } from "~/components/Button"
+import { ConnectMetamaskButton } from "~/components/ConnectMetamask"
 import type { X402Accept, X402Item } from "../types"
 
 // 根据 accept 输出 schema 推导方法

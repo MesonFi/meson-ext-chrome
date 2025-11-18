@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react"
 import X402Item from "./X402Item"
 import X402Popup from "./X402Popup"
-import { SvgIcon } from "~src/components/SvgIcon"
-import RefreshIconSrc from "~/src/assets/icons/refresh.svg"
-import Loading from "~src/components/Loading"
+import { SvgIcon } from "~/components/SvgIcon"
+import RefreshIconSrc from "~/assets/icons/refresh.svg"
+import Loading from "~/components/Loading"
 import { getPendingTransaction, clearPendingTransaction } from "../../lib/transactionState"
 import { toast } from "sonner"
 import type {

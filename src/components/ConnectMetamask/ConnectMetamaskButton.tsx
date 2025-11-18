@@ -1,7 +1,7 @@
 // src/components/ConnectMetamask/ConnectMetamaskButton.tsx
 import React, { useMemo } from "react"
-import { useWallet } from "~src/app/contexts/WalletContext"
-import { Button, type ButtonProps } from "~src/components/Button"
+import { useWallet } from "~/app/contexts/WalletContext"
+import { Button, type ButtonProps } from "~/components/Button"
 
 function shortAddr(addr?: string) {
   if (!addr) return ""

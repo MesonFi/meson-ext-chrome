@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react"
 import { decodeXPaymentResponseHeader } from "../lib"
-import { Button } from "~src/components/Button"
+import { Button } from "~/components/Button"
 import DynamicForm, { type DynamicFormRef } from "./DynamicForm"
 import type { X402Accept } from "../types"
-import { SvgIcon } from "~src/components/SvgIcon"
-import CopyIconSrc from "~src/assets/icons/copy.svg"
-import { MessageTooltip } from "~src/components/MessageTooltip"
+import { SvgIcon } from "~/components/SvgIcon"
+import CopyIconSrc from "~/assets/icons/copy.svg"
+import { MessageTooltip } from "~/components/MessageTooltip"
 
 type Props = {
   resourceUrl: string

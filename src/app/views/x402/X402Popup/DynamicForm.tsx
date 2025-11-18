@@ -1,9 +1,9 @@
 import React, { useState, useMemo, forwardRef, useImperativeHandle } from "react"
-import { Input } from "~src/components/ui/input"
-import { Checkbox } from "~src/components/ui/checkbox"
-import { SvgIcon } from "~src/components/SvgIcon"
-import PasteIconSrc from "~src/assets/icons/paste.svg"
-import { MessageTooltip } from "~src/components/MessageTooltip"
+import { Input } from "~/components/ui/input"
+import { Checkbox } from "~/components/ui/checkbox"
+import { SvgIcon } from "~/components/SvgIcon"
+import PasteIconSrc from "~/assets/icons/paste.svg"
+import { MessageTooltip } from "~/components/MessageTooltip"
 import type { X402Accept, X402FieldSchema } from "../types"
 
 type Props = {
