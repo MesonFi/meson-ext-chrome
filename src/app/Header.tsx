@@ -29,7 +29,7 @@ const Header: React.FC<{
   }
 
   return (
-    <div className={cn("border-b border-borderColor flex items-center justify-between px-3", connected ? 'py-[18px]' : 'py-3')}>
+    <div className={cn("bg-secondaryBg border-b border-borderColor flex items-center justify-between px-3", connected ? 'py-[18px]' : 'py-3')}>
       <ConnectMetamask mode="full" className="flex-1" showActions={true} />
       {(mode === "popup") && (
         <div className="flex items-center gap-4 ml-4">
