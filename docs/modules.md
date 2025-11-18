@@ -12,7 +12,7 @@ This section highlights key files and their roles.
 - **utils.ts**: helper (`cn` for class merging, `capitalize`).  
 
 ## wallet-transport
-- **wallet-transport/index.ts**:: `sendToActiveTab` & `withTimeout` for messaging between popup and in-page.  
+- **wallet-transport/index.ts**:: `sendToActiveTab` & `withTimeout` for messaging between popup and in-page, and support for `MM_ACCOUNTS_CHANGED` forwarding.
 
 ## contexts  
 - **WalletContext.tsx**: exposes `connect`, `disconnect`, `address`, and `ExtensionSigner` via React context.

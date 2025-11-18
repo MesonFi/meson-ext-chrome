@@ -45,6 +45,14 @@ window.addEventListener("message", (evt) => {
   if (evt.source !== window) return
   const data = evt.data
   if (!data || data.target !== "CONTENT") return
+
+    if (data.payload?.type === 'ACCOUNTS_CHANGED') {
+      chrome.runtime.sendMessage({
+        type: 'MM_ACCOUNTS_CHANGED',
+        accounts: data.payload.accounts
+      });
+      return;
+    }
   console.log("[CS] <- inpage message", data)
   const { id, result, error } = data
   const responder = pending.get(id)

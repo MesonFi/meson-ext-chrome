@@ -1,6 +1,16 @@
 ;(function () {
   console.log("[INPAGE] injected inpage.js on", location.href)
 
+  if ((window as any).ethereum && !(window as any).ethereum._forwardAccounts) {
+    (window as any).ethereum._forwardAccounts = true;
+    (window as any).ethereum.on('accountsChanged', (accounts: string[]) => {
+      window.postMessage({
+        target: "CONTENT",
+        payload: { type: "ACCOUNTS_CHANGED", accounts }
+      }, "*");
+    });
+  }
+
   function reply(id: string, result?: any, error?: string) {
     console.log("[INPAGE] -> content reply", { id, result, error })
     // 调试阶段使用 "*"，生产改成 window.origin

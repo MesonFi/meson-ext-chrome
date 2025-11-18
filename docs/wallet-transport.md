@@ -4,6 +4,7 @@
 The `wallet-transport` module centralizes messaging between extension contexts and handles wallet injection logic. It provides:
 - `sendToActiveTab`: forward messages to the active browser tab content.
 - `withTimeout`: add timeouts to asynchronous calls.
+- Account change detection: in-page script listens for `accountsChanged` and forwards `MM_ACCOUNTS_CHANGED` via content script to extension context.
 
 ## Folder Structure
 ```

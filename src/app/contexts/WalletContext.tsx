@@ -42,6 +42,20 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     })
   }, [])
 
+  useEffect(() => {
+    const handleMsg = (message: any, _sender: any, sendResponse: any) => {
+      if (message.type === 'MM_ACCOUNTS_CHANGED') {
+        const newAddr = message.accounts?.[0] || '';
+        saveState({ connected: !!newAddr, address: newAddr });
+        setAddress(newAddr);
+      }
+    };
+    chrome.runtime.onMessage.addListener(handleMsg);
+    return () => {
+      chrome.runtime.onMessage.removeListener(handleMsg);
+    };
+  }, []);
+
   const connected = useMemo(() => !!address, [address])
 
   // 连接（沿用 MM_GET_ACCOUNTS）
