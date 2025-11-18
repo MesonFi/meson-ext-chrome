@@ -2,7 +2,7 @@
 
 ## 目录结构
 ```
-src/assets/icons/
+assets/icons/
 ├── README.md          # 使用说明
 ├── home.svg          # 示例图标
 ├── settings.svg      # 示例图标
@@ -23,7 +23,7 @@ import Icon from '~/components/Icon'
 ### 方法 2: 直接导入 SVG 文件（推荐）
 ```tsx
 // 在组件中导入
-import HomeIcon from '~/assets/icons/home.svg'
+import HomeIcon from '@assets/icons/home.svg'
 
 // 使用
 <img src={HomeIcon} alt="home" className="w-6 h-6" />

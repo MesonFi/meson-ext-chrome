@@ -10,8 +10,8 @@ import {
   DrawerTitle,
 } from "~/components/ui/drawer"
 import { SvgIcon } from "~/components/SvgIcon"
-import CloseIconSrc from "~/assets/icons/X.svg"
-import PasteIconSrc from "~/assets/icons/paste.svg"
+import CloseIconSrc from "@assets/icons/X.svg"
+import PasteIconSrc from "@assets/icons/paste.svg"
 import { Input } from "~/components/ui/input"
 import { MessageTooltip } from "~/components/MessageTooltip"
 import X402Popup from "./x402/X402Popup"

@@ -1,7 +1,7 @@
 import * as React from "react"
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
 import { Check } from "lucide-react"
-import CheckboxIconSrc from "~/assets/icons/checkbox.svg"
+import CheckboxIconSrc from "@assets/icons/checkbox.svg"
 
 import { cn } from "~/lib/utils"
 import SvgIcon from "../SvgIcon"

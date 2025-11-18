@@ -4,8 +4,8 @@ import classNames from 'classnames';
 // 导入所有 SVG 图标
 const icons = {
   // 示例图标，您可以添加更多
-  // home: () => import('@/assets/icons/home.svg'),
-  // settings: () => import('@/assets/icons/settings.svg'),
+  // home: () => import('@assets/icons/home.svg'),
+  // settings: () => import('@assets/icons/settings.svg'),
 };
 
 export type IconName = keyof typeof icons;
@@ -29,7 +29,7 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
  * </Icon>
  *
  * 使用方式3 - 直接导入 SVG 文件作为组件:
- * import HomeIcon from '~/assets/icons/home.svg?react'
+ * import HomeIcon from '@assets/icons/home.svg?react'
  * <HomeIcon className="w-6 h-6" />
  */
 export const Icon: React.FC<IconProps> = ({

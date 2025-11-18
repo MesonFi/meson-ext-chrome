@@ -2,7 +2,7 @@
 import React from "react"
 import { useWallet } from "./contexts/WalletContext"
 import { SvgIcon } from "~/components/SvgIcon"
-import SidebarIconSrc from "../assets/icons/sidebar.svg"
+import SidebarIconSrc from "@assets/icons/sidebar.svg"
 import { cn } from "~/lib/utils"
 import { MessageTooltip } from "~/components/MessageTooltip"
 import { ConnectMetamask } from "~/components/ConnectMetamask"

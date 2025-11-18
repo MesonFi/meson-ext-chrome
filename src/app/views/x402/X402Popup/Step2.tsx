@@ -4,7 +4,7 @@ import { Button } from "~/components/Button"
 import DynamicForm, { type DynamicFormRef } from "./DynamicForm"
 import type { X402Accept } from "../types"
 import { SvgIcon } from "~/components/SvgIcon"
-import CopyIconSrc from "~/assets/icons/copy.svg"
+import CopyIconSrc from "@assets/icons/copy.svg"
 import { MessageTooltip } from "~/components/MessageTooltip"
 
 type Props = {

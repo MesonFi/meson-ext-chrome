@@ -9,8 +9,8 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "~/components/ui/drawer"
-import CloseIcon from "~/assets/icons/X.svg"
-import ArrowRightIcon from "~/assets/icons/arrow-right.svg"
+import CloseIcon from "@assets/icons/X.svg"
+import ArrowRightIcon from "@assets/icons/arrow-right.svg"
 import {
   savePendingTransaction,
   getPendingTransaction,

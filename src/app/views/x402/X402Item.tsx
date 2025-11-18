@@ -1,6 +1,6 @@
 import React from "react"
 import SvgIcon from "~/components/SvgIcon"
-import BaseIconSrc from "~/assets/icons/base.svg"
+import BaseIconSrc from "@assets/icons/base.svg"
 import { capitalize } from "~/lib/utils"
 import { cn } from "~/lib/utils"
 import type { X402Item as X402ItemType } from "./types"

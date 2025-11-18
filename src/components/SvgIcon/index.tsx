@@ -11,7 +11,7 @@ export interface SvgIconProps extends React.SVGProps<SVGSVGElement> {
  * 这样可以通过 className 控制 SVG 内部的 currentColor
  *
  * 使用方式:
- * import Icon from '~/assets/icons/copy.svg'
+ * import Icon from '@assets/icons/copy.svg'
  * <SvgIcon src={Icon} className="w-4 h-4 text-gray-600 hover:text-gray-900" />
  */
 export const SvgIcon: React.FC<SvgIconProps> = ({ src, className, ...props }) => {

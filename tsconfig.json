@@ -13,7 +13,10 @@
     "paths": {
       "~/*": [
         "src/*"
-      ]
+      ],
+      "@assets/*": [
+        "assets/*"
+      ],
     },
     "baseUrl": ".",
     "moduleResolution": "bundler"
