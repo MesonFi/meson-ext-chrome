@@ -2,7 +2,7 @@ import React from "react"
 import SvgIcon from "~src/components/SvgIcon"
 import BaseIconSrc from "~/src/assets/icons/base.svg"
 import { capitalize } from "~src/app/lib/utils"
-import { cn } from "~lib/utils"
+import { cn } from "~src/app/lib/utils"
 import type { X402Item as X402ItemType } from "./types"
 
 type Props = {

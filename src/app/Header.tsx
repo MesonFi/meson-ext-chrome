@@ -3,7 +3,7 @@ import React from "react"
 import { useWallet } from "./contexts/WalletContext"
 import { SvgIcon } from "~src/components/SvgIcon"
 import SidebarIconSrc from "../assets/icons/sidebar.svg"
-import { cn } from "~lib/utils"
+import { cn } from "~src/app/lib/utils"
 import { MessageTooltip } from "~src/components/MessageTooltip"
 import { ConnectMetamask } from "~src/components/ConnectMetamask"
 

@@ -18,7 +18,7 @@ import {
 } from "../../../lib/transactionState"
 import { parseValidBeforeFromHeader } from "../lib"
 import type { X402Item, X402Accept } from "../types"
-import { cn } from "~lib/utils"
+import { cn } from "~src/app/lib/utils"
 import { MessageTooltip } from "~src/components/MessageTooltip"
 
 type Props = {

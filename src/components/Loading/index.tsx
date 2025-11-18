@@ -1,4 +1,4 @@
-import {cn} from '~/lib/utils';
+import {cn} from '~src/app/lib/utils';
 import './index.css';
 
 interface ILoadingProps {

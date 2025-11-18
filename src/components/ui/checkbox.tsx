@@ -3,7 +3,7 @@ import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
 import { Check } from "lucide-react"
 import CheckboxIconSrc from "~/src/assets/icons/checkbox.svg"
 
-import { cn } from "~/lib/utils"
+import { cn } from "~src/app/lib/utils"
 import SvgIcon from "../SvgIcon"
 
 const Checkbox = React.forwardRef<

@@ -5,7 +5,7 @@ import { SvgIcon } from "~src/components/SvgIcon"
 import MetaMaskIconSrc from "~src/assets/icons/metamask.svg"
 import CopyIconSrc from "~src/assets/icons/copy.svg"
 import LogoutIconSrc from "~src/assets/icons/logout.svg"
-import { cn } from "~lib/utils"
+import { cn } from "~src/app/lib/utils"
 import { MessageTooltip } from "~src/components/MessageTooltip"
 import { ConnectMetamaskButton } from "./ConnectMetamaskButton"
 

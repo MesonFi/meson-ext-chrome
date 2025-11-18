@@ -1,5 +1,5 @@
 import { TooltipContent, TooltipTrigger, Tooltip, TooltipProvider, TooltipArrow } from '~/src/components/ui/tooltip';
-import { cn } from '~/lib/utils';
+import { cn } from '~src/app/lib/utils';
 import { type FC, useState } from 'react';
 
 

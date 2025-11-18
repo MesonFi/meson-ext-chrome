@@ -4,7 +4,7 @@ import "./styles.css"
 import { WalletProvider } from "./contexts/WalletContext"
 import Header from "./Header"
 import Home from "./views/Home"
-import { cn } from "~lib/utils"
+import { cn } from "~/src/app/lib/utils"
 import { X402URL } from './views/x402URL'
 import { Toaster } from "~src/components/ui/sonner"
 
