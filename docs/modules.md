@@ -4,9 +4,11 @@ This section highlights key files and their roles.
 
 ## lib  
 - **signer.ts**: `ExtensionSigner` wraps MetaMask RPC (accounts, chain, sign, sendTransaction).  
-- **transport.ts**: `sendToActiveTab` & `withTimeout` for messaging between popup and in-page.  
 - **transactionState.ts**: persists in-flight x402 transactions in Chrome storage.  
 - **utils.ts**: helper (`cn` for class merging, `capitalize`).  
+
+## wallet-transport
+- **wallet-transport/index.ts**:: `sendToActiveTab` & `withTimeout` for messaging between popup and in-page.  
 
 ## contexts  
 - **WalletContext.tsx**: exposes `connect`, `disconnect`, `address`, and `ExtensionSigner` via React context.

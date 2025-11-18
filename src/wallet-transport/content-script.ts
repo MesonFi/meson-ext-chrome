@@ -1,12 +1,6 @@
-// src/contents/metamask-bridge.ts
-import inpageUrl from "url:~injected/inpage.ts"  // ← 注意 ~src 路径
+import inpageUrl from "url:~wallet-transport/inpage-script.ts"
 
-import type { PlasmoCSConfig } from "plasmo"
-
-export const config: PlasmoCSConfig = {
-  matches: ["https://*/*", "http://*/*"],
-  run_at: "document_start"
-}
+console.log("[CONTENT SCRIPT] wallet-transport/content-script.ts loaded", location.href)
 
 /**
  * content script:
@@ -14,8 +8,6 @@ export const config: PlasmoCSConfig = {
  * - 接收 popup 的消息，转发给页面（postMessage）
  * - 接收页面回包，回给 popup
  */
-
-console.log("[CS] metamask-bridge loaded on", location.href)
 
 type Responder = (resp: any) => void
 const pending = new Map<string, Responder>()

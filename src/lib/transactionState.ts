@@ -1,4 +1,4 @@
-// src/app/lib/transactionState.ts
+// src/lib/transactionState.ts
 // 用于保存和恢复 x402 交易状态（防止 popup 关闭时丢失状态）
 
 const TX_STATE_KEY = "x402_pending_transaction"

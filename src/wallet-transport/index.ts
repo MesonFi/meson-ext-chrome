@@ -1,4 +1,4 @@
-// src/app/lib/transport.ts
+// src/lib/transport.ts
 const TIMEOUT_MS = 5 * 60_000
 
 export function withTimeout<T>(p: Promise<T>, ms = TIMEOUT_MS): Promise<T> {

@@ -1,5 +1,3 @@
-// src/injected/inpage.ts
-// 该脚本注入到页面的真实 window 上，能访问 window.ethereum
 ;(function () {
   console.log("[INPAGE] injected inpage.js on", location.href)
 

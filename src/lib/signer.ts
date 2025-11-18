@@ -1,5 +1,5 @@
-// src/app/lib/signer.ts
-import { withTimeout, sendToActiveTab } from "./transport"
+// src/lib/signer.ts
+import { withTimeout, sendToActiveTab } from "~/wallet-transport"
 
 export type Hex = `0x${string}`
 

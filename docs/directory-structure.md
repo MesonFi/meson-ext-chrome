@@ -15,8 +15,7 @@ src/
 │  ├─ ConnectMetamask/  # Connect button and UI  
 │  └─ Loading/          # Skeleton loaders  
 
-├─ injected/            # In-page script for wallet bridging  
-├─ contents/            # Content script for communication  
+├─ wallet-transport/    # In-page & content scripts for wallet transport  
 ├─ background.ts        # Background script for tab tracking  
 ├─ popup.tsx            # Entry point for popup view  
 └─ sidepanel.tsx        # Entry point for sidepanel view

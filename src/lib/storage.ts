@@ -1,4 +1,4 @@
-// src/app/lib/storage.ts
+// src/lib/storage.ts
 export type AppState = {
   connected: boolean
   address?: string

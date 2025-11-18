@@ -7,7 +7,7 @@ import {
   watchState,
   type AppState
 } from "../../lib/storage"
-import { sendToActiveTab, withTimeout } from "../../lib/transport"
+import { sendToActiveTab, withTimeout } from "~/wallet-transport"
 import { ExtensionSigner } from "../../lib/signer"
 
 type WalletCtx = {
