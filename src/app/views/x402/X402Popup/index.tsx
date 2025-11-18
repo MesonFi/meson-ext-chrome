@@ -15,7 +15,7 @@ import {
   savePendingTransaction,
   getPendingTransaction,
   clearPendingTransaction
-} from "../../../../lib/transactionState"
+} from "~/lib/storage/x402_pending_transaction"
 import { parseValidBeforeFromHeader } from "../lib"
 import type { X402Item, X402Accept } from "../types"
 import { cn } from "~/lib/utils"

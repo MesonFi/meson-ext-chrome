@@ -2,9 +2,13 @@
 
 This section highlights key files and their roles.
 
+## lib/storage  
+- **index.ts**: 通用存取封装，提供 `get<T>(key)`, `set(key,value)`, `remove(key)`.  
+- **app_state.ts**: 针对键 `"app_state"` 的 `loadState()`, `saveState()`, `clearState()`, `watchState()`.  
+- **x402_pending_transaction.ts**: 针对键 `"x402_pending_transaction"` 的 `savePendingTransaction()`, `getPendingTransaction()`, `clearPendingTransaction()`, `updatePendingTransaction()`.  
+
 ## lib  
 - **signer.ts**: `ExtensionSigner` wraps MetaMask RPC (accounts, chain, sign, sendTransaction).  
-- **transactionState.ts**: persists in-flight x402 transactions in Chrome storage.  
 - **utils.ts**: helper (`cn` for class merging, `capitalize`).  
 
 ## wallet-transport

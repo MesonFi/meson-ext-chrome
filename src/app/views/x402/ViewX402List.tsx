@@ -4,7 +4,7 @@ import X402Popup from "./X402Popup"
 import { SvgIcon } from "~/components/SvgIcon"
 import RefreshIconSrc from "@assets/icons/refresh.svg"
 import Loading from "~/components/Loading"
-import { getPendingTransaction, clearPendingTransaction } from "../../../lib/transactionState"
+import { getPendingTransaction, clearPendingTransaction } from "~/lib/storage/x402_pending_transaction"
 import { toast } from "sonner"
 import type {
   X402Item as X402ItemType,

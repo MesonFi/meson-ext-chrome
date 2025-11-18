@@ -6,7 +6,7 @@ import {
   clearState,
   watchState,
   type AppState
-} from "../../lib/storage"
+} from "~/lib/storage/app_state"
 import { sendToActiveTab, withTimeout } from "~/wallet-transport"
 import { ExtensionSigner } from "../../lib/signer"
 
