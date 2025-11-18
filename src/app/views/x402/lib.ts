@@ -21,7 +21,7 @@ import {
 } from "x402/client"
 
 import { decodeXPaymentResponse } from "x402/shared"
-import type { Hex } from "../../lib/signer"
+import type { Hex } from "../../../lib/signer"
 
 const NETWORK_TO_CHAIN_ID: Record<string, Hex> = {
   "base": "0x2105",           // 8453

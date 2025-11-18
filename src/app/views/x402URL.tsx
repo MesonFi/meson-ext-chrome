@@ -15,7 +15,7 @@ import PasteIconSrc from "~/assets/icons/paste.svg"
 import { Input } from "~/components/ui/input"
 import { MessageTooltip } from "~/components/MessageTooltip"
 import X402Popup from "./x402/X402Popup"
-import { clearPendingTransaction } from "../lib/transactionState"
+import { clearPendingTransaction } from "../../lib/transactionState"
 
 // URL 验证函数
 function validateURL(url: string): string | null {

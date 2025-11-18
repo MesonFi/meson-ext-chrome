@@ -15,10 +15,10 @@ import {
   savePendingTransaction,
   getPendingTransaction,
   clearPendingTransaction
-} from "../../../lib/transactionState"
+} from "../../../../lib/transactionState"
 import { parseValidBeforeFromHeader } from "../lib"
 import type { X402Item, X402Accept } from "../types"
-import { cn } from "~/app/lib/utils"
+import { cn } from "~/lib/utils"
 import { MessageTooltip } from "~/components/MessageTooltip"
 
 type Props = {

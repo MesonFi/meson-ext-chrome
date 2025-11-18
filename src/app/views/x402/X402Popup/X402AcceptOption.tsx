@@ -1,5 +1,5 @@
 import React from "react"
-import { capitalize } from "~/app/lib/utils"
+import { capitalize } from "~/lib/utils"
 import SvgIcon from "~/components/SvgIcon"
 import BaseIconSrc from "~/assets/icons/base.svg"
 import type { X402Accept } from "../types"

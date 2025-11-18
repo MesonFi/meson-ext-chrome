@@ -6,9 +6,9 @@ import {
   clearState,
   watchState,
   type AppState
-} from "../lib/storage"
-import { sendToActiveTab, withTimeout } from "../lib/transport"
-import { ExtensionSigner } from "../lib/signer"
+} from "../../lib/storage"
+import { sendToActiveTab, withTimeout } from "../../lib/transport"
+import { ExtensionSigner } from "../../lib/signer"
 
 type WalletCtx = {
   booting: boolean
