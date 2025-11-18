@@ -53,7 +53,8 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showItem, setShowItem] = useState<any | null>(null)
-  const [recentUrls, setRecentUrls] = useState<string[]>([])
+  const [recentUrls, setRecentUrls] = useState<{ url: string; method: "GET" | "POST" }[]>([])
+  const [method, setMethod] = useState<"GET" | "POST">("POST")
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -79,7 +80,7 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
 
     try {
       const response = await fetch(url, {
-        method: "POST",
+        method,
         headers: {
           "Content-Type": "application/json"
         }
@@ -90,7 +91,7 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
       if (response.status === 402) {
         const body = await response.json()
         console.log("402 Response body:", body)
-        await saveRecentUrl(url)
+        await saveRecentUrl(url, method)
         setShowItem({
           ...body,
           resource: url
@@ -99,7 +100,7 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
         setUrl("")
         setError(null)
       } else {
-        setError("URL must be a x402 url.")
+        setError("Request did not return a 402 status. Please try again using GET or POST.")
       }
     } catch (e) {
       setLoading(false)
@@ -114,18 +115,20 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
       // 关闭时重置状态
       setUrl("")
       setError(null)
+      setMethod("POST")
     }
   }
 
   React.useEffect(() => {
     if (open) {
-      loadRecentUrls().then(list => setRecentUrls(list.map(item => item.url)))
+      loadRecentUrls().then(list => setRecentUrls(list))
     }
   }, [open])
 
-  const selectRecent = (u: string) => {
-    setUrl(u)
-    const validationError = validateURL(u)
+  const selectRecent = (u: { url: string; method?: "GET" | "POST" }) => {
+    setUrl(u.url)
+    setMethod(u.method ?? "GET")
+    const validationError = validateURL(u.url)
     setError(validationError)
   }
 
@@ -210,6 +213,33 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
                 </MessageTooltip>
               }
             />
+            <div className="mt-2">
+              <div className="text-xs text-textColor1 mb-1">HTTP Method</div>
+              <div className="flex gap-4">
+                <label className="flex items-center text-sm">
+                  <input
+                    type="radio"
+                    name="http-method"
+                    value="GET"
+                    checked={method === "GET"}
+                    onChange={() => { setMethod("GET"); setError(null); }}
+                    className="mr-2"
+                  />
+                  GET
+                </label>
+                <label className="flex items-center text-sm">
+                  <input
+                    type="radio"
+                    name="http-method"
+                    value="POST"
+                    checked={method === "POST"}
+                    onChange={() => { setMethod("POST"); setError(null); }}
+                    className="mr-2"
+                  />
+                  POST
+                </label>
+              </div>
+            </div>
             {error && (
               <div className="mt-2 text-xs text-error">
                 {error}
@@ -220,12 +250,12 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
                 <div className="mb-1 font-medium">Recently used</div>
                 <ul className="space-y-1">
                   {recentUrls.map(u => (
-                    <li key={u}>
+                    <li key={`${u.method}-${u.url}`}>
                       <button
                         className="text-textColor2 hover:text-primaryColorHover truncate w-full text-left"
                         onClick={() => selectRecent(u)}
                       >
-                        {u}
+                        {`${u.method} ${u.url}`}
                       </button>
                     </li>
                   ))}
