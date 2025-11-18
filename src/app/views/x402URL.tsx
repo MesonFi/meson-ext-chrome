@@ -14,6 +14,7 @@ import CloseIconSrc from "@assets/icons/X.svg"
 import PasteIconSrc from "@assets/icons/paste.svg"
 import { Input } from "~/components/ui/input"
 import { MessageTooltip } from "~/components/MessageTooltip"
+import { loadRecentUrls, saveRecentUrl } from "~/lib/storage/recentUrls"
 import X402Popup from "./x402/X402Popup"
 import { clearPendingTransaction } from "~/lib/storage/x402_pending_transaction"
 
@@ -52,6 +53,7 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showItem, setShowItem] = useState<any | null>(null)
+  const [recentUrls, setRecentUrls] = useState<string[]>([])
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -88,6 +90,7 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
       if (response.status === 402) {
         const body = await response.json()
         console.log("402 Response body:", body)
+        await saveRecentUrl(url)
         setShowItem({
           ...body,
           resource: url
@@ -112,6 +115,18 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
       setUrl("")
       setError(null)
     }
+  }
+
+  React.useEffect(() => {
+    if (open) {
+      loadRecentUrls().then(list => setRecentUrls(list.map(item => item.url)))
+    }
+  }, [open])
+
+  const selectRecent = (u: string) => {
+    setUrl(u)
+    const validationError = validateURL(u)
+    setError(validationError)
   }
 
   const handlePaste = async () => {
@@ -198,6 +213,23 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup" }) => {
             {error && (
               <div className="mt-2 text-xs text-error">
                 {error}
+              </div>
+            )}
+            {recentUrls.length > 0 && (
+              <div className="mt-2 text-sm">
+                <div className="mb-1 font-medium">Recently used</div>
+                <ul className="space-y-1">
+                  {recentUrls.map(u => (
+                    <li key={u}>
+                      <button
+                        className="text-textColor2 hover:text-primaryColorHover truncate w-full text-left"
+                        onClick={() => selectRecent(u)}
+                      >
+                        {u}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
