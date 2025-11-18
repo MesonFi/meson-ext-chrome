@@ -6,18 +6,18 @@ import { cn } from '~/lib/utils';
 import classNames from 'classnames';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center transition-colors whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none disabled:pointer-events-none disabled:bg-disableColor disabled:bg-none disabled:text-textColor3',
+  'inline-flex items-center justify-center transition-colors whitespace-nowrap rounded-md text-sm font-medium focus-visible:outline-none disabled:pointer-events-none disabled:bg-disabled disabled:bg-none disabled:text-color-muted',
   {
     variants: {
       variant: {
         primary:
-          'bg-primaryColor text-white backdrop-blur-[10px] hover:bg-primaryColorHover active:bg-active disabled:bg-disableColor',
+          'bg-primary text-white backdrop-blur-[10px] hover:bg-primary-hover active:bg-success disabled:bg-disabled',
         secondary:
-          'bg-secondaryBg text-textColor1 hover:bg-primaryColorHover hover:text-white active:bg-active disabled:bg-disableColor disabled:text-textColor3',
-        default: 'active:outline-active active:outline-1 focus:outline-1 focus:[outline-style:solid] focus:outline-primaryColor active:[outline-style:solid] active:bg-active/5 active:text-active hover:outline-primaryColorHover outline-1 [outline-style:solid] hover:text-primaryColorHover outline-borderColor text-primaryColor disabled:outline-disableColor disabled:bg-white bg-white hover:bg-primaryColorHover/[0.06]',
-        main: 'bg-primaryColorLinear hover:bg-primaryColorLinearHover text-[#fff] active:bg-primaryColorLinearActive',
-        error: 'text-white bg-error hover:bg-errorHover active:bg-errorActive',
-        roundeOutline: '!pl-2 !pr-3 !py-[3px] !rounded-full !text-sm border hover:border-primaryColorHover hover:text-primaryColorHover bg-white hover:bg-primaryColorHover/5 active:bg-active/5 active:border-active active:text-active gap-1 border-borderColor text-textColor2 font-normal',
+          'bg-surface text-color-strong hover:bg-primary-hover hover:text-white active:bg-success disabled:bg-disabled disabled:text-color-muted',
+        default: 'active:outline-active active:outline-1 focus:outline-1 focus:[outline-style:solid] focus:outline-primary active:[outline-style:solid] active:bg-active/5 active:text-active hover:outline-primary-hover outline-1 [outline-style:solid] hover:text-primary-hover outline-border text-primary disabled:outline-disabled disabled:bg-white bg-white hover:bg-primary-hover/[0.06]',
+        main: 'bg-primary hover:bg-primary-hover text-[#fff] active:bg-primary',
+        error: 'text-white bg-error hover:bg-error active:bg-error',
+        roundeOutline: '!pl-2 !pr-3 !py-[3px] !rounded-full !text-sm border hover:border-primary-hover hover:text-primary-hover bg-white hover:bg-primary-hover/5 active:bg-active/5 active:border-active active:text-active gap-1 text-secondary font-normal',
       },
       size: {
         xs: 'py-0 px-3 text-base rounded',
@@ -77,9 +77,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const loadingClass = {
       main: 'group-hover:bg-[linear-gradient(282deg,#02C78D_-40%,#04D0D1_140%);] bg-[linear-gradient(282deg,#00D395_-40%,#04DDDE_140%);]',
       default: 'bg-[#fff]',
-      primary: 'bg-primaryColor group-hover:bg-primaryColorHover',
-      secondary: 'bg-secondaryBg',
-      error: 'bg-error group-hover:bg-errorHover'
+      primary: 'bg-primary group-hover:bg-primary-hover',
+      secondary: 'bg-surface',
+      error: 'bg-error group-hover:bg-hover:bg-error'
     }
     return (
       <Comp
@@ -103,7 +103,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               )}></span>
               <span className={classNames(
                 'absolute w-[75%] h-[75%] rounded-full left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]',
-                props.disabled ? `${['main', 'primary', 'secondary'].includes(variant as string) ? 'bg-disableColor' : 'bg-[#fff]'}` : loadingClass[variant as keyof typeof loadingClass]
+                props.disabled ? `${['main', 'primary', 'secondary'].includes(variant as string) ? 'bg-disabled' : 'bg-[#fff]'}` : loadingClass[variant as keyof typeof loadingClass]
               )}></span>
             </div>
           </div>

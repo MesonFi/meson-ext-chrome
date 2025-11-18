@@ -75,12 +75,12 @@ const X402Item: React.FC<Props> = ({ item, onClick, sortKey, maxMonth }) => {
   const tokenName = accpet.extra?.name
 
   return (
-    <div className="py-3 cursor-pointer hover:bg-card px-3 flex flex-col gap-2" onClick={onClick}>
+    <div className="py-3 cursor-pointer hover:bg-surface px-3 flex flex-col gap-2" onClick={onClick}>
       <div className="flex gap-2 items-center justify-between">
         <div className="text-sm font-medium truncate" title={resource}>
           {resource}
         </div>
-        <span className="text-xs text-textColor3 shrink-0">
+        <span className="text-xs text-color-muted shrink-0">
           {formatRelativeFromDate(updated)}
         </span>
       </div>
@@ -96,32 +96,37 @@ const X402Item: React.FC<Props> = ({ item, onClick, sortKey, maxMonth }) => {
             {sortKey === 'score' ? typeof score === "number" ? score.toFixed(2) : "-" : formatInt(mth)}
           </span>
         </div>
-        <div className="text-xs text-textColor4 line-clamp-3" title={desc}>
+        <div className="text-xs line-clamp-3" title={desc}>
           {desc}
         </div>
       </div>
       <div className="flex gap-3">
         <div className="flex flex-col min-w-[60px]">
-          <div className="text-xs text-textColor4">
+          <div className="text-xs">
             {sortKey === 'score' ? 'M. Tx' : 'Score'}
           </div>
-          <div className="font-medium text-sm text-textColor1">
+          <div className="font-medium text-sm text-color-strong">
             {sortKey === 'score' ? formatInt(mth) : typeof score === "number" ? score.toFixed(2) : "-"}
           </div>
         </div>
         <div className="flex flex-col w-full">
-          <div className="text-xs text-textColor4">
+          <div className="text-xs">
             Payment
           </div>
-          <div className="font-medium text-sm text-textColor1 flex items-center gap-1">
-            {['base', 'base-sepolia'].includes(network) && <SvgIcon src={BaseIconSrc} />}<div className="truncate">{capitalize(network)}</div> <div className="w-[1px] h-3 bg-[#E4E3E3]"/>{maxAmountRequired} <span className="text-textColor4">{tokenName}</span>
+          <div className="font-medium text-sm text-color-strong flex items-center gap-1">
+            {
+              ['base', 'base-sepolia'].includes(network) &&
+              <SvgIcon src={BaseIconSrc} />
+            }
+            <div className="truncate">{capitalize(network)}</div>
+            <div className="w-[1px] h-3 bg-[#E4E3E3]"/>{maxAmountRequired} <span>{tokenName}</span>
           </div>
         </div>
         <div className="flex flex-col min-w-[70px]">
-          <div className="text-xs text-textColor4 text-right">
+          <div className="text-xs text-right">
             Succ. Rate
           </div>
-          <div className="font-medium text-sm text-textColor1 text-right">{formatPercent(success, 0)}</div>
+          <div className="font-medium text-sm text-color-strong text-right">{formatPercent(success, 0)}</div>
         </div>
       </div>
     </div>

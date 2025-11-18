@@ -1,6 +1,6 @@
 // src/app/AppShell.tsx
 import React, { useMemo, useState } from "react"
-import "./styles.css"
+import "../style.css"
 import { WalletProvider } from "./contexts/WalletContext"
 import Header from "./Header"
 import Home from "./views/Home"
@@ -20,8 +20,8 @@ const AppShell: React.FC<{ mode: Mode }> = ({ mode }) => {
   const containerClass = useMemo(
     () =>
       mode === "popup"
-        ? "w-[360px] h-[600px] text-gray-900 flex flex-col"
-        : "w-full h-screen text-gray-900 flex flex-col",
+        ? "w-[360px] h-[600px] text-color-strong flex flex-col"
+        : "w-full h-screen text-color-strong flex flex-col",
     [mode]
   )
 

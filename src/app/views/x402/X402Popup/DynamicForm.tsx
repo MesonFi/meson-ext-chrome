@@ -110,7 +110,7 @@ const DynamicForm = forwardRef<DynamicFormRef, Props>(({ selectedAccept }, ref) 
 
   return (
     <div className="mb-4 space-y-2">
-      <div className="text-textColor1 text-sm mb-2 mt-3">Request Parameters</div>
+      <div className="text-color-strong text-sm mb-2 mt-3">Request Parameters</div>
       {bodyFields.map(({ key, schema }) => (
         <div key={key} className="space-y-1">
           {/* 根据类型渲染不同的输入组件 */}
@@ -118,11 +118,11 @@ const DynamicForm = forwardRef<DynamicFormRef, Props>(({ selectedAccept }, ref) 
             <div className="flex items-center space-x-2 justify-between">
               <label
                 htmlFor={`field-${key}`}
-                className="text-xs text-textColor1 flex items-center gap-1 cursor-pointer"
+                className="text-xs text-color-strong flex items-center gap-1 cursor-pointer"
               >
                 {key}
                 {schema.required && <span className="text-error">*</span>}
-                <span className="text-textColor4 ml-1">(boolean)</span>
+                <span className="ml-1">(boolean)</span>
               </label>
               <Checkbox
                 id={`field-${key}`}
@@ -132,7 +132,7 @@ const DynamicForm = forwardRef<DynamicFormRef, Props>(({ selectedAccept }, ref) 
             </div>
           ) : (
             <>
-              <label className="text-xs text-textColor1 flex items-center gap-1">
+              <label className="text-xs text-color-strong flex items-center gap-1">
                 {key}
                 {schema.required && <span className="text-error">*</span>}
                 <span className="">({schema.type || "string"})</span>
@@ -149,7 +149,7 @@ const DynamicForm = forwardRef<DynamicFormRef, Props>(({ selectedAccept }, ref) 
                     <MessageTooltip content={pastedField === key ? 'Pasted' : 'Paste'}>
                       <SvgIcon
                         src={PasteIconSrc}
-                        className="w-4 h-4 text-textColor2 hover:text-primaryColorHover cursor-pointer"
+                        className="w-4 h-4 text-secondary hover:text-primary-hover cursor-pointer"
                         onClick={() => handlePaste(key)}
                       />
                     </MessageTooltip>
@@ -166,7 +166,7 @@ const DynamicForm = forwardRef<DynamicFormRef, Props>(({ selectedAccept }, ref) 
                     <MessageTooltip content={pastedField === key ? 'Pasted' : 'Paste'}>
                       <SvgIcon
                         src={PasteIconSrc}
-                        className="w-4 h-4 text-textColor2 hover:text-primaryColorHover cursor-pointer"
+                        className="w-4 h-4 text-secondary hover:text-primary-hover cursor-pointer"
                         onClick={() => handlePaste(key)}
                       />
                     </MessageTooltip>
@@ -177,10 +177,10 @@ const DynamicForm = forwardRef<DynamicFormRef, Props>(({ selectedAccept }, ref) 
           )}
 
           {schema.description && (
-            <p className="text-xs text-textColor4 m-0">{schema.description}</p>
+            <p className="text-xs m-0">{schema.description}</p>
           )}
           {schema.default !== undefined && (
-            <p className="text-xs text-textColor4 m-0">Default: {String(schema.default)}</p>
+            <p className="text-xs m-0">Default: {String(schema.default)}</p>
           )}
         </div>
       ))}

@@ -148,21 +148,21 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
             >
               <SvgIcon
                 src={RefreshIconSrc}
-                className={`w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors ${loading ? "animate-spin" : ""}`}
+                className={`w-4 h-4 text-secondary hover:text-primary-hover transition-colors ${loading ? "animate-spin" : ""}`}
               />
             </button>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <div className="flex rounded-md overflow-hidden border border-borderColor">
+            <div className="flex rounded-md overflow-hidden border">
               <button
-                className={`px-2 py-0.5 ${sortKey === "score" ? "bg-card border-r border-borderColor" : "bg-white text-textColor2 hover:text-textColor1"}`}
+                className={`px-2 py-0.5 ${sortKey === "score" ? "bg-surface border-r" : "bg-white text-secondary hover:text-color-strong"}`}
                 onClick={() => setSortKey("score")}
                 title="Score"
               >
                 Score
               </button>
               <button
-                className={`px-2 py-1 ${sortKey === "month" ? "bg-card border-l border-borderColor" : "bg-white text-textColor2 hover:text-textColor1"}`}
+                className={`px-2 py-1 ${sortKey === "month" ? "bg-surface border-l" : "bg-white text-secondary hover:text-color-strong"}`}
                 onClick={() => setSortKey("month")}
                 title="Monthly Tx"
               >
@@ -176,19 +176,19 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
         {loading ? (
           <div className="text-sm text-gray-600 flex flex-col gap-6 px-3">
             {new Array(10).fill(1).map((_, i) => (
-              <Loading key={i} className="w-full h-[128px] bg-card" />
+              <Loading key={i} className="w-full h-[128px] bg-surface" />
             ))}
           </div>
         ) : loadFailed ? (
-          <div className="text-sm text-textColor4 w-full flex justify-center mt-24">
+          <div className="text-sm w-full flex justify-center mt-24">
             Loading failed
           </div>
         ) : items.length === 0 ? (
-          <div className="text-sm text-textColor4 w-full flex justify-center mt-24">
+          <div className="text-sm w-full flex justify-center mt-24">
             No data available
           </div>
         ) : (
-          <div className="divide-y divide-borderColor pb-3">
+          <div className="divide-y divide-border pb-3">
             {sorted.map((item, idx) => (
               <X402Item
                 key={idx}

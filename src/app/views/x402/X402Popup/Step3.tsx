@@ -41,17 +41,17 @@ const Step3: React.FC<Props> = ({ finalText, decodedPaymentResp }) => {
       {decodedPaymentResp && (
         <div>
           <div className="flex items-center mb-1 gap-1">
-            <div className="text-sm text-textColor1">X-Payment Response</div>
+            <div className="text-sm text-color-strong">X-Payment Response</div>
             <MessageTooltip content={copiedPayment ? 'Copied' : 'Copy'}>
               <button
                 onClick={() => handleCopy(paymentResponseJson, setCopiedPayment)}
                 className="flex items-center"
               >
-                <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
+                <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-secondary hover:text-primary-hover transition-colors" />
               </button>
             </MessageTooltip>
           </div>
-          <pre className="text-xs bg-card p-2 rounded-lg whitespace-pre-wrap break-words">
+          <pre className="text-xs bg-surface p-2 rounded-lg whitespace-pre-wrap break-words">
             {paymentResponseJson}
           </pre>
         </div>
@@ -59,17 +59,17 @@ const Step3: React.FC<Props> = ({ finalText, decodedPaymentResp }) => {
 
       <div>
         <div className="flex items-center mb-1  gap-1">
-          <div className="text-sm text-textColor1">Response Body</div>
+          <div className="text-sm text-color-strong">Response Body</div>
           <MessageTooltip content={copiedBody ? 'Copied' : 'Copy'}>
             <button
               onClick={() => handleCopy(responseBodyJson || finalText, setCopiedBody)}
               className="flex items-center"
             >
-              <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
+              <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-secondary hover:text-primary-hover transition-colors" />
             </button>
           </MessageTooltip>
         </div>
-        <pre className="text-xs bg-card p-2 rounded-lg whitespace-pre-wrap break-words">
+        <pre className="text-xs bg-surface p-2 rounded-lg whitespace-pre-wrap break-words">
           {responseBodyJson || "(empty)"}
         </pre>
       </div>

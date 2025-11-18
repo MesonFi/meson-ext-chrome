@@ -183,7 +183,7 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup", open, onOpenCh
   const isValid = url.trim() && !error
 
   return (
-    <div className="p-3 border-t border-borderColor">
+    <div className="p-3 border-t">
       <Drawer open={open} onOpenChange={handleOpenChange}>
         <DrawerContent>
           <DrawerHeader className="flex justify-between items-center">
@@ -202,12 +202,12 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup", open, onOpenCh
               variant={error ? "error" : "default"}
               suffix={
                 <MessageTooltip content={'Paste'}>
-                  <SvgIcon src={PasteIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover cursor-pointer" onClick={handlePaste} />
+                  <SvgIcon src={PasteIconSrc} className="w-4 h-4 text-secondary hover:text-primary-hover cursor-pointer" onClick={handlePaste} />
                 </MessageTooltip>
               }
             />
             <div className="mt-2">
-              <div className="text-xs text-textColor1 mb-1">HTTP Method</div>
+              <div className="text-xs text-color-strong mb-1">HTTP Method</div>
               <div className="flex gap-4">
                 <label className="flex items-center text-sm">
                   <input
@@ -245,7 +245,7 @@ export const X402URL: React.FC<X402URLProps> = ({ mode = "popup", open, onOpenCh
                   {recentUrls.map(u => (
                     <li key={`${u.method}-${u.url}`}>
                       <button
-                        className="text-textColor2 hover:text-primaryColorHover truncate w-full text-left"
+                        className="text-secondary hover:text-primary-hover truncate w-full text-left"
                         onClick={() => selectRecent(u)}
                       >
                         {`${u.method} ${u.url}`}

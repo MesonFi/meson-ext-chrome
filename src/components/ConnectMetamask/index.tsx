@@ -75,7 +75,7 @@ export const ConnectMetamask: React.FC<ConnectMetamaskProps> = ({
         <>
           <div className="flex-1 flex items-center gap-2 rounded-lg">
             <SvgIcon src={MetaMaskIconSrc} className="w-6 h-6" />
-            <span className="text-sm font-medium text-gray-900 flex-1 truncate" title={address}>
+            <span className="text-sm font-medium text-color-strong flex-1 truncate" title={address}>
               {shortAddr(address)}
             </span>
           </div>
@@ -83,12 +83,12 @@ export const ConnectMetamask: React.FC<ConnectMetamaskProps> = ({
             <div className="flex items-center gap-4">
               <MessageTooltip content={copied ? 'Copied' : 'Copy'}>
                 <button onClick={handleCopy} title="Copy Address" className="flex items-center">
-                  <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
+                  <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-secondary hover:text-primary-hover transition-colors" />
                 </button>
               </MessageTooltip>
               <MessageTooltip content={'Disconnect'}>
                 <button onClick={handleDisconnect} title="Disconnect" className="flex items-center">
-                  <SvgIcon src={LogoutIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
+                  <SvgIcon src={LogoutIconSrc} className="w-4 h-4 text-secondary hover:text-primary-hover transition-colors" />
                 </button>
               </MessageTooltip>
             </div>

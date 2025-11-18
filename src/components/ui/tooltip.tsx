@@ -26,7 +26,7 @@ const TooltipContent = React.forwardRef<
     sideOffset={sideOffset}
     className={cn(
       '[box-shadow:0px_0px_8px_0px_#1067561F]',
-      'z-50 text-textColor1 backdrop-blur-[10px] rounded-lg border border-borderColor bg-[#fff]/[.20] px-4 py-[3px] text-sm animate-in fade-in-0',
+      'z-50 text-color-strong backdrop-blur-[10px] rounded-lg border bg-[#fff]/[.20] px-4 py-[3px] text-sm animate-in fade-in-0',
       animate
         ? 'zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'
         : '',

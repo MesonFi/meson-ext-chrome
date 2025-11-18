@@ -132,13 +132,13 @@ const Step2: React.FC<Props> = ({
         <div className="mt-4">
           <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-1">
-              <div className="text-textColor1 text-sm">X-Payment Header</div>
+              <div className="text-color-strong text-sm">X-Payment Header</div>
               <MessageTooltip content={copied ? 'Copied' : 'Copy'}>
                 <button
                   onClick={handleCopy}
                   className="flex items-center"
                 >
-                  <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-textColor2 hover:text-primaryColorHover transition-colors" />
+                  <SvgIcon src={CopyIconSrc} className="w-4 h-4 text-secondary hover:text-primary-hover transition-colors" />
                 </button>
               </MessageTooltip>
             </div>
@@ -147,33 +147,33 @@ const Step2: React.FC<Props> = ({
                 onClick={() => setHeaderFormat('json')}
                 className={`text-xs ${
                   headerFormat === 'json'
-                    ? 'text-textColor1'
-                    : 'text-textColor3 hover:text-textColor1'
+                    ? 'text-color-strong'
+                    : 'text-color-muted hover:text-color-strong'
                 }`}
               >
                 JSON
               </button>
-              <div className="h-3 w-[1px] bg-borderColor mx-2"></div>
+              <div className="h-3 w-[1px] bg-border mx-2"></div>
               <button
                 onClick={() => setHeaderFormat('base64')}
                 className={`text-xs ${
                   headerFormat === 'base64'
-                    ? 'text-textColor1'
-                    : 'text-textColor3 hover:text-textColor1'
+                    ? 'text-color-strong'
+                    : 'text-color-muted hover:text-color-strong'
                 }`}
               >
                 BASE64
               </button>
             </div>
           </div>
-          <div className="text-xs bg-card p-2 rounded-lg whitespace-pre-wrap break-words max-h-[172px] overflow-y-scroll scrollbar-hide mb-3">
+          <div className="text-xs bg-surface p-2 rounded-lg whitespace-pre-wrap break-words max-h-[172px] overflow-y-scroll scrollbar-hide mb-3">
             {headerFormat === 'json' ? paymentHeaderJson : xPaymentHeader}
           </div>
         </div>
       </div>
 
       {/* 固定底部按钮 */}
-      <div className="pt-4 border-t border-borderColor flex-shrink-0">
+      <div className="pt-4 border-t flex-shrink-0">
         <Button
           className="w-full"
           variant="primary"

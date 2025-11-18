@@ -99,10 +99,10 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
       { n: 3, label: "Response" }
     ] as const
     return (
-      <div className={cn("flex items-center px-3 pb-1 text-sm text-textColor3", step === 2 && 'border-b border-borderColor')}>
+      <div className={cn("flex items-center px-3 pb-1 text-sm text-color-muted", step === 2 && 'border-b')}>
         {steps.map((s, i) => (
           <React.Fragment key={s.n}>
-            <span className={step === s.n ? "text-textColor1 font-medium" : ""}>
+            <span className={step === s.n ? "text-color-strong font-medium" : ""}>
               {s.label}
             </span>
             {i < steps.length - 1 && <img src={ArrowRightIcon} alt="arrow" className="w-6 h-6" />}
@@ -115,7 +115,7 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
   return (
     <Drawer open={true} onOpenChange={(open) => { if (!open) onClose() }}>
       <DrawerContent className="max-h-[480px] flex flex-col">
-        <DrawerHeader className="flex justify-between border-borderColor items-start flex-shrink-0">
+        <DrawerHeader className="flex justify-between items-start flex-shrink-0">
           <MessageTooltip content={copiedUrl ? 'Copied' : 'Copy'}>
             <DrawerTitle
               className="break-all pr-8 text-left font-normal text-sm cursor-pointer hover:underline"
@@ -124,7 +124,7 @@ const X402Popup: React.FC<Props> = ({ item, onClose, mode = "popup" }) => {
               {resourceUrl}
             </DrawerTitle>
           </MessageTooltip>
-          <DrawerClose className="p-1 hover:bg-gray-100 rounded transition-colors">
+          <DrawerClose className="p-1 hover:bg-surface rounded transition-colors">
             <img src={CloseIcon} alt="close" className="min-w-6 h-6" />
           </DrawerClose>
         </DrawerHeader>

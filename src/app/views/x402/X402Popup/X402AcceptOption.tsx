@@ -46,27 +46,27 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
     <div
       role="button"
       onClick={onSelect}
-      className={`px-2 py-1 bg-card rounded-lg ${
-        selected ? "border border-textColor2" : ""
+      className={`px-2 py-1 bg-surface rounded-lg ${
+        selected ? "border border-secondary" : ""
       }`}
     >
       {desc && <div className="text-xs break-words text-black mb-2">{desc}</div>}
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
-          <div className="text-xs text-textColor4">Payment</div>
+          <div className="text-xs">Payment</div>
           <div className="flex items-center">
-            <div className="inline-flex items-center h-5 pr-1 rounded bg-slate-100 text-textColor1 gap-1" title={network}>
+            <div className="inline-flex items-center h-5 pr-1 rounded bg-slate-100 text-color-strong gap-1" title={network}>
               {['base', 'base-sepolia'].includes(network) && <SvgIcon src={BaseIconSrc} />}{capitalize(network)}
             </div>
             <div className="w-[1px] h-3 bg-[#E4E3E3] mr-1"/>
             {amount6}
-            {extraName && <span className="text-textColor4 ml-1">{extraName}</span>}
+            {extraName && <span className="ml-1">{extraName}</span>}
           </div>
         </div>
         <div className="flex justify-between">
-          <div className="text-xs text-textColor4 min-w-[104px]">Asset</div>
+          <div className="text-xs min-w-[104px]">Asset</div>
           <div
-            className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1 text-right"
+            className="text-xs break-all hover:underline hover:text-color-strong text-right"
             title={asset}
             onClick={() => openUrl(`${getDomainUrl(network)}/token/${asset}`)}
           >
@@ -74,9 +74,9 @@ const X402AcceptOption: React.FC<Props> = ({ accept, selected, onSelect }) => {
           </div>
         </div>
         <div className="flex justify-between">
-          <div className="text-xs text-textColor4 min-w-[104px]">Pay to</div>
+          <div className="text-xs min-w-[104px]">Pay to</div>
           <div
-            className="text-xs text-textColor4 break-all hover:underline hover:text-textColor1 text-right"
+            className="text-xs break-all hover:underline hover:text-color-strong text-right"
             onClick={() => openUrl(`${getDomainUrl(network)}/address/${payTo}`)}
           >{payTo}</div>
         </div>

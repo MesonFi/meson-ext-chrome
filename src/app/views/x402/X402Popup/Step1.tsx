@@ -70,7 +70,7 @@ const Step1: React.FC<Props> = ({ item, mode = "popup", onSelected }) => {
         ))}
 
         {accepts.length === 0 && (
-          <div className="text-xs text-gray-600">No accepts.</div>
+          <div className="text-xs text-color-muted">No accepts.</div>
         )}
 
         {err && <div className="text-xs text-error mt-3">{err}</div>}

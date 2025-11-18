@@ -7,12 +7,12 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 const inputVariants = cva(
   cn(
-    'relative flex w-full rounded-lg text-textColor1 border placeholder:text-textColor3 bg-[#fff] text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed',
+    'relative flex w-full rounded-lg text-color-strong border placeholder:text-color-muted bg-[#fff] text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed',
   ),
   {
     variants: {
       variant: {
-        default: 'border-borderColor hover:border-primaryColorHover focus-within:border-primaryColorHover',
+        default: 'hover:border-primary-hover focus-within:border-primary-hover',
         error: 'border-error hover:border-error focus-within:border-error',
         warning: 'border-warning hover:border-warning focus-within:border-warning'
       },
@@ -83,7 +83,7 @@ const Input = React.forwardRef<
         <input
           type={type}
           className={cn(
-            'w-full text-textColor1 [&::-webkit-inner-spin-button]:appearance-none inputGroup placeholder:text-textColor3 focus:outline-none focus-visible:outline-none',
+            'w-full text-color-strong [&::-webkit-inner-spin-button]:appearance-none inputGroup placeholder:text-color-muted focus:outline-none focus-visible:outline-none',
             suffix && 'pr-6'
           )}
           ref={ref}
