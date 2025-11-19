@@ -8,20 +8,24 @@ import {
   getPendingTransaction,
   clearPendingTransaction
 } from "~/lib/storage/x402_pending_transaction"
+import { saveX402Request, updateX402Request } from "~/lib/storage/x402_history"
 import { parseValidBeforeFromHeader } from "../lib"
 import type { X402Item, X402Accept } from "../types"
+import type { X402TransactionState } from "~/lib/storage/x402_pending_transaction"
 import { cn } from "~/lib/utils"
 import { MessageTooltip } from "~/components/MessageTooltip"
 
 type Props = {
   item: X402Item
   mode?: "popup" | "sidepanel"
+  historyEntry?: X402TransactionState
 }
 
 type Step = 1 | 2 | 3
 
-const DrawerX402Request: React.FC<Props> = ({ item, mode = "popup" }) => {
+const DrawerX402Request: React.FC<Props> = ({ item, mode = "popup", historyEntry }) => {
   const [step, setStep] = useState<Step>(1)
+  const [historyTimestamp, setHistoryTimestamp] = useState<number>(0)
 
   // 选择的 accept
   const [selectedAccept, setSelectedAccept] = useState<X402Accept | null>(null)
@@ -40,6 +44,30 @@ const DrawerX402Request: React.FC<Props> = ({ item, mode = "popup" }) => {
   // 组件挂载时尝试恢复状态
   useEffect(() => {
     const restoreState = async () => {
+      if (historyEntry) {
+        console.log("[DrawerX402Request] Restoring history entry:", historyEntry)
+
+        setStep(historyEntry.step as Step)
+
+        if (historyEntry.accept) {
+          setSelectedAccept(historyEntry.accept)
+        }
+
+        if (historyEntry.init) {
+          setBaseInit(historyEntry.init)
+        }
+
+        if (historyEntry.xPaymentHeader) {
+          setXPaymentHeader(historyEntry.xPaymentHeader)
+        }
+
+        if (historyEntry.response) {
+          setFinalText(JSON.stringify(historyEntry.response.body, null, 2))
+        }
+
+        return
+      }
+
       const savedState = await getPendingTransaction()
 
       if (savedState && savedState.item?.resource === item?.resource) {
@@ -68,7 +96,7 @@ const DrawerX402Request: React.FC<Props> = ({ item, mode = "popup" }) => {
     }
 
     restoreState()
-  }, [item])
+  }, [item, historyEntry])
 
   const renderStepIndicator = () => {
     const steps = [
@@ -107,8 +135,10 @@ const DrawerX402Request: React.FC<Props> = ({ item, mode = "popup" }) => {
               setXPaymentHeader(header)
               setStep(2)
 
-              // 保存状态（签名后的状态）
+              // 保存状态（签名后的状态）并写入历史记录
               const validBefore = parseValidBeforeFromHeader(header)
+              const ts = Date.now()
+              setHistoryTimestamp(ts)
               await savePendingTransaction({
                 item,
                 selectedAcceptIndex: item.accepts?.indexOf(acc) ?? 0,
@@ -116,8 +146,18 @@ const DrawerX402Request: React.FC<Props> = ({ item, mode = "popup" }) => {
                 accept: acc,
                 init,
                 xPaymentHeader: header,
-                validBefore: validBefore ?? undefined, // 从凭证中解析有效期
-                timestamp: Date.now()
+                validBefore: validBefore ?? undefined,
+                timestamp: ts
+              })
+              await saveX402Request({
+                item,
+                selectedAcceptIndex: item.accepts?.indexOf(acc) ?? 0,
+                step: 2,
+                accept: acc,
+                init,
+                xPaymentHeader: header,
+                validBefore: validBefore ?? undefined,
+                timestamp: ts
               })
             }}
           />
@@ -134,6 +174,8 @@ const DrawerX402Request: React.FC<Props> = ({ item, mode = "popup" }) => {
               setDecodedPaymentResp(payload.decoded)
               setStep(3)
 
+              // 更新历史记录状态为完成
+              await updateX402Request(historyTimestamp, { step: 3 })
               // 清除保存的状态（交易完成）
               await clearPendingTransaction()
             }}

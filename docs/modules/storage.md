@@ -7,7 +7,8 @@
 src/lib/storage/  
 ├─ index.ts                  # 通用存取：get, set, remove  
 ├─ app_state.ts              # AppState：loadState, saveState, clearState, watchState  
-└─ x402_pending_transaction.ts  # 交易状态：savePendingTransaction, getPendingTransaction, clearPendingTransaction, updatePendingTransaction  
+├─ x402_pending_transaction.ts  # 交易状态：savePendingTransaction, getPendingTransaction, clearPendingTransaction, updatePendingTransaction  
+└─ x402_history.ts              # 历史记录：loadX402History, saveX402Request, updateX402Request
 
 ## index.ts
 
