@@ -5,6 +5,15 @@ import { useDrawer } from "~/app/contexts/AppProvider"
 import { SvgIcon } from "~/components/SvgIcon"
 import RefreshIconSrc from "@assets/icons/refresh.svg"
 import Loading from "~/components/Loading"
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
+import SettingsIconSrc from "@assets/icons/settings.svg"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from "~/components/ui/select"
 import { getPendingTransaction, clearPendingTransaction } from "~/lib/storage/x402_pending_transaction"
 import { toast } from "sonner"
 import type {
@@ -41,6 +50,9 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
   const [loadFailed, setLoadFailed] = useState(false)
   const [items, setItems] = useState<X402ItemType[]>([])
   const [sortKey, setSortKey] = useState<SortKey>("score")
+  const [serviceUrl, setServiceUrl] = useState<string>(BAZAAR_URL)
+  const [networkFilter, setNetworkFilter] = useState<string>("all")
+  const [networks, setNetworks] = useState<string[]>([])
   const { openDrawer } = useDrawer()
 
   async function load(forceRefresh = false) {
@@ -69,7 +81,7 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
 
     // 3. 请求接口获取最新数据
     try {
-      const res = await fetch(BAZAAR_URL, {
+      const res = await fetch(serviceUrl, {
         headers: { accept: "application/json" },
         cache: "no-store"
       })
@@ -102,7 +114,29 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
       setLoading(false)
     }
   }
-  useEffect(() => { load(false) }, [])
+  // on mount load list and saved options
+  useEffect(() => {
+    const opts = JSON.parse(localStorage.getItem("x402_list_option")||"{}")
+    if (opts.serviceUrl) setServiceUrl(opts.serviceUrl)
+    if (opts.sortKey) setSortKey(opts.sortKey)
+    if (opts.networkFilter) setNetworkFilter(opts.networkFilter)
+    load(false)
+  }, [])
+
+  // derive available networks whenever items change
+  useEffect(() => {
+    const uniq = Array.from(new Set(items.flatMap(it => it.accepts?.map(a=>a.network)||[])))
+    setNetworks(uniq)
+  }, [items])
+
+  // persist options on change
+  useEffect(() => {
+    localStorage.setItem("x402_list_option", JSON.stringify({serviceUrl,sortKey,networkFilter}))
+  }, [serviceUrl,sortKey,networkFilter])
+  
+  // reload when serviceUrl changes
+  useEffect(() => { load(true) }, [serviceUrl])
+  
 
   // 检查是否有待恢复的交易，自动打开 drawer
   useEffect(() => {
@@ -121,7 +155,11 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
     [items]
   )
   const sorted = useMemo(() => {
-    const arr = [...items]
+    const filtered = items.filter(it=>
+      networkFilter==="all" ||
+      it.accepts?.some(a=>a.network===networkFilter)
+    )
+    const arr = [...filtered]
     if (sortKey === "score") {
       arr.sort(
         (a, b) =>
@@ -132,7 +170,7 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
       arr.sort((a, b) => monthTx(b?.metadata) - monthTx(a?.metadata))
     }
     return arr
-  }, [items, sortKey])
+  }, [items, sortKey, networkFilter])
 
   return (
     <div className="h-full flex flex-col">
@@ -154,22 +192,53 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
             </button>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <div className="flex rounded-md overflow-hidden border">
-              <button
-                className={`px-2 py-0.5 ${sortKey === "score" ? "bg-surface border-r" : "bg-white text-secondary hover:text-color-strong"}`}
-                onClick={() => setSortKey("score")}
-                title="Score"
-              >
-                Score
-              </button>
-              <button
-                className={`px-2 py-1 ${sortKey === "month" ? "bg-surface border-l" : "bg-white text-secondary hover:text-color-strong"}`}
-                onClick={() => setSortKey("month")}
-                title="Monthly Tx"
-              >
-                Monthly Tx
-              </button>
-            </div>
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <button aria-label="Settings">
+                  <SvgIcon src={SettingsIconSrc} className="w-5 h-5 text-secondary hover:text-primary-hover" />
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content sideOffset={4} className="p-2 bg-white rounded border space-y-2 min-w-[220px]">
+                <div className="text-xs font-medium">X402 Discovery Service URL</div>
+                <Select value={serviceUrl} onValueChange={setServiceUrl}>
+                  <SelectTrigger className="w-64 truncate">
+                    <SelectValue placeholder="Select URL" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white">
+                    <SelectItem value={BAZAAR_URL} className="truncate">
+                      {BAZAAR_URL}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <div className="text-xs font-medium pt-2">Sort By</div>
+                <div className="flex space-x-1">
+                  <button
+                    onClick={() => setSortKey('score')}
+                    className={`px-2 py-1 rounded ${sortKey === 'score' ? 'bg-primary text-white' : 'bg-surface text-color-strong'}`}
+                  >
+                    Score
+                  </button>
+                  <button
+                    onClick={() => setSortKey('month')}
+                    className={`px-2 py-1 rounded ${sortKey === 'month' ? 'bg-primary text-white' : 'bg-surface text-color-strong'}`}
+                  >
+                    Monthly Tx
+                  </button>
+                </div>
+                <div className="text-xs font-medium pt-2">Network</div>
+                <Select value={networkFilter} onValueChange={setNetworkFilter}>
+                  <SelectTrigger className="w-64 truncate">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white">
+                    <SelectItem value="all">All</SelectItem>
+                    {networks.map(n => (
+                      <SelectItem key={n} value={n}>{n}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
           </div>
         </div>
       </div>
