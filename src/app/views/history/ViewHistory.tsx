@@ -1,6 +1,6 @@
 import React from "react"
 
-const HistoryPage: React.FC = () => {
+const ViewHistory: React.FC = () => {
   return (
     <div className="p-4 text-center">
       Coming soon
@@ -8,4 +8,4 @@ const HistoryPage: React.FC = () => {
   )
 }
 
-export default HistoryPage
+export default ViewHistory

@@ -1,56 +1,45 @@
 # Project Documentation
 
-This document set describes the architecture, structure, and key components of the browser extension located under `src/`. It covers:
-
-- [Overview](#overview)  
-- [Directory Structure](directory-structure.md)  
-- [Modules and Components](modules.md)  
-- [Conventions & Extension Points](#conventions--extension-points)  
+This document set describes the browser extension under `src/`.
 
 ## Overview
 
 The extension integrates with MetaMask (or compatible wallets) to support x402 payments:
-- Discovers x402 resources (`ViewX402List`)  
-- Fetches payment requirements (402 responses)  
-- Builds and attaches payment headers via the `ExtensionSigner`  
-- Retries requests with `X-Payment` headers and displays results  
-- Provides both popup and sidepanel views  
+- Discover x402 resources and present them in a list.
+- Fetch payment requirements (HTTP 402 responses) and parse them.
+- Generate and attach signed `X-Payment` headers.
+- Retry requests with payment headers and display results.
+- Provide both popup and sidepanel interfaces with a unified UI.
 
-## Conventions & Extension Points
+## Documentation Structure
 
-- **Contexts & hooks**: `WalletContext` for wallet state and signer  
-- **UI primitives**: re-usable Radix wrappers under `components/ui`  
-- **Dynamic forms**: schema-driven form in `X402Popup/DynamicForm.tsx`  
-- **Transaction state**: persists in Chrome storage via `transactionState.ts`  
-- **Assets**: SVG icons loaded inline through `SvgIcon`  
+- **UI** (`docs/ui`)
+  - [Application Layout](ui/app_layout.md)
+  - [UI Guide](ui/ui_guide.md)
+- **Modules** (`docs/modules`)
+  - [Modules Overview](modules/index.md)
+  - [Storage](modules/storage.md)
+  - [Wallet Transport](modules/wallet-transport.md)
+
+## Source Directory Structure
+
+src/  
+├─ app/  
+│  ├─ contexts/      AppProvider (wallet & drawer contexts)  
+│  ├─ layout/        TabView, DrawerPopup  
+│  ├─ views/         Feature pages and flows  
+│  ├─ AppShell.tsx   Root component  
+│  └─ Header.tsx     Header component  
 
 ## Import Path Configuration
 
-We use absolute imports prefixed with `~/`, mapping to the project’s `src/` root.  
+Absolute imports use `~/` to reference the `src/` root:
 
-• In **tsconfig.json**:
 ```json
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": {
-      "~/*": ["src/*"]
-    }
+    "paths": { "~/*": ["src/*"] }
   }
 }
-```  
-• In **components.json**:
-```json
-"aliases": {
-  "components": "~/components",
-  "utils": "~/lib/utils"
-}
-```  
-
-Usage examples:
-```ts
-import { Button } from "~/components/Button"
-import { cn } from "~/lib/utils"
 ```
-
-For more details, see the linked pages above.

@@ -1,4 +1,6 @@
-# Design Guide
+# UI Guide
+
+See [Application Layout](app_layout.md) for the component hierarchy and flow.
 
 ## Color Palette
 

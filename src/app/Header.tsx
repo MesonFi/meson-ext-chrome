@@ -1,11 +1,11 @@
 // src/app/Header.tsx
 import React from "react"
-import { useWallet } from "./contexts/WalletContext"
+import { useWallet } from "./contexts/AppProvider"
 import { SvgIcon } from "~/components/SvgIcon"
 import SidebarIconSrc from "@assets/icons/sidebar.svg"
 import { cn } from "~/lib/utils"
 import { MessageTooltip } from "~/components/MessageTooltip"
-import { ConnectMetamask } from "~/components/ConnectMetamask"
+import Wallet from "~/components/Wallet"
 
 const Header: React.FC<{
   mode: "popup" | "sidepanel"
@@ -30,7 +30,7 @@ const Header: React.FC<{
 
   return (
     <div className={cn("bg-surface border-b flex items-center justify-between px-3", connected ? 'py-[18px]' : 'py-3')}>
-      <ConnectMetamask mode="full" className="flex-1" showActions={true} />
+      <Wallet mode="full" className="flex-1" showActions={true} />
       {(mode === "popup") && (
         <div className="flex items-center gap-4 ml-4">
           <MessageTooltip content={'Sidebar'}>

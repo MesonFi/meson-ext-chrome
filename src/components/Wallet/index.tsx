@@ -1,23 +1,23 @@
-// src/components/ConnectMetamask/index.tsx
+// src/components/Wallet/index.tsx
 import React, { useState } from "react"
-import { useWallet } from "~/app/contexts/WalletContext"
+import { useWallet } from "~/app/contexts/AppProvider"
 import { SvgIcon } from "~/components/SvgIcon"
 import MetaMaskIconSrc from "@assets/icons/metamask.svg"
 import CopyIconSrc from "@assets/icons/copy.svg"
 import LogoutIconSrc from "@assets/icons/logout.svg"
 import { cn } from "~/lib/utils"
 import { MessageTooltip } from "~/components/MessageTooltip"
-import { ConnectMetamaskButton } from "./ConnectMetamaskButton"
+import { ConnectButton } from "./ConnectButton"
 
 function shortAddr(addr?: string) {
   if (!addr) return ""
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`
 }
 
-// Re-export ConnectMetamaskButton for convenience
-export { ConnectMetamaskButton } from "./ConnectMetamaskButton"
+// Re-export ConnectButton for convenience
+export { ConnectButton } from "./ConnectButton"
 
-type ConnectMetamaskProps = {
+type WalletProps = {
   mode?: "button" | "full"
   className?: string
   showActions?: boolean
@@ -25,7 +25,7 @@ type ConnectMetamaskProps = {
   onDisconnected?: () => void
 }
 
-export const ConnectMetamask: React.FC<ConnectMetamaskProps> = ({
+const Wallet: React.FC<WalletProps> = ({
   mode = "full",
   className,
   showActions = true,
@@ -56,7 +56,7 @@ export const ConnectMetamask: React.FC<ConnectMetamaskProps> = ({
 
   if (mode === "button") {
     return (
-      <ConnectMetamaskButton
+      <ConnectButton
         className={className}
         onConnected={onConnected}
         showAddressWhenConnected={true}
@@ -67,7 +67,7 @@ export const ConnectMetamask: React.FC<ConnectMetamaskProps> = ({
   return (
     <div className={cn("flex items-center gap-2", className)}>
       {!connected ? (
-        <ConnectMetamaskButton
+        <ConnectButton
           className="flex-1"
           onConnected={onConnected}
         />
@@ -99,4 +99,4 @@ export const ConnectMetamask: React.FC<ConnectMetamaskProps> = ({
   )
 }
 
-export default ConnectMetamask
+export default Wallet

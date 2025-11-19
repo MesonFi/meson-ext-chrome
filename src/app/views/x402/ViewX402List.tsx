@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react"
 import X402Item from "./X402Item"
-import X402Popup from "./X402Popup"
+import DrawerX402Request, { DrawerTitleX402Request } from "./DrawerX402Request"
+import { useDrawer } from "~/app/contexts/AppProvider"
 import { SvgIcon } from "~/components/SvgIcon"
 import RefreshIconSrc from "@assets/icons/refresh.svg"
 import Loading from "~/components/Loading"
@@ -40,7 +41,7 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
   const [loadFailed, setLoadFailed] = useState(false)
   const [items, setItems] = useState<X402ItemType[]>([])
   const [sortKey, setSortKey] = useState<SortKey>("score")
-  const [showItem, setShowItem] = useState<X402ItemType | null>(null)
+  const { openDrawer } = useDrawer()
 
   async function load(forceRefresh = false) {
     setLoadFailed(false)
@@ -109,7 +110,7 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
       const savedState = await getPendingTransaction()
       if (savedState && savedState.item) {
         console.log("[ViewX402List] Auto-restoring pending transaction:", savedState)
-        setShowItem(savedState.item)
+        openDrawer(<DrawerX402Request item={savedState.item} mode={mode} />, <DrawerTitleX402Request>{savedState.item.resource}</DrawerTitleX402Request>)
       }
     }
     checkPendingTransaction()
@@ -195,22 +196,12 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
                 item={item}
                 maxMonth={maxMonth}
                 sortKey={sortKey}
-                onClick={() => setShowItem(item)}
+                onClick={() => openDrawer(<DrawerX402Request item={item} mode={mode} />, <DrawerTitleX402Request>{item.resource}</DrawerTitleX402Request>)}
               />
             ))}
           </div>
         )}
       </div>
-      {showItem && (
-        <X402Popup
-          item={showItem}
-          mode={mode}
-          onClose={async () => {
-            await clearPendingTransaction()
-            setShowItem(null)
-          }}
-        />
-      )}
     </div>
   )
 }

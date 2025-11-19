@@ -1,6 +1,6 @@
-// src/components/ConnectMetamask/ConnectMetamaskButton.tsx
+// src/components/Wallet/ConnectButton.tsx
 import React, { useMemo } from "react"
-import { useWallet } from "~/app/contexts/WalletContext"
+import { useWallet } from "~/app/contexts/AppProvider"
 import { Button, type ButtonProps } from "~/components/Button"
 
 function shortAddr(addr?: string) {
@@ -8,7 +8,7 @@ function shortAddr(addr?: string) {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`
 }
 
-type ConnectMetamaskButtonProps = {
+type ConnectButtonProps = {
   className?: string
   size?: ButtonProps['size']
   onConnected?: (address: string) => void
@@ -17,7 +17,7 @@ type ConnectMetamaskButtonProps = {
   children?: React.ReactNode
 }
 
-export const ConnectMetamaskButton: React.FC<ConnectMetamaskButtonProps> = ({
+export const ConnectButton: React.FC<ConnectButtonProps> = ({
   className,
   size,
   onConnected,
@@ -62,4 +62,4 @@ export const ConnectMetamaskButton: React.FC<ConnectMetamaskButtonProps> = ({
   )
 }
 
-export default ConnectMetamaskButton
+export default ConnectButton

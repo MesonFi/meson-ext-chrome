@@ -22,11 +22,38 @@ type WalletCtx = {
 
 const Ctx = createContext<WalletCtx | null>(null)
 
-export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+type DrawerContextType = {
+  isOpen: boolean
+  title: React.ReactNode | null
+  content: React.ReactNode | null
+  openDrawer: (content: React.ReactNode, title?: React.ReactNode) => void
+  closeDrawer: () => void
+}
+
+const DrawerCtx = createContext<DrawerContextType | null>(null)
+
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const signer = useMemo(() => new ExtensionSigner(), [])
   const [booting, setBooting] = useState(true)
   const [connecting, setConnecting] = useState(false)
   const [address, setAddress] = useState<string>("")
+
+  // Drawer state
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [drawerTitle, setDrawerTitle] = useState<React.ReactNode | null>(null)
+  const [drawerContent, setDrawerContent] = useState<React.ReactNode | null>(null)
+
+  const openDrawer = (content: React.ReactNode, title?: React.ReactNode) => {
+    setDrawerTitle(title ?? null)
+    setDrawerContent(content)
+    setDrawerOpen(true)
+  }
+
+  const closeDrawer = () => {
+    setDrawerOpen(false)
+    setDrawerTitle(null)
+    setDrawerContent(null)
+  }
 
   // 初始化加载 & 监听存储变化（与你当前 Wallet.tsx 的逻辑一致）
   useEffect(() => {
@@ -93,11 +120,23 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     signer
   }
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>
+  return (
+    <DrawerCtx.Provider value={{ isOpen: drawerOpen, title: drawerTitle, content: drawerContent, openDrawer, closeDrawer }}>
+      <Ctx.Provider value={value}>
+        {children}
+      </Ctx.Provider>
+    </DrawerCtx.Provider>
+  )
 }
 
 export function useWallet() {
   const v = useContext(Ctx)
-  if (!v) throw new Error("useWallet must be used within WalletProvider")
+  if (!v) throw new Error("useWallet must be used within AppProvider")
   return v
+}
+
+export function useDrawer() {
+  const ctx = useContext(DrawerCtx)
+  if (!ctx) throw new Error("useDrawer must be used within AppProvider")
+  return ctx
 }

@@ -1,22 +1,16 @@
 // src/app/AppShell.tsx
-import React, { useMemo, useState } from "react"
+import React, { useMemo } from "react"
 import "../style.css"
-import { WalletProvider } from "./contexts/WalletContext"
+import { AppProvider } from "./contexts/AppProvider"
 import Header from "./Header"
-import Home from "./views/Home"
+import TabView from "./layout/TabView"
 import { cn } from "~/lib/utils"
-import { X402URL } from "./views/x402URL"
-import HistoryPage from "./views/History"
-import TabBar from "~/components/Navigation/TabBar"
 import { Toaster } from "~/components/ui/sonner"
+import DrawerPopup from "./layout/DrawerPopup"
 
 type Mode = "popup" | "sidepanel"
-type View = "home" | "x402" | "options"
 
 const AppShell: React.FC<{ mode: Mode }> = ({ mode }) => {
-  const [selectedTab, setSelectedTab] = useState<"list"|"history">("list")
-  const [drawerOpen, setDrawerOpen] = useState(false)
-
   const containerClass = useMemo(
     () =>
       mode === "popup"
@@ -25,20 +19,15 @@ const AppShell: React.FC<{ mode: Mode }> = ({ mode }) => {
     [mode]
   )
 
-  // 内容区可滚动，header 固定
   return (
-    <WalletProvider>
-      <div className={cn(containerClass, 'overflow-hidden')}>
+    <AppProvider>
+      <div className={cn(containerClass, "overflow-hidden")}>
         <Header mode={mode} />
-        <div className="flex-1 overflow-y-auto scrollbar-hide pb-[safe-area-inset-bottom]">
-          { selectedTab === "list" && <Home mode={mode}/> }
-          { selectedTab === "history" && <HistoryPage/> }
-        </div>
-        <X402URL open={drawerOpen} onOpenChange={setDrawerOpen} mode={mode} />
-        <TabBar selectedTab={selectedTab} onSelect={setSelectedTab} onAdd={() => setDrawerOpen(true)} />
+        <TabView mode={mode} />
+        <DrawerPopup />
         <Toaster />
       </div>
-    </WalletProvider>
+    </AppProvider>
   )
 }
 

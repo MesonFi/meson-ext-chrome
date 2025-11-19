@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from "react"
-import { useWallet } from "../../../contexts/WalletContext"
+import { useWallet } from "~/app/contexts/AppProvider"
 import X402AcceptOption from "./X402AcceptOption"
 import { buildXPaymentHeader } from "../lib"
 import { Button } from "~/components/Button"
-import { ConnectMetamaskButton } from "~/components/ConnectMetamask"
+import { ConnectButton } from "~/components/Wallet"
 import type { X402Accept, X402Item } from "../types"
 
 // 根据 accept 输出 schema 推导方法
@@ -89,7 +89,7 @@ const Step1: React.FC<Props> = ({ item, mode = "popup", onSelected }) => {
               loading={signing}
             >
               {signing ? 'Signing' : 'Confirm'}
-            </Button> : <ConnectMetamaskButton className="w-full" size="lg" />
+            </Button> : <ConnectButton className="w-full" size="lg" />
         }
       </div>
     </div>
