@@ -3,7 +3,7 @@ import { useDrawer } from "~/app/contexts/AppProvider"
 import TabBar from "~/app/layout/TabBar"
 import ViewX402Discover from "~/app/views/discover/ViewX402Discover"
 import ViewHistory from "~/app/views/history/ViewX402History"
-import { DrawerEnterX402 } from "~/app/views/DrawerEnterX402"
+import { DrawerEnterX402 } from "~/app/drawers/DrawerEnterX402"
 
 type Tab = "discover" | "history"
 

@@ -23,7 +23,7 @@ import type {
 } from "~/lib/x402/types"
 
 import X402Item from "./X402Item"
-import DrawerX402Request, { DrawerTitleX402Request } from "../DrawerX402Request"
+import DrawerX402Request, { DrawerTitleX402Request } from "~/app/drawers/DrawerX402Request"
 
 const BAZAAR_URL =
   "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources"

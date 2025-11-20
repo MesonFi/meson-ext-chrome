@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useDrawer } from "~/app/contexts/AppProvider"
-import DrawerX402Request, { DrawerTitleX402Request } from "~/app/views/DrawerX402Request"
+import DrawerX402Request, { DrawerTitleX402Request } from "~/app/drawers/DrawerX402Request"
 import type { X402TransactionState } from "~/lib/storage/x402_pending_transaction"
 import { loadX402History } from "~/lib/storage/x402_history"
 
