@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import "../style.css"
-import Header from "./Header"
+import Header from "./layout/Header"
 import TabView from "./layout/TabView"
 import { cn } from "~/lib/utils"
 import { Toaster } from "~/components/ui/sonner"

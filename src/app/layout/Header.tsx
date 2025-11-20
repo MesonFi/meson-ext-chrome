@@ -1,6 +1,6 @@
 // src/app/Header.tsx
 import React from "react"
-import { useWallet } from "./contexts/AppProvider"
+import { useWallet } from "../contexts/AppProvider"
 import { SvgIcon } from "~/components/SvgIcon"
 import SidebarIconSrc from "@assets/icons/sidebar.svg"
 import { cn } from "~/lib/utils"
