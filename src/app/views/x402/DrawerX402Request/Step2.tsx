@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react"
-import { decodeXPaymentResponseHeader } from "../lib"
+import { decodeXPaymentResponseHeader, parseValidBeforeFromHeader } from "../lib"
 import { Button } from "~/components/Button"
+import { toast } from "sonner"
+import { updatePendingTransaction, clearPendingTransaction } from "~/lib/storage/x402_pending_transaction"
 import DynamicForm, { type DynamicFormRef } from "./DynamicForm"
 import type { X402Accept } from "../types"
 import { SvgIcon } from "~/components/SvgIcon"
@@ -24,6 +26,9 @@ const Step2: React.FC<Props> = ({
 }) => {
   const [sending, setSending] = useState(false)
   const [err, setErr] = useState<string>("")
+  const validBeforeParsed = parseValidBeforeFromHeader(xPaymentHeader)
+  const nowSec = Math.floor(Date.now() / 1000)
+  const isExpired = validBeforeParsed !== null && nowSec >= validBeforeParsed
   const [copied, setCopied] = useState(false)
   const [headerFormat, setHeaderFormat] = useState<'base64' | 'json'>('base64')
   const formRef = useRef<DynamicFormRef>(null)
@@ -75,6 +80,16 @@ const Step2: React.FC<Props> = ({
 
   async function onSend() {
     setErr("")
+
+    // Check expired
+    const validBeforeCheck = parseValidBeforeFromHeader(xPaymentHeader)
+    const nowSecCheck = Math.floor(Date.now() / 1000)
+    if (validBeforeCheck !== null && nowSecCheck >= validBeforeCheck) {
+      toast.error("支付请求已过期")
+      await updatePendingTransaction({ step: 3 })
+      await clearPendingTransaction()
+      return
+    }
 
     // 验证表单并获取数据
     const validation = formRef.current?.validate()
@@ -180,6 +195,7 @@ const Step2: React.FC<Props> = ({
           size="lg"
           onClick={onSend}
           loading={sending}
+          disabled={isExpired || sending}
         >
           {sending ? 'Sending' : 'Request with Payment Header'}
         </Button>
