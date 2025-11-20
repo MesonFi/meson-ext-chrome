@@ -2,15 +2,17 @@
 
 This document describes the top-level structure of the React application.
 
-## AppShell (root)
+## AppRoot (root)
 - Wraps the UI in `<AppProvider>` context.
-- Defines the base container for popup and sidepanel modes.
-- Renders in order:
+- Runs a one-time check for pending transactions on startup.
+- If a pending transaction exists, opens `DrawerX402Request` with the stored state via `initialState`.
+
+## AppShellContent (UI)
+- Defines the container for popup and sidepanel modes.
+- Responsible solely for rendering UI elements inside the provider:
   1. `<Header>` (fixed at top).
-  2. `<TabView>` (manages selected tab state):
-     - Renders current view via its render prop.
-     - Renders `<TabBar>` for navigation.
-  3. `<DrawerPopup>` (controlled by `DrawerContext` to display dynamic content).
+  2. `<TabView>` (manages selected tab state and triggers drawers).
+  3. `<DrawerPopup>` (renders controlled drawer content).
   4. `<Toaster>` (global notifications).
 
 ## AppProvider (context)

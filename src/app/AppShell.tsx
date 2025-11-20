@@ -1,34 +1,47 @@
 // src/app/AppShell.tsx
-import React, { useMemo } from "react"
-import "../style.css"
-import { AppProvider } from "./contexts/AppProvider"
-import Header from "./Header"
-import TabView from "./layout/TabView"
-import { cn } from "~/lib/utils"
-import { Toaster } from "~/components/ui/sonner"
-import DrawerPopup from "./layout/DrawerPopup"
+import React, { useEffect } from "react"
+import { AppProvider, useDrawer } from "./contexts/AppProvider"
+import AppShellContent from "./AppShellContent"
+import {
+  getPendingTransaction
+} from "~/lib/storage/x402_pending_transaction"
+import DrawerX402Request, { DrawerTitleX402Request } from "./views/x402/DrawerX402Request"
 
 type Mode = "popup" | "sidepanel"
 
-const AppShell: React.FC<{ mode: Mode }> = ({ mode }) => {
-  const containerClass = useMemo(
-    () =>
-      mode === "popup"
-        ? "w-[360px] h-[600px] text-color-strong flex flex-col"
-        : "w-full h-screen text-color-strong flex flex-col",
-    [mode]
-  )
+const AppShell: React.FC<{ mode: Mode }> = ({ mode }) => (
+  <AppProvider>
+    <AppRootInner mode={mode} />
+  </AppProvider>
+)
 
-  return (
-    <AppProvider>
-      <div className={cn(containerClass, "overflow-hidden")}>
-        <Header mode={mode} />
-        <TabView mode={mode} />
-        <DrawerPopup />
-        <Toaster />
-      </div>
-    </AppProvider>
-  )
+const AppRootInner: React.FC<{ mode: Mode }> = ({ mode }) => {
+  const { openDrawer } = useDrawer()
+
+  useEffect(() => {
+    ;(async () => {
+      const state = await getPendingTransaction()
+      if (state && state.item) {
+        openDrawer(
+          <DrawerX402Request
+            item={state.item}
+            mode={mode}
+            initialState={{
+              step: state.step,
+              accept: state.accept,
+              xPaymentHeader: state.xPaymentHeader,
+              init: state.init,
+              finalText: state.response ? JSON.stringify(state.response.body, null, 2) : undefined
+            }}
+          />,
+          <DrawerTitleX402Request>{state.item.resource}</DrawerTitleX402Request>
+        )
+      }
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return <AppShellContent mode={mode} />
 }
 
 export default AppShell

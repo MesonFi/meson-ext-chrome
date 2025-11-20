@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import Step1 from "./Step1"
 import Step2 from "./Step2"
 import Step3 from "./Step3"
 import ArrowRightIcon from "@assets/icons/arrow-right.svg"
 import {
   savePendingTransaction,
-  getPendingTransaction,
   clearPendingTransaction
 } from "~/lib/storage/x402_pending_transaction"
 import { saveX402Request, updateX402Request } from "~/lib/storage/x402_history"
@@ -15,88 +14,51 @@ import type { X402TransactionState } from "~/lib/storage/x402_pending_transactio
 import { cn } from "~/lib/utils"
 import { MessageTooltip } from "~/components/MessageTooltip"
 
-type Props = {
-  item: X402Item
-  mode?: "popup" | "sidepanel"
-  historyEntry?: X402TransactionState
-}
-
 type Step = 1 | 2 | 3
 
-const DrawerX402Request: React.FC<Props> = ({ item, mode = "popup", historyEntry }) => {
-  const [step, setStep] = useState<Step>(1)
-  const [historyTimestamp, setHistoryTimestamp] = useState<number>(0)
+export type DrawerX402RequestInitialState = {
+  step?: Step
+  accept?: X402Accept | null
+  xPaymentHeader?: string
+  init?: RequestInit
+  finalText?: string
+  decodedPaymentResp?: any
+}
 
-  // 选择的 accept
-  const [selectedAccept, setSelectedAccept] = useState<X402Accept | null>(null)
-  // 支付凭证（X-PAYMENT header）
-  const [xPaymentHeader, setXPaymentHeader] = useState<string>("")
+interface DrawerX402RequestProps {
+  item: X402Item
+  mode?: "popup" | "sidepanel"
+  // For history entries (from ViewHistory)
+  historyEntry?: X402TransactionState
+  // For auto-restore (from AppShell)
+  initialState?: DrawerX402RequestInitialState
+}
+
+const DrawerX402Request: React.FC<DrawerX402RequestProps> = ({
+  item,
+  mode = "popup",
+  historyEntry,
+  initialState
+}) => {
+  // Merge historyEntry and initialState (historyEntry takes priority)
+  const init = historyEntry ?? initialState
+
+  const [step, setStep] = useState<Step>(init?.step ?? 1)
+  const [historyTimestamp, setHistoryTimestamp] = useState<number>(historyEntry?.timestamp ?? 0)
+  const [selectedAccept, setSelectedAccept] = useState<X402Accept | null>(init?.accept ?? null)
+  const [xPaymentHeader, setXPaymentHeader] = useState<string>(init?.xPaymentHeader ?? "")
+  const [baseInit, setBaseInit] = useState<RequestInit>(init?.init ?? { method: "GET" })
+
+  const [finalText, setFinalText] = useState<string>(() => {
+    if (historyEntry?.response) {
+      return JSON.stringify(historyEntry.response.body, null, 2)
+    }
+    return initialState?.finalText ?? ""
+  })
+  const [decodedPaymentResp, setDecodedPaymentResp] = useState<any>(initialState?.decodedPaymentResp ?? null)
+
   // 用于最终请求的 URL（优先 accept.resource，否则 item.resource）
   const resourceUrl = selectedAccept?.resource || item.resource || "-"
-
-  // 首次请求的 init（由 accept.outputSchema.input.method 推断）
-  const [baseInit, setBaseInit] = useState<RequestInit>({ method: "GET" })
-
-  // 最终响应数据
-  const [finalText, setFinalText] = useState<string>("")
-  const [decodedPaymentResp, setDecodedPaymentResp] = useState<any>(null)
-
-  // 组件挂载时尝试恢复状态
-  useEffect(() => {
-    const restoreState = async () => {
-      if (historyEntry) {
-        console.log("[DrawerX402Request] Restoring history entry:", historyEntry)
-
-        setStep(historyEntry.step as Step)
-
-        if (historyEntry.accept) {
-          setSelectedAccept(historyEntry.accept)
-        }
-
-        if (historyEntry.init) {
-          setBaseInit(historyEntry.init)
-        }
-
-        if (historyEntry.xPaymentHeader) {
-          setXPaymentHeader(historyEntry.xPaymentHeader)
-        }
-
-        if (historyEntry.response) {
-          setFinalText(JSON.stringify(historyEntry.response.body, null, 2))
-        }
-
-        return
-      }
-
-      const savedState = await getPendingTransaction()
-
-      if (savedState && savedState.item?.resource === item?.resource) {
-        console.log("[DrawerX402Request] Restoring saved state:", savedState)
-
-        // 恢复状态
-        setStep(savedState.step)
-
-        if (savedState.accept) {
-          setSelectedAccept(savedState.accept)
-        }
-
-        if (savedState.init) {
-          setBaseInit(savedState.init)
-        }
-
-        if (savedState.xPaymentHeader) {
-          setXPaymentHeader(savedState.xPaymentHeader)
-        }
-
-        if (savedState.response) {
-          setFinalText(JSON.stringify(savedState.response.body, null, 2))
-          // 如果有 decoded 信息也恢复
-        }
-      }
-    }
-
-    restoreState()
-  }, [item, historyEntry])
 
   const renderStepIndicator = () => {
     const steps = [
@@ -174,8 +136,10 @@ const DrawerX402Request: React.FC<Props> = ({ item, mode = "popup", historyEntry
               setDecodedPaymentResp(payload.decoded)
               setStep(3)
 
-              // 更新历史记录状态为完成
-              await updateX402Request(historyTimestamp, { step: 3 })
+              // 更新历史记录状态为完成（仅当有 historyTimestamp 时）
+              if (historyTimestamp) {
+                await updateX402Request(historyTimestamp, { step: 3 })
+              }
               // 清除保存的状态（交易完成）
               await clearPendingTransaction()
             }}

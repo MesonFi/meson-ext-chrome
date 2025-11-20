@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react"
 import X402Item from "./X402Item"
-import DrawerX402Request, { DrawerTitleX402Request } from "./DrawerX402Request"
 import { useDrawer } from "~/app/contexts/AppProvider"
 import { SvgIcon } from "~/components/SvgIcon"
 import RefreshIconSrc from "@assets/icons/refresh.svg"
@@ -14,13 +13,14 @@ import {
   SelectContent,
   SelectItem
 } from "~/components/ui/select"
-import { getPendingTransaction, clearPendingTransaction } from "~/lib/storage/x402_pending_transaction"
 import { toast } from "sonner"
 import type {
   X402Item as X402ItemType,
   X402DiscoveryResponse,
   X402ItemMetadata
 } from "./types"
+
+import DrawerX402Request, { DrawerTitleX402Request } from "./DrawerX402Request"
 
 const BAZAAR_URL =
   "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources"
@@ -138,17 +138,6 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
   useEffect(() => { load(true) }, [serviceUrl])
   
 
-  // 检查是否有待恢复的交易，自动打开 drawer
-  useEffect(() => {
-    const checkPendingTransaction = async () => {
-      const savedState = await getPendingTransaction()
-      if (savedState && savedState.item) {
-        console.log("[ViewX402List] Auto-restoring pending transaction:", savedState)
-        openDrawer(<DrawerX402Request item={savedState.item} mode={mode} />, <DrawerTitleX402Request>{savedState.item.resource}</DrawerTitleX402Request>)
-      }
-    }
-    checkPendingTransaction()
-  }, [])
 
   const maxMonth = useMemo(
     () => Math.max(0, ...items.map((it) => monthTx(it?.metadata) || 0)),
