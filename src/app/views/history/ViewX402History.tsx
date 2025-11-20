@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
+import { useDrawer } from "~/app/contexts/AppProvider"
+import DrawerX402Request, { DrawerTitleX402Request } from "~/app/views/DrawerX402Request"
 import type { X402TransactionState } from "~/lib/storage/x402_pending_transaction"
 import { loadX402History } from "~/lib/storage/x402_history"
-import PastX402Request from "./PastX402Request"
-import { useDrawer } from "~/app/contexts/AppProvider"
-import DrawerX402Request, { DrawerTitleX402Request } from "~/app/views/x402/DrawerX402Request"
 
-const ViewHistory: React.FC = () => {
+import PastX402Request from "./PastX402Request"
+
+const ViewX402History: React.FC = () => {
   const [history, setHistory] = useState<X402TransactionState[]>([])
   const { openDrawer } = useDrawer()
 
@@ -21,7 +22,7 @@ const ViewHistory: React.FC = () => {
       <div className="px-3 pt-4 mb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-medium">X402 History Requests</h3>
+            <h3 className="text-base font-medium">History X402 Requests</h3>
           </div>
         </div>
       </div>
@@ -47,4 +48,4 @@ const ViewHistory: React.FC = () => {
   )
 }
 
-export default ViewHistory
+export default ViewX402History

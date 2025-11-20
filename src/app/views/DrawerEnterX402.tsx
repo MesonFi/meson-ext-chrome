@@ -1,13 +1,16 @@
 import React, { useState } from "react"
-import { Button } from "~/components/Button"
 import { useDrawer } from "~/app/contexts/AppProvider"
-import { SvgIcon } from "~/components/SvgIcon"
+
 import PasteIconSrc from "@assets/icons/paste.svg"
+import { Button } from "~/components/Button"
+import { SvgIcon } from "~/components/SvgIcon"
 import { Input } from "~/components/ui/input"
 import { MessageTooltip } from "~/components/MessageTooltip"
+
 import { loadRecentUrls, saveRecentUrl } from "~/lib/storage/recentUrls"
-import DrawerX402Request, { DrawerTitleX402Request } from "./x402/DrawerX402Request"
 import { clearPendingTransaction } from "~/lib/storage/x402_pending_transaction"
+
+import DrawerX402Request, { DrawerTitleX402Request } from "./DrawerX402Request"
 
 // URL 验证函数
 function validateURL(url: string): string | null {

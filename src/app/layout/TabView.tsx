@@ -1,18 +1,18 @@
 import React, { useState } from "react"
 import { useDrawer } from "~/app/contexts/AppProvider"
 import TabBar from "~/app/layout/TabBar"
-import ViewX402List from "~/app/views/x402/ViewX402List"
-import ViewHistory from "~/app/views/history/ViewHistory"
+import ViewX402Discover from "~/app/views/discover/ViewX402Discover"
+import ViewHistory from "~/app/views/history/ViewX402History"
 import { DrawerEnterX402 } from "~/app/views/DrawerEnterX402"
 
-type Tab = "list" | "history"
+type Tab = "discover" | "history"
 
 interface TabViewProps {
   mode: "popup" | "sidepanel"
 }
 
 const TabView: React.FC<TabViewProps> = ({ mode }) => {
-  const [selectedTab, setSelectedTab] = useState<Tab>("list")
+  const [selectedTab, setSelectedTab] = useState<Tab>("discover")
   const { openDrawer } = useDrawer()
 
   const handleAdd = () => {
@@ -22,7 +22,7 @@ const TabView: React.FC<TabViewProps> = ({ mode }) => {
   return (
     <>
       <div className="flex-1 overflow-y-auto scrollbar-hide pb-[50px]">
-        {selectedTab === "list" ? <ViewX402List mode={mode} /> : <ViewHistory />}
+        {selectedTab === "discover" ? <ViewX402Discover mode={mode} /> : <ViewHistory />}
       </div>
       <TabBar
         selectedTab={selectedTab}

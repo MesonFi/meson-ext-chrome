@@ -1,10 +1,13 @@
 import React, { useMemo, useState } from "react"
 import { useWallet } from "~/app/contexts/AppProvider"
-import X402AcceptOption from "./X402AcceptOption"
-import { buildXPaymentHeader } from "../lib"
+
 import { Button } from "~/components/Button"
 import { ConnectButton } from "~/components/Wallet"
-import type { X402Accept, X402Item } from "../types"
+
+import { buildXPaymentHeader } from "~/lib/x402"
+import type { X402Accept, X402Item } from "~/lib/x402/types"
+
+import X402AcceptOption from "./X402AcceptOption"
 
 // 根据 accept 输出 schema 推导方法
 function deriveInitByAccept(acc: X402Accept): RequestInit {

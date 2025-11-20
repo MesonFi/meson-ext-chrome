@@ -5,7 +5,7 @@ import AppShellContent from "./AppShellContent"
 import {
   getPendingTransaction
 } from "~/lib/storage/x402_pending_transaction"
-import DrawerX402Request, { DrawerTitleX402Request } from "./views/x402/DrawerX402Request"
+import DrawerX402Request, { DrawerTitleX402Request } from "./views/DrawerX402Request"
 
 type Mode = "popup" | "sidepanel"
 

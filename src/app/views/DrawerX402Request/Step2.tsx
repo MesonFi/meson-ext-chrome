@@ -1,13 +1,15 @@
 import React, { useState, useRef } from "react"
-import { decodeXPaymentResponseHeader, parseValidBeforeFromHeader } from "../lib"
-import { Button } from "~/components/Button"
 import { toast } from "sonner"
-import { updatePendingTransaction, clearPendingTransaction } from "~/lib/storage/x402_pending_transaction"
-import DynamicForm, { type DynamicFormRef } from "./DynamicForm"
-import type { X402Accept } from "../types"
-import { SvgIcon } from "~/components/SvgIcon"
+
 import CopyIconSrc from "@assets/icons/copy.svg"
+import { Button } from "~/components/Button"
+import { SvgIcon } from "~/components/SvgIcon"
 import { MessageTooltip } from "~/components/MessageTooltip"
+
+import { updatePendingTransaction, clearPendingTransaction } from "~/lib/storage/x402_pending_transaction"
+import { decodeXPaymentResponseHeader, parseValidBeforeFromHeader } from "~/lib/x402"
+import type { X402Accept } from "~/lib/x402/types"
+import DynamicForm, { type DynamicFormRef } from "./DynamicForm"
 
 type Props = {
   resourceUrl: string

@@ -1,8 +1,8 @@
 import React from "react"
-import { capitalize } from "~/lib/utils"
-import SvgIcon from "~/components/SvgIcon"
 import BaseIconSrc from "@assets/icons/base.svg"
-import type { X402Accept } from "../types"
+import SvgIcon from "~/components/SvgIcon"
+import { capitalize } from "~/lib/utils"
+import type { X402Accept } from "~/lib/x402/types"
 
 type Props = {
   accept: X402Accept

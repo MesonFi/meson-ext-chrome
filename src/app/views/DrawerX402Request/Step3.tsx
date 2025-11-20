@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import { SvgIcon } from "~/components/SvgIcon"
 import CopyIconSrc from "@assets/icons/copy.svg"
+import { SvgIcon } from "~/components/SvgIcon"
 import { MessageTooltip } from "~/components/MessageTooltip"
 
 type Props = {

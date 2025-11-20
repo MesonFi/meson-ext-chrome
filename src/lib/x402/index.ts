@@ -1,4 +1,4 @@
-// src/app/views/x402/lib.ts
+// src/lib/x402/index.ts
 // 分步 x402 流程：1) 获取并解析 Payment Requirements 2) 生成支付头(签名) 3) 携带支付头重试
 // 仅使用 x402 官方导出：x402/types, x402/client, x402/shared
 
@@ -21,7 +21,7 @@ import {
 } from "x402/client"
 
 import { decodeXPaymentResponse } from "x402/shared"
-import type { Hex } from "../../../lib/signer"
+import type { Hex } from "../signer"
 
 const NETWORK_TO_CHAIN_ID: Record<string, Hex> = {
   "base": "0x2105",           // 8453

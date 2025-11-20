@@ -1,18 +1,20 @@
 import React, { useState } from "react"
+import ArrowRightIcon from "@assets/icons/arrow-right.svg"
+import { MessageTooltip } from "~/components/MessageTooltip"
+
+import { cn } from "~/lib/utils"
+import {
+  savePendingTransaction,
+  clearPendingTransaction,
+  type X402TransactionState,
+} from "~/lib/storage/x402_pending_transaction"
+import { saveX402Request, updateX402Request } from "~/lib/storage/x402_history"
+import { parseValidBeforeFromHeader } from "~/lib/x402"
+import type { X402Item, X402Accept } from "~/lib/x402/types"
+
 import Step1 from "./Step1"
 import Step2 from "./Step2"
 import Step3 from "./Step3"
-import ArrowRightIcon from "@assets/icons/arrow-right.svg"
-import {
-  savePendingTransaction,
-  clearPendingTransaction
-} from "~/lib/storage/x402_pending_transaction"
-import { saveX402Request, updateX402Request } from "~/lib/storage/x402_history"
-import { parseValidBeforeFromHeader } from "../lib"
-import type { X402Item, X402Accept } from "../types"
-import type { X402TransactionState } from "~/lib/storage/x402_pending_transaction"
-import { cn } from "~/lib/utils"
-import { MessageTooltip } from "~/components/MessageTooltip"
 
 type Step = 1 | 2 | 3
 

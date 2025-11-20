@@ -1,6 +1,6 @@
 import React from "react"
 
-type Tab = "list" | "history"
+type Tab = "discover" | "history"
 
 interface TabBarProps {
   selectedTab: Tab
@@ -12,11 +12,11 @@ const TabBar: React.FC<TabBarProps> = ({ selectedTab, onSelect, onAdd }) => {
   return (
     <nav className="fixed bottom-0 inset-x-0 bg-surface border-t flex justify-around py-2">
       <button
-        aria-label="List"
-        onClick={() => onSelect("list")}
-        className={`text-sm ${selectedTab === "list" ? "text-primary" : "text-secondary"}`}
+        aria-label="Discover"
+        onClick={() => onSelect("discover")}
+        className={`text-sm ${selectedTab === "discover" ? "text-primary" : "text-secondary"}`}
       >
-        List
+        Discover
       </button>
       <button
         aria-label="Add"

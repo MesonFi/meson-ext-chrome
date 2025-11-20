@@ -1,10 +1,12 @@
 import React, { useState, useMemo, forwardRef, useImperativeHandle } from "react"
+
+import PasteIconSrc from "@assets/icons/paste.svg"
 import { Input } from "~/components/ui/input"
 import { Checkbox } from "~/components/ui/checkbox"
 import { SvgIcon } from "~/components/SvgIcon"
-import PasteIconSrc from "@assets/icons/paste.svg"
 import { MessageTooltip } from "~/components/MessageTooltip"
-import type { X402Accept, X402FieldSchema } from "../types"
+
+import type { X402Accept, X402FieldSchema } from "~/lib/x402/types"
 
 type Props = {
   selectedAccept: X402Accept | null

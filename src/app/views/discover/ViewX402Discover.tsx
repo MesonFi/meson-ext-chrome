@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react"
-import X402Item from "./X402Item"
-import { useDrawer } from "~/app/contexts/AppProvider"
-import { SvgIcon } from "~/components/SvgIcon"
-import RefreshIconSrc from "@assets/icons/refresh.svg"
-import Loading from "~/components/Loading"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
+import { toast } from "sonner"
+
+import { useDrawer } from "~/app/contexts/AppProvider"
+
+import RefreshIconSrc from "@assets/icons/refresh.svg"
 import SettingsIconSrc from "@assets/icons/settings.svg"
+import Loading from "~/components/Loading"
+import { SvgIcon } from "~/components/SvgIcon"
 import {
   Select,
   SelectTrigger,
@@ -13,14 +15,15 @@ import {
   SelectContent,
   SelectItem
 } from "~/components/ui/select"
-import { toast } from "sonner"
+
 import type {
   X402Item as X402ItemType,
   X402DiscoveryResponse,
   X402ItemMetadata
-} from "./types"
+} from "~/lib/x402/types"
 
-import DrawerX402Request, { DrawerTitleX402Request } from "./DrawerX402Request"
+import X402Item from "./X402Item"
+import DrawerX402Request, { DrawerTitleX402Request } from "../DrawerX402Request"
 
 const BAZAAR_URL =
   "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources"
@@ -45,7 +48,7 @@ function normalizeList(json: X402DiscoveryResponse | X402ItemType[]): X402ItemTy
 type SortKey = "score" | "month"
 const CACHE_KEY = "x402_cache"
 
-const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
+const ViewX402Discover: React.FC<Props> = ({ mode = "popup" }) => {
   const [loading, setLoading] = useState(false)
   const [loadFailed, setLoadFailed] = useState(false)
   const [items, setItems] = useState<X402ItemType[]>([])
@@ -166,7 +169,7 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
       <div className="px-3 pt-4 mb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-medium">X402 List</h3>
+            <h3 className="text-base font-medium">Discover X402</h3>
             <button
               onClick={() => load(true)}
               className="flex items-center justify-center"
@@ -264,4 +267,4 @@ const ViewX402List: React.FC<Props> = ({ mode = "popup" }) => {
   )
 }
 
-export default ViewX402List
+export default ViewX402Discover
