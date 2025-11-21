@@ -334,8 +334,13 @@ class WalletDiscoveryManager {
           }
           return
         }
+
+        // Unknown PHANTOM_ message type
+        reply(id, undefined, `未知 Phantom 消息类型：${payload?.type}`)
+        return
       }
 
+      // Unknown message type
       reply(id, undefined, `未知消息类型：${payload?.type}`)
     } catch (err: any) {
       console.error("[INPAGE] caught error", err)

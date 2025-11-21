@@ -140,7 +140,7 @@ const Step2: React.FC<Props> = ({
   return (
     <div className="flex flex-col h-full px-3 overflow-hidden">
       {/* 可滚动内容区域 */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide min-h-0">
+      <div className="flex-1 overflow-y-auto min-h-0">
         {err && <div className="text-xs text-error mb-3">错误：{err}</div>}
 
         {/* 动态表单 */}
@@ -183,7 +183,7 @@ const Step2: React.FC<Props> = ({
               </button>
             </div>
           </div>
-          <div className="text-xs bg-surface p-2 rounded-lg whitespace-pre-wrap break-words max-h-[172px] overflow-y-scroll scrollbar-hide mb-3">
+          <div className="text-xs bg-surface p-2 rounded-lg whitespace-pre-wrap break-words max-h-[172px] overflow-y-scroll mb-3">
             {headerFormat === 'json' ? paymentHeaderJson : xPaymentHeader}
           </div>
         </div>

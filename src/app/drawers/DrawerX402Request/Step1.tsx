@@ -96,7 +96,7 @@ const Step1: React.FC<Props> = ({ item, onSelected }) => {
 
   return (
     <div className="flex flex-col h-full px-3 overflow-hidden">
-      <div className="flex-1 overflow-y-auto scrollbar-hide min-h-0">
+      <div className="flex-1 overflow-y-auto min-h-0">
         {/* 支付选项列表 */}
         {accepts.map((acc: any, i: number) => (
           <X402AcceptOption

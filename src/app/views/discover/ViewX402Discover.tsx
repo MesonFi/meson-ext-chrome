@@ -234,7 +234,7 @@ const ViewX402Discover: React.FC<Props> = ({ mode = "popup" }) => {
           </div>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
+      <div className="flex-1 overflow-y-auto">
         {loading ? (
           <div className="text-sm text-gray-600 flex flex-col gap-6 px-3">
             {new Array(10).fill(1).map((_, i) => (

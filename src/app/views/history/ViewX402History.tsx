@@ -26,7 +26,7 @@ const ViewX402History: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
+      <div className="flex-1 overflow-y-auto">
         {history.length === 0 ? (
           <div className="text-center text-color-muted">No history available</div>
         ) : (

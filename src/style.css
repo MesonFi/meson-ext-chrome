@@ -10,4 +10,29 @@
   body {
     @apply text-color-regular;
   }
+
+  /* Custom scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #CAE5DD;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #B5D9D0;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #CAE5DD transparent;
+  }
 }

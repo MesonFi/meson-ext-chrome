@@ -149,7 +149,7 @@ const DrawerX402Request: React.FC<DrawerX402RequestProps> = ({
         )}
 
         {step === 3 && (
-          <div className="h-full overflow-auto scrollbar-hide">
+          <div className="h-full overflow-auto">
             <Step3
               finalText={finalText}
               decodedPaymentResp={decodedPaymentResp}
