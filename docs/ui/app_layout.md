@@ -34,5 +34,11 @@ This document describes the top-level structure of the React application.
 - Listens to `DrawerContext` for `isOpen`, `content`, and `closeDrawer`.
 - Renders `content` inside the drawer.
 
+## DrawerX402Request Step1
+- In the Payment step, the action button adapts based on the selected network:
+  - If wallet not connected: shows generic 'Connect Wallet'.
+  - If connected but network mismatch: shows 'Connect Phantom Wallet' or 'Connect MetaMask Wallet', and clicking switches the wallet and proceeds.
+  - If connected and network matches: shows 'Confirm'.
+
 ## Toaster
 - Renders global toast notifications using Sonner.

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react"
 import { useWallet } from "~/app/contexts/AppProvider"
+import { getWalletTypeByNetwork } from "~/lib/x402"
 
 import { Button } from "~/components/Button"
 import { ConnectButton } from "~/components/Wallet"
@@ -23,15 +24,49 @@ type Props = {
 }
 
 const Step1: React.FC<Props> = ({ item, onSelected }) => {
-  const { connected, signer } = useWallet()
+  // 1. 所有 useState 集中在顶部
   const [selectedIdx, setSelectedIdx] = useState<number>(0)
   const [signing, setSigning] = useState(false)
+  const [switching, setSwitching] = useState(false)
   const [err, setErr] = useState<string>("")
 
+  // 2. useWallet 获取状态
+  const { connected, walletType, connect, switchWallet, signer } = useWallet()
+
+  // 3. 先计算 accepts 和 selectedAccept
   const accepts = useMemo(() => (Array.isArray(item?.accepts) ? item.accepts : []), [item])
   const selectedAccept = selectedIdx >= 0 ? accepts[selectedIdx] : null
 
-  const canProceed = connected && !!selectedAccept
+  // 4. 基于 selectedAccept 计算其他状态
+  const requiredWallet = useMemo(
+    () => getWalletTypeByNetwork(selectedAccept?.network),
+    [selectedAccept]
+  )
+  const isNetworkMatch = walletType === requiredWallet
+  const needsSwitch = connected && !isNetworkMatch
+  const canProceed = connected && isNetworkMatch && !!selectedAccept
+
+  // 5. 定义处理函数
+  const handleWalletSwitch = async () => {
+    if (!requiredWallet) return
+
+    try {
+      setSwitching(true)
+      setErr("")
+
+      console.log(`切换钱包: 从 ${walletType} 到 ${requiredWallet}`)
+      await switchWallet(requiredWallet)
+      await connect(requiredWallet)
+      console.log(`钱包切换成功: ${requiredWallet}`)
+
+      // 切换成功后，按钮会自动变成 "Confirm"，用户可以再次点击确认
+    } catch (e: any) {
+      console.error("切换钱包失败:", e)
+      setErr(e?.message ?? "切换钱包失败，请重试")
+    } finally {
+      setSwitching(false)
+    }
+  }
 
   async function onProceed() {
     setErr("")
@@ -46,7 +81,7 @@ const Step1: React.FC<Props> = ({ item, onSelected }) => {
       const header = await buildXPaymentHeader({
         wallet: signer,
         x402Version,
-        requirement: selectedAccept
+        requirement: selectedAccept as any // X402Accept 与 PaymentRequirementsParsed 结构兼容
       })
 
       const init = deriveInitByAccept(selectedAccept)
@@ -81,19 +116,33 @@ const Step1: React.FC<Props> = ({ item, onSelected }) => {
 
       {/* 固定底部按钮 */}
       <div className="pt-4 flex-shrink-0">
-        {
-          connected ?
-            <Button
-              className="w-full"
-              variant="primary"
-              size="lg"
-              onClick={onProceed}
-              disabled={!canProceed}
-              loading={signing}
-            >
-              {signing ? 'Signing' : 'Confirm'}
-            </Button> : <ConnectButton className="w-full" size="lg" />
-        }
+        {!connected ? (
+          <ConnectButton className="w-full" size="lg" />
+        ) : needsSwitch ? (
+          <Button
+            className="w-full"
+            variant="primary"
+            size="lg"
+            onClick={handleWalletSwitch}
+            loading={switching}
+            disabled={switching}
+          >
+            {switching
+              ? 'Switching...'
+              : `Connect ${requiredWallet === 'phantom' ? 'Phantom' : 'MetaMask'} Wallet`}
+          </Button>
+        ) : (
+          <Button
+            className="w-full"
+            variant="primary"
+            size="lg"
+            onClick={onProceed}
+            disabled={!canProceed}
+            loading={signing}
+          >
+            {signing ? 'Signing' : 'Confirm'}
+          </Button>
+        )}
       </div>
     </div>
   )

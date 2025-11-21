@@ -14,6 +14,19 @@ import {
 
 import { decodeXPaymentResponse } from "x402/shared"
 import type { Hex } from "../signer"
+import type { WalletType } from "~/lib/storage/app_state"
+
+/**
+ * 根据网络名称推导所需的钱包类型
+ * @param network - 网络名称（如 "solana", "base"）
+ * @returns "phantom" | "metamask"
+ */
+export function getWalletTypeByNetwork(network: string | undefined): WalletType {
+  if (!network) return "metamask" // 默认 MetaMask
+  const normalized = network.toLowerCase()
+  if (normalized.startsWith("solana")) return "phantom"
+  return "metamask" // EVM 默认
+}
 
 const NETWORK_TO_CHAIN_ID: Record<string, Hex> = {
   "base": "0x2105",           // 8453

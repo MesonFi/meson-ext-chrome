@@ -37,3 +37,4 @@ dist/
 !.aider
 !.aiderignore
 !.aider.conf.yml
+.aider*
