@@ -4,6 +4,10 @@ import { useWallet } from "~/app/contexts/AppProvider"
 import { Button, type ButtonProps } from "~/components/Button"
 import type { WalletType } from "~/lib/storage/app_state"
 import { shortAddr } from "~/lib/utils/address"
+import { useDrawer } from "~/app/contexts/AppProvider"
+import DrawerConnectWallet from "./DrawerConnectWallet"
+import { Drawer, DrawerContent } from "~/components/ui/drawer"
+import { cn } from "~/lib/utils"
 
 type ConnectButtonProps = {
   className?: string
@@ -13,6 +17,7 @@ type ConnectButtonProps = {
   showAddressWhenConnected?: boolean
   children?: React.ReactNode
   walletType?: WalletType
+  inline?: boolean  // 新增：是否在当前上下文中内联显示钱包选择
 }
 
 export const ConnectButton: React.FC<ConnectButtonProps> = ({
@@ -22,10 +27,12 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
   onError,
   showAddressWhenConnected = false,
   children,
-  walletType: propWalletType
+  walletType: propWalletType,
+  inline = false
 }) => {
   const { booting, connecting, connected, address, walletType, connect } = useWallet()
-  const [showWalletPicker, setShowWalletPicker] = useState(false)
+  const { openDrawer } = useDrawer()
+  const [localDrawerOpen, setLocalDrawerOpen] = useState(false)
 
   const handleConnect = async (type?: WalletType) => {
     try {
@@ -33,7 +40,8 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
       if (address && onConnected) {
         onConnected(address)
       }
-      setShowWalletPicker(false)
+      // 关闭本地 drawer
+      setLocalDrawerOpen(false)
     } catch (e: any) {
       console.error("连接失败：", e?.message ?? String(e))
       if (onError) {
@@ -65,37 +73,41 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
     )
   }
 
-  // 未连接时显示钱包选择器
-  if (!connected && showWalletPicker) {
+  if (!connected) {
     return (
-      <div className="flex flex-col gap-2">
+      <>
         <Button
-          variant="secondary"
+          variant={inline ? "primary" : "roundeOutline"}
           size={size}
-          className={className}
-          onClick={() => handleConnect("metamask")}
+          className={cn(className, !inline ? 'border-primaryColor text-primaryColor !px-4' : 'py-3')}
+          onClick={() => {
+            if (inline) {
+              setLocalDrawerOpen(true)
+            } else {
+              openDrawer(<DrawerConnectWallet />, 'Connect Wallet')
+            }
+          }}
           disabled={booting || connecting}
         >
-          Connect MetaMask
+          {connecting ? "Connecting..." : children || "Connect Wallet"}
         </Button>
-        <Button
-          variant="secondary"
-          size={size}
-          className={className}
-          onClick={() => handleConnect("phantom")}
-          disabled={booting || connecting}
-        >
-          Connect Phantom
-        </Button>
-        <Button
-          variant="default"
-          size={size}
-          className={className}
-          onClick={() => setShowWalletPicker(false)}
-        >
-          Cancel
-        </Button>
-      </div>
+
+        {/* inline 模式：使用独立的 Drawer，不影响父级 drawer */}
+        {inline && (
+          <Drawer
+            open={localDrawerOpen}
+            onOpenChange={setLocalDrawerOpen}
+            direction="right"
+          >
+            <DrawerContent
+              className="inset-0 max-h-full rounded-none mt-0"
+              direction="right"
+            >
+              <DrawerConnectWallet onClose={() => setLocalDrawerOpen(false)} />
+            </DrawerContent>
+          </Drawer>
+        )}
+      </>
     )
   }
 
@@ -104,8 +116,7 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
       variant="primary"
       size={size}
       className={className}
-      onClick={() => connected ? undefined : setShowWalletPicker(true)}
-      disabled={booting || connecting || connected}
+      disabled={booting || connecting || !connected}
     >
       {buttonText}
     </Button>

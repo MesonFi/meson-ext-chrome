@@ -117,7 +117,7 @@ const Step1: React.FC<Props> = ({ item, onSelected }) => {
       {/* 固定底部按钮 */}
       <div className="pt-4 flex-shrink-0">
         {!connected ? (
-          <ConnectButton className="w-full" size="lg" />
+          <ConnectButton className="w-full" inline />
         ) : needsSwitch ? (
           <Button
             className="w-full"

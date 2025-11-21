@@ -17,7 +17,7 @@ const buttonVariants = cva(
         default: 'active:outline-active active:outline-1 focus:outline-1 focus:[outline-style:solid] focus:outline-primary active:[outline-style:solid] active:bg-active/5 active:text-active hover:outline-primary-hover outline-1 [outline-style:solid] hover:text-primary-hover outline-border text-primary disabled:outline-disabled disabled:bg-white bg-white hover:bg-primary-hover/[0.06]',
         main: 'bg-primary hover:bg-primary-hover text-[#fff] active:bg-primary',
         error: 'text-white bg-error hover:bg-error active:bg-error',
-        roundeOutline: '!pl-2 !pr-3 !py-[3px] !rounded-full !text-sm border hover:border-primary-hover hover:text-primary-hover bg-white hover:bg-primary-hover/5 active:bg-active/5 active:border-active active:text-active gap-1 text-secondary font-normal',
+        roundeOutline: '!pl-2 !pr-3 !py-[7px] !rounded-full !text-sm border border-borderColor hover:border-primary-hover hover:text-primary-hover bg-white hover:bg-primary-hover/5 active:bg-active/5 active:border-active active:text-active gap-1 text-secondary font-medium',
       },
       size: {
         xs: 'py-0 px-3 text-base rounded',

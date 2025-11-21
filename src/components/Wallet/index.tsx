@@ -3,7 +3,7 @@ import React, { useState, useMemo } from "react"
 import { useWallet } from "~/app/contexts/AppProvider"
 import { SvgIcon } from "~/components/SvgIcon"
 import MetaMaskIconSrc from "@assets/icons/metamask.svg"
-import SolanaIconSrc from "@assets/icons/solana.svg"
+import PhantonIconSrc from "@assets/icons/phantom.svg"
 import CopyIconSrc from "@assets/icons/copy.svg"
 import LogoutIconSrc from "@assets/icons/logout.svg"
 import { cn } from "~/lib/utils"
@@ -34,7 +34,7 @@ const Wallet: React.FC<WalletProps> = ({
 
   // 根据钱包类型动态选择图标
   const walletIcon = useMemo(() => {
-    return walletType === "phantom" ? SolanaIconSrc : MetaMaskIconSrc
+    return walletType === "phantom" ? PhantonIconSrc : MetaMaskIconSrc
   }, [walletType])
 
   const handleDisconnect = async () => {
@@ -67,7 +67,7 @@ const Wallet: React.FC<WalletProps> = ({
   }
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn(connected && "flex items-center gap-2", className)}>
       {!connected ? (
         <ConnectButton
           className="flex-1"

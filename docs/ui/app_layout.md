@@ -29,6 +29,14 @@ This document describes the top-level structure of the React application.
 - Manages two tabs: `"list"` and `"history"`.
 - Exposes an `onAdd` callback for opening the drawer.
 
+## DrawerConnectWallet
+
+- Renders a full-screen drawer for selecting and connecting wallets.
+- Contains two buttons: Connect MetaMask and Connect Phantom.
+- Close button in the top-right to dismiss.
+- On successful connection via `useWallet().connect(type)`, automatically invokes `closeDrawer()`.
+- Displays error messages on failure.
+
 ## DrawerPopup
 - Wraps the Radix `<Drawer>` primitive.
 - Listens to `DrawerContext` for `isOpen`, `content`, and `closeDrawer`.

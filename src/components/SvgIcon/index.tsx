@@ -41,10 +41,28 @@ export const SvgIcon: React.FC<SvgIconProps> = ({ src, className, ...props }) =>
     return <span className={className} {...props} />;
   }
 
+  // 检查 className 中是否包含尺寸相关的类（w-* 或 h-*）
+  const hasSizeClass = className && /\b(w-\d+|h-\d+|w-\[|h-\[)\b/.test(className);
+
+  // 修改 SVG 内容
+  const modifiedSvgContent = svgContent.replace(
+    /<svg([^>]*)>/,
+    (match, attrs) => {
+      if (hasSizeClass) {
+        // 如果有尺寸类，移除固定的 width 和 height 属性，添加 w-full h-full
+        let newAttrs = attrs.replace(/\s*(width|height)="[^"]*"/g, '');
+        return `<svg${newAttrs} class="w-full h-full">`;
+      } else {
+        // 如果没有尺寸类，保持原样
+        return match;
+      }
+    }
+  );
+
   return (
     <span
       className={classNames('inline-flex items-center justify-center', className)}
-      dangerouslySetInnerHTML={{ __html: svgContent }}
+      dangerouslySetInnerHTML={{ __html: modifiedSvgContent }}
       {...props}
     />
   );
