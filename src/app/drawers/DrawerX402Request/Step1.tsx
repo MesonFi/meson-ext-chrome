@@ -22,7 +22,7 @@ type Props = {
   onSelected: (acc: X402Accept, init: RequestInit, xPaymentHeader: string) => void
 }
 
-const Step1: React.FC<Props> = ({ item, mode = "popup", onSelected }) => {
+const Step1: React.FC<Props> = ({ item, onSelected }) => {
   const { connected, signer } = useWallet()
   const [selectedIdx, setSelectedIdx] = useState<number>(0)
   const [signing, setSigning] = useState(false)

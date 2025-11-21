@@ -1,15 +1,18 @@
 import { get, set, remove, listen } from "./index"
 
+export type WalletType = "metamask" | "phantom"
+
 export type AppState = {
   connected: boolean
   address?: string
+  walletType?: WalletType
 }
 
 const KEY = "app_state"
 
 export async function loadState(): Promise<AppState> {
   const state = await get<AppState>(KEY)
-  return state ?? { connected: false }
+  return state ?? { connected: false, walletType: "metamask" }
 }
 
 export async function saveState(next: AppState): Promise<void> {

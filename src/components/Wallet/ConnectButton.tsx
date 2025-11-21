@@ -1,12 +1,9 @@
 // src/components/Wallet/ConnectButton.tsx
-import React, { useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import { useWallet } from "~/app/contexts/AppProvider"
 import { Button, type ButtonProps } from "~/components/Button"
-
-function shortAddr(addr?: string) {
-  if (!addr) return ""
-  return `${addr.slice(0, 6)}...${addr.slice(-4)}`
-}
+import type { WalletType } from "~/lib/storage/app_state"
+import { shortAddr } from "~/lib/utils/address"
 
 type ConnectButtonProps = {
   className?: string
@@ -15,6 +12,7 @@ type ConnectButtonProps = {
   onError?: (error: Error) => void
   showAddressWhenConnected?: boolean
   children?: React.ReactNode
+  walletType?: WalletType
 }
 
 export const ConnectButton: React.FC<ConnectButtonProps> = ({
@@ -23,16 +21,19 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
   onConnected,
   onError,
   showAddressWhenConnected = false,
-  children
+  children,
+  walletType: propWalletType
 }) => {
-  const { booting, connecting, connected, address, connect } = useWallet()
+  const { booting, connecting, connected, address, walletType, connect } = useWallet()
+  const [showWalletPicker, setShowWalletPicker] = useState(false)
 
-  const handleConnect = async () => {
+  const handleConnect = async (type?: WalletType) => {
     try {
-      await connect()
+      await connect(type)
       if (address && onConnected) {
         onConnected(address)
       }
+      setShowWalletPicker(false)
     } catch (e: any) {
       console.error("连接失败：", e?.message ?? String(e))
       if (onError) {
@@ -45,16 +46,65 @@ export const ConnectButton: React.FC<ConnectButtonProps> = ({
     if (booting) return "Loading..."
     if (connecting) return "Connecting..."
     if (connected && showAddressWhenConnected) return shortAddr(address)
-    if (connected) return "Connected"
-    return children || "Connect MetaMask"
-  }, [booting, connecting, connected, address, showAddressWhenConnected, children])
+    if (connected) return walletType === "phantom" ? "Phantom Connected" : "MetaMask Connected"
+    return children || "Connect Wallet"
+  }, [booting, connecting, connected, address, showAddressWhenConnected, children, walletType])
+
+  // 如果指定了钱包类型，直接连接该钱包
+  if (propWalletType) {
+    return (
+      <Button
+        variant="primary"
+        size={size}
+        className={className}
+        onClick={() => handleConnect(propWalletType)}
+        disabled={booting || connecting || connected}
+      >
+        {connecting ? "Connecting..." : children || `Connect ${propWalletType === "phantom" ? "Phantom" : "MetaMask"}`}
+      </Button>
+    )
+  }
+
+  // 未连接时显示钱包选择器
+  if (!connected && showWalletPicker) {
+    return (
+      <div className="flex flex-col gap-2">
+        <Button
+          variant="secondary"
+          size={size}
+          className={className}
+          onClick={() => handleConnect("metamask")}
+          disabled={booting || connecting}
+        >
+          Connect MetaMask
+        </Button>
+        <Button
+          variant="secondary"
+          size={size}
+          className={className}
+          onClick={() => handleConnect("phantom")}
+          disabled={booting || connecting}
+        >
+          Connect Phantom
+        </Button>
+        <Button
+          variant="default"
+          size={size}
+          className={className}
+          onClick={() => setShowWalletPicker(false)}
+        >
+          Cancel
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <Button
       variant="primary"
       size={size}
       className={className}
-      onClick={handleConnect}
+      onClick={() => connected ? undefined : setShowWalletPicker(true)}
       disabled={booting || connecting || connected}
     >
       {buttonText}

@@ -1,18 +1,15 @@
 // src/components/Wallet/index.tsx
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import { useWallet } from "~/app/contexts/AppProvider"
 import { SvgIcon } from "~/components/SvgIcon"
 import MetaMaskIconSrc from "@assets/icons/metamask.svg"
+import SolanaIconSrc from "@assets/icons/solana.svg"
 import CopyIconSrc from "@assets/icons/copy.svg"
 import LogoutIconSrc from "@assets/icons/logout.svg"
 import { cn } from "~/lib/utils"
 import { MessageTooltip } from "~/components/MessageTooltip"
 import { ConnectButton } from "./ConnectButton"
-
-function shortAddr(addr?: string) {
-  if (!addr) return ""
-  return `${addr.slice(0, 6)}...${addr.slice(-4)}`
-}
+import { shortAddr } from "~/lib/utils/address"
 
 // Re-export ConnectButton for convenience
 export { ConnectButton } from "./ConnectButton"
@@ -32,8 +29,13 @@ const Wallet: React.FC<WalletProps> = ({
   onConnected,
   onDisconnected
 }) => {
-  const { connected, address, disconnect } = useWallet()
+  const { connected, address, walletType, disconnect } = useWallet()
   const [copied, setCopied] = useState(false)
+
+  // 根据钱包类型动态选择图标
+  const walletIcon = useMemo(() => {
+    return walletType === "phantom" ? SolanaIconSrc : MetaMaskIconSrc
+  }, [walletType])
 
   const handleDisconnect = async () => {
     await disconnect()
@@ -74,7 +76,7 @@ const Wallet: React.FC<WalletProps> = ({
       ) : (
         <>
           <div className="flex-1 flex items-center gap-2 rounded-lg">
-            <SvgIcon src={MetaMaskIconSrc} className="w-6 h-6" />
+            <SvgIcon src={walletIcon} className="w-6 h-6" />
             <span className="text-sm font-medium text-color-strong flex-1 truncate" title={address}>
               {shortAddr(address)}
             </span>

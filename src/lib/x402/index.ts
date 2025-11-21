@@ -1,16 +1,8 @@
-// src/lib/x402/index.ts
-// 分步 x402 流程：1) 获取并解析 Payment Requirements 2) 生成支付头(签名) 3) 携带支付头重试
-// 仅使用 x402 官方导出：x402/types, x402/client, x402/shared
+// src/app/views/x402/lib.ts
+// x402 支付流程：1) 获取并解析 Payment Requirements 2) 生成支付头(签名) 3) 携带支付头重试
 
 import {
-  ChainIdToNetwork,
   PaymentRequirementsSchema,
-  type Signer,
-  type MultiNetworkSigner,
-  evm,
-  isMultiNetworkSigner,
-  isSvmSignerWallet,
-  type Network,
   type X402Config
 } from "x402/types"
 
@@ -28,8 +20,19 @@ const NETWORK_TO_CHAIN_ID: Record<string, Hex> = {
   "base-sepolia": "0x14a34"   // 84532
 }
 
+const EVM_NETWORKS = ["base", "base-sepolia"]
+const SOLANA_NETWORKS = ["solana", "solana-devnet"]
+
 function getChainId(network: string): Hex | null {
   return NETWORK_TO_CHAIN_ID[network.toLowerCase()] || null
+}
+
+function isEvmNetwork(network: string): boolean {
+  return EVM_NETWORKS.includes(network.toLowerCase())
+}
+
+function isSolanaNetwork(network: string): boolean {
+  return SOLANA_NETWORKS.includes(network.toLowerCase())
 }
 
 // ====== Step 1: 获取并解析 Payment Requirements ======
@@ -95,19 +98,24 @@ export async function fetchPaymentRequirements(
 
 /** 按 x402-fetch 的同款网络推断逻辑，从钱包推断 Network（或多网络） */
 export function inferNetworkFromWallet(
-  wallet: Signer | MultiNetworkSigner
-): Network | Network[] | undefined {
-  if (isMultiNetworkSigner(wallet)) {
-    return undefined
+  wallet: any
+): any {
+  // 如果有 inferNetworkFromWallet 方法，直接调用
+  if (wallet && typeof wallet.inferNetworkFromWallet === 'function') {
+    return wallet.inferNetworkFromWallet()
   }
-  if (evm.isSignerWallet(wallet as any)) {
-    const chainId = (wallet as any)?.chain?.id
-    return ChainIdToNetwork[chainId as keyof typeof ChainIdToNetwork]
+
+  // 尝试从 chainId 推断（MetaMask）
+  if (wallet?.chain?.id) {
+    const chainId = wallet.chain.id
+    for (const [network, id] of Object.entries(NETWORK_TO_CHAIN_ID)) {
+      if (id === chainId) {
+        return network
+      }
+    }
   }
-  if (isSvmSignerWallet(wallet)) {
-    // 与 x402-fetch 源码一致：SVM 钱包默认支持这两个
-    return ["solana", "solana-devnet"] as Network[]
-  }
+
+  // 默认返回支持的网络
   return undefined
 }
 
@@ -133,8 +141,72 @@ export function pickPaymentRequirement(
 }
 
 /**
- * 生成支付头（签名）（仅使用官方 createPaymentHeader）
- * - 不发送请求，只返回 Header 字符串，交由调用方在 Step 3 使用
+ * 构建 EVM 网络支付头
+ */
+async function buildEvmPaymentHeader(
+  wallet: any,
+  network: string,
+  x402Version: number,
+  requirement: PaymentRequirementsParsed,
+  config?: X402Config
+): Promise<string> {
+  console.log('[buildEvmPaymentHeader] Processing EVM network:', network)
+
+  const chainId = getChainId(network)
+  if (!chainId) {
+    throw new Error(`Unsupported EVM network: ${network}`)
+  }
+
+  // 如果钱包有 switchChain 方法，先切换到目标链
+  if (wallet && typeof wallet.switchChain === 'function') {
+    try {
+      console.log(`[buildEvmPaymentHeader] Switching to chain ${chainId}`)
+      await wallet.switchChain(chainId)
+    } catch (e: any) {
+      console.error('[buildEvmPaymentHeader] Chain switch failed:', e)
+      throw new Error(`Failed to switch to ${network}: ${e.message}`)
+    }
+  }
+
+  // 生成 EVM 支付头
+  const header = await createPaymentHeader(wallet, x402Version, requirement, config)
+  console.log('[buildEvmPaymentHeader] Payment header created successfully')
+  return header
+}
+
+/**
+ * 构建 Solana 网络支付头
+ */
+async function buildSolanaPaymentHeader(
+  wallet: any,
+  network: string,
+  x402Version: number,
+  requirement: PaymentRequirementsParsed,
+  config?: X402Config
+): Promise<string> {
+  console.log('[buildSolanaPaymentHeader] Processing Solana network:', network)
+
+  // 生成支付头（x402 库会自动处理 Solana 交易构建和签名）
+  const header = await createPaymentHeader(wallet, x402Version, requirement, {
+    ...config,
+    svmConfig: {
+      // 可以配置自定义 RPC（如果公共 RPC 限流）
+      rpcUrl: network === 'solana'
+        ? "https://solemn-winter-road.solana-mainnet.quiknode.pro/46fa061ea3ca4552da78cde720d7d3e6ea1c6265"
+        : "https://api.devnet.solana.com",
+      ...config?.svmConfig
+    }
+  })
+
+  console.log('[buildSolanaPaymentHeader] Payment header created successfully')
+  return header
+}
+
+/**
+ * 生成支付头（签名）- 同时支持 EVM 和 Solana 网络
+ * - EVM 网络（base, base-sepolia）：切链 + 签名
+ * - Solana 网络（solana, solana-devnet）：直接签名
+ * - 返回 X-Payment Header 字符串
  */
 export async function buildXPaymentHeader(params: {
   wallet: any
@@ -144,20 +216,28 @@ export async function buildXPaymentHeader(params: {
 }): Promise<string> {
   const { wallet, x402Version, requirement, config } = params
   const network = requirement.network as string
-  const chainId = getChainId(network)
 
-  if (!chainId) {
-    throw new Error(`Unsupported network: ${network}. Only 'base' and 'base-sepolia' are supported.`)
+  console.log('[buildXPaymentHeader] Creating payment header:', {
+    network,
+    asset: requirement.asset,
+    payTo: requirement.payTo,
+    amount: requirement.maxAmountRequired,
+    walletType: wallet?.constructor?.name
+  })
+
+  // 根据网络类型路由到对应的处理函数
+  if (isEvmNetwork(network)) {
+    return buildEvmPaymentHeader(wallet, network, x402Version, requirement, config)
   }
 
-  try {
-    await wallet.switchChain(chainId)
-  } catch (error: any) {
-    throw new Error(`Failed to switch to ${network}: ${error.message}`)
+  if (isSolanaNetwork(network)) {
+    return buildSolanaPaymentHeader(wallet, network, x402Version, requirement, config)
   }
 
-  const header = await createPaymentHeader(wallet, x402Version, requirement, config)
-  return header
+  // 不支持的网络
+  throw new Error(
+    `Unsupported network: ${network}. Supported networks: ${[...EVM_NETWORKS, ...SOLANA_NETWORKS].join(', ')}`
+  )
 }
 
 // ====== Step 3: 携带 X-PAYMENT 再次请求，读取成功响应 + 解析结算头 ======
