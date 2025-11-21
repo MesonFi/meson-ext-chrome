@@ -186,7 +186,7 @@ const ViewX402Discover: React.FC<Props> = ({ mode = "popup" }) => {
           <div className="flex items-center gap-2 text-xs">
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
-                <button aria-label="Settings">
+                <button aria-label="Settings" className="flex items-center">
                   <SvgIcon src={SettingsIconSrc} className="w-5 h-5 text-secondary hover:text-primary-hover" />
                 </button>
               </DropdownMenu.Trigger>

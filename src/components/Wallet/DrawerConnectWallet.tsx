@@ -36,7 +36,7 @@ const DrawerConnectWallet: React.FC<DrawerConnectWalletProps> = ({ onClose }) =>
   return (
     <div className="w-full h-full flex flex-col relative">
       <div className="flex justify-between items-center p-4">
-        <h2 className="text-lg font-semibold text-textColor1">Connect Wallet</h2>
+        <h2 className="text-lg font-medium text-textColor1">Connect Wallet</h2>
         <button
           onClick={handleClose}
           className="p-1 hover:bg-surface rounded transition-colors"

@@ -77,7 +77,7 @@ const X402Item: React.FC<Props> = ({ item, onClick, sortKey, maxMonth }) => {
   return (
     <div className="py-3 cursor-pointer hover:bg-surface px-3 flex flex-col gap-2" onClick={onClick}>
       <div className="flex gap-2 items-center justify-between">
-        <div className="text-sm font-medium truncate" title={resource}>
+        <div className="text-sm truncate" title={resource}>
           {resource}
         </div>
         <span className="text-xs text-color-muted shrink-0">
@@ -96,13 +96,13 @@ const X402Item: React.FC<Props> = ({ item, onClick, sortKey, maxMonth }) => {
             {sortKey === 'score' ? typeof score === "number" ? score.toFixed(2) : "-" : formatInt(mth)}
           </span>
         </div>
-        <div className="text-xs line-clamp-3" title={desc}>
+        <div className="text-xs line-clamp-3 text-textColor4" title={desc}>
           {desc}
         </div>
       </div>
       <div className="flex gap-3">
         <div className="flex flex-col min-w-[60px]">
-          <div className="text-xs">
+          <div className="text-xs text-textColor4">
             {sortKey === 'score' ? 'M. Tx' : 'Score'}
           </div>
           <div className="font-medium text-sm text-color-strong">
@@ -110,7 +110,7 @@ const X402Item: React.FC<Props> = ({ item, onClick, sortKey, maxMonth }) => {
           </div>
         </div>
         <div className="flex flex-col w-full">
-          <div className="text-xs">
+          <div className="text-xs text-textColor4">
             Payment
           </div>
           <div className="font-medium text-sm text-color-strong flex items-center gap-1">
@@ -119,11 +119,11 @@ const X402Item: React.FC<Props> = ({ item, onClick, sortKey, maxMonth }) => {
               <SvgIcon src={BaseIconSrc} />
             }
             <div className="truncate">{capitalize(network)}</div>
-            <div className="w-[1px] h-3 bg-[#E4E3E3]"/>{maxAmountRequired} <span>{tokenName}</span>
+            <div className="w-[1px] h-3 bg-[#E4E3E3]"/>{maxAmountRequired} <span className="text-textColor4 font-normal">{tokenName}</span>
           </div>
         </div>
         <div className="flex flex-col min-w-[70px]">
-          <div className="text-xs text-right">
+          <div className="text-xs text-right text-textColor4">
             Succ. Rate
           </div>
           <div className="font-medium text-sm text-color-strong text-right">{formatPercent(success, 0)}</div>

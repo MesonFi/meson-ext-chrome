@@ -21,7 +21,7 @@ const TabView: React.FC<TabViewProps> = ({ mode }) => {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto scrollbar-hide pb-[50px]">
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
         {selectedTab === "discover" ? <ViewX402Discover mode={mode} /> : <ViewHistory />}
       </div>
       <TabBar

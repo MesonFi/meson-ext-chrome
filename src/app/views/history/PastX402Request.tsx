@@ -57,7 +57,7 @@ const PastX402Request: React.FC<Props> = ({ entry, onSelect }) => {
       onClick={() => onSelect(entry)}
     >
       <div className="flex justify-between items-center mb-1">
-        <span className="text-sm font-medium truncate">
+        <span className="text-sm truncate">
           {entry.item?.resource || "-"}
         </span>
         <span className="text-xs text-color-muted">

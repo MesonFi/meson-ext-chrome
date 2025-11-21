@@ -6,6 +6,7 @@ import { Button } from "~/components/Button"
 import { SvgIcon } from "~/components/SvgIcon"
 import { Input } from "~/components/ui/input"
 import { MessageTooltip } from "~/components/MessageTooltip"
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group"
 
 import { loadRecentUrls, saveRecentUrl } from "~/lib/storage/recentUrls"
 import { clearPendingTransaction } from "~/lib/storage/x402_pending_transaction"
@@ -167,8 +168,8 @@ export const DrawerEnterX402: React.FC<DrawerEnterX402Props> = ({ mode = "popup"
   const isValid = url.trim() && !error
 
   return (
-    <div className="p-3">
-      <div className="px-3">
+    <div className="p-3 pt-0">
+      <div className="">
         <Input
           type="text"
           size="sm"
@@ -182,32 +183,25 @@ export const DrawerEnterX402: React.FC<DrawerEnterX402Props> = ({ mode = "popup"
             </MessageTooltip>
           }
         />
-        <div className="mt-2">
+        <div className="mt-3">
           <div className="text-xs text-color-strong mb-1">HTTP Method</div>
-          <div className="flex gap-4">
-            <label className="flex items-center text-sm">
-              <input
-                type="radio"
-                name="http-method"
-                value="GET"
-                checked={method === "GET"}
-                onChange={() => { setMethod("GET"); setError(null); }}
-                className="mr-2"
-              />
-              GET
+          <RadioGroup
+            value={method}
+            onValueChange={(value) => {
+              setMethod(value as "GET" | "POST")
+              setError(null)
+            }}
+            className="flex gap-6"
+          >
+            <label className="flex items-center gap-1 text-sm cursor-pointer">
+              <RadioGroupItem value="GET" />
+              <span>GET</span>
             </label>
-            <label className="flex items-center text-sm">
-              <input
-                type="radio"
-                name="http-method"
-                value="POST"
-                checked={method === "POST"}
-                onChange={() => { setMethod("POST"); setError(null); }}
-                className="mr-2"
-              />
-              POST
+            <label className="flex items-center gap-1 text-sm cursor-pointer">
+              <RadioGroupItem value="POST" />
+              <span>POST</span>
             </label>
-          </div>
+          </RadioGroup>
         </div>
         {error && (
           <div className="mt-2 text-xs text-error">
@@ -215,17 +209,24 @@ export const DrawerEnterX402: React.FC<DrawerEnterX402Props> = ({ mode = "popup"
           </div>
         )}
         {recentUrls.length > 0 && (
-          <div className="mt-2 text-sm">
-            <div className="mb-1 font-medium">Recently used</div>
+          <div className="mt-3 text-sm">
+            <div className="mb-1 text-xs">Recently used</div>
             <ul className="space-y-1">
               {recentUrls.map(u => (
                 <li key={`${u.method}-${u.url}`}>
-                  <button
-                    className="text-secondary hover:text-primary-hover truncate w-full text-left"
-                    onClick={() => selectRecent(u)}
+                  <div
+                    className="flex justify-between items-start gap-2"
                   >
-                    {`${u.method} ${u.url}`}
-                  </button>
+                    <span
+                      onClick={() => selectRecent(u)}
+                      className="text-secondary hover:underline text-left text-sm cursor-pointer break-all flex-1"
+                    >
+                      {`${u.url}`}
+                    </span>
+                    <span className="bg-card text-textColor2 py-[1px] px-1 flex-shrink-0 rounded">
+                      {u.method}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
